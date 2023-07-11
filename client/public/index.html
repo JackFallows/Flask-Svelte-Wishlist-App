@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1'>
+
+	<title>Svelte app</title>
+
+	<link rel='icon' type='image/png' href='/favicon.png'>
+	<link rel='stylesheet' href='/build/index.css'>
+
+	<script async src="/build/vendors-node_modules_svelte-hmr_runtime_proxy-adapter-dom_js-node_modules_svelte-loader_lib_h-cac228.bundle.js"></script>
+
+	<script defer src='/build/index.bundle.js'></script>
+</head>
+
+<body>
+
+	<div>
+		<p>Hello, {{ user.name }}! You're logged in! Email: {{ user.email }}</p>
+		<div>
+			<p>Google Profile Picture:</p>
+			<img src="{{ user.profile_pic }}" alt="Google profile pic" />
+		</div>
+		<a class="button" href="/logout">Logout</a>
+	</div>
+
+	<div id="app-content"></div>
+
+</body>
+</html>

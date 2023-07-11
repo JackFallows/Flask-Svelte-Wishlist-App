@@ -1,0 +1,7 @@
+__pycache__
+.venv
+client/public/build
+node_modules
+secure
+.DS_Store
+sqlite_db
