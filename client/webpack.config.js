@@ -58,7 +58,7 @@ module.exports = {
 		]
 	},
 	mode,
-	watch: !prod,
+	//watch: !prod,
 	plugins: [
 		new MiniCssExtractPlugin({
 			filename: '[name].css'

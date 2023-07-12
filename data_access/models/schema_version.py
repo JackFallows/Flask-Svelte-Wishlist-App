@@ -4,20 +4,6 @@ class SchemaVersion():
     def __init__(self, rowid, filename):
         self.rowid = rowid
         self.filename = filename
-
-    @staticmethod
-    def get(rowid):
-        db = get_db_connection()
-        schema_version = db.execute(
-            "SELECT * FROM schema_version WHERE rowid = ?", (rowid,)
-        ).fetchone()
-        if not schema_version:
-            return None
-        
-        schema_version = SchemaVersion(
-            rowid = schema_version[0], filename=schema_version[1]
-        )
-        return schema_version
     
     @staticmethod
     def get_all():

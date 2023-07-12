@@ -5,3 +5,4 @@ node_modules
 secure
 .DS_Store
 sqlite_db
+client/public/library_content

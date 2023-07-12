@@ -13,7 +13,7 @@ def get_db():
         g.db = get_db_connection()
 
         try:
-            g.db.execute("SELECT * FROM schema_version").fetchall()
+            g.db.execute("SELECT * FROM schema_version").fetchone()
         except sqlite3.OperationalError:
             # schema_version table probably doesn't exist - create it
             with current_app.open_resource("data_access/base.sql") as f:
@@ -49,7 +49,6 @@ def init_db():
 
 @with_appcontext
 def init_db_command():
-    """Clear the existing data and create new tables."""
     init_db()
 
 def init_app(app):
