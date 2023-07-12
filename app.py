@@ -33,9 +33,7 @@ login_manager.init_app(app)
 
 # Naive database setup
 try:
-    # TODO fix
-    #init_db_command()
-    pass
+    init_db_command()
 except sqlite3.OperationalError:
     # Assume it's already been created
     pass
