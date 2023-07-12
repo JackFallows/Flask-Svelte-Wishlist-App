@@ -16,14 +16,19 @@
 	<script async src="/build/vendors-node_modules_svelte-hmr_runtime_proxy-adapter-dom_js-node_modules_svelte-loader_lib_h-cac228.bundle.js"></script>
 
     <script>
-        window.user_name = {{ ('"' + user.name + '"' if user.is_authenticated else 'void 0')|safe }};
+        window.user_name = 
+            {% if user.is_authenticated %}
+            "{{ user.name }}"
+            {% else %}
+            void 0
+            {% endif %};
     </script>
 
     {% block scripts %}
     {% endblock %}
 </head>
 
-<body style="padding-top: 60px">
+<body>
 
     <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -36,8 +41,12 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
-
                 </ul>
+                {% if user.is_authenticated %}
+                <form class="d-flex" role="create">
+                    <button class="btn btn-outline-primary" style="margin-bottom: 0" type="submit">Create wishlist</button>
+                </form>
+                {% endif %}
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">

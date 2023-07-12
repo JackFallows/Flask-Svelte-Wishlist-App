@@ -1,10 +1,17 @@
 <script lang="ts">
-	export let name: string = "world";
+	export let name: string;
+
+	let user_is_authenticated: boolean = name != null;
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
+	{#if !user_is_authenticated}
+	<h1>Hello there!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	{:else}
+	<h1>Hello {name}!</h1>
+	<p>View your wishlists below...</p>
+	{/if}
 </main>
 
 <style>

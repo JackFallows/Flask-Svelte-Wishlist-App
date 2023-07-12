@@ -4,7 +4,6 @@ const { exec } = require("child_process");
 function processCallback(error, stdout, stderr) {
     if (error) {
         console.error(`exec error: ${error}`);
-        return;
     }
 
     if (stdout) {
