@@ -5,7 +5,7 @@ import App from './App.svelte';
 const app = new App({
 	target: document.getElementById("app-content"),
 	props: {
-		name: 'world'
+		name: window.user_name
 	}
 });
 

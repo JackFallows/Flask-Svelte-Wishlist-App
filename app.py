@@ -1,6 +1,5 @@
 # Python standard libraries
 import os
-import sqlite3
 
 # Third party libraries
 from flask import (
