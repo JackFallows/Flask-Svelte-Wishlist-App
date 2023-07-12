@@ -31,13 +31,8 @@ app.register_blueprint(auth, url_prefix='/')
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Naive database setup
-try:
-    init_db_command()
-except sqlite3.OperationalError:
-    # Assume it's already been created
-    pass
-
+# Database setup
+init_db_command()
 
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
