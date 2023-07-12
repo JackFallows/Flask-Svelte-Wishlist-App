@@ -4,7 +4,8 @@ const { exec } = require("child_process");
 function copyLibraryContent() {
     return src([
         "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-        "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+        "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+        "./node_modules/@popperjs/core/dist/umd/popper.min.js"
     ])
     .pipe(dest("./public/library_content"));
 }

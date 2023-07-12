@@ -41,10 +41,7 @@ def load_user(user_id):
 
 @app.route("/")
 def index():
-    if current_user.is_authenticated:
-        return render_template("index.html", user=current_user)
-
-    return '<a class="button" href="/login">Google Login</a>'
+    return render_template("index.html", user=current_user)
 
 # Serve the content for the pages - JS, CSS, etc.
 @app.route("/<path:path>")
