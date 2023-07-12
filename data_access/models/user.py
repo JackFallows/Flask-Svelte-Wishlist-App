@@ -9,7 +9,7 @@ class User(UserMixin):
         self.email = email
         self.profile_pic = profile_pic
 
-    staticmethod
+    @staticmethod
     def get(user_id):
         db = get_db()
         user = db.execute(
