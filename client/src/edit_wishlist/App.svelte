@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Get, Post } from "../http"
+    import { Api, Views } from "../routes";
 
     interface $$Props {
         wishlist_id: number;
@@ -21,16 +22,16 @@
             return;
         }
 
-        const wishlist = await Get<IWishlist>(`/api/wishlists/get/${wishlist_id}`)
+        const wishlist = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id))
         wishlist_name = wishlist.name;
     }
 
     async function save_wishlist() {
         if (wishlist_id == null) {
             // create new
-            const wishlist = await Post<{ name: string }, IWishlist>(`/api/wishlists/post`, { name: wishlist_name ?? "My wishlist" })
+            const wishlist = await Post<{ name: string }, IWishlist>(Api.Wishlists.Post, { name: wishlist_name ?? "My wishlist" })
             
-            location.href = `/edit/${wishlist.id}`;
+            location.href = Views.Edit.append(wishlist.id).to_string();
         } else {
             // update existing
         }

@@ -1,5 +1,7 @@
-export async function Get<TResult>(route: string): Promise<TResult> {
-    const response = await fetch(route);
+import { Route } from "./routes";
+
+export async function Get<TResult>(route: Route): Promise<TResult> {
+    const response = await fetch(route.to_string());
 
     if (response.ok) {
         const result = await (response.json() as Promise<TResult>);
@@ -9,8 +11,8 @@ export async function Get<TResult>(route: string): Promise<TResult> {
     return null;
 };
 
-export async function Post<T, TResult>(route: string, data: T): Promise<TResult> {
-    const response = await fetch(route, {
+export async function Post<T, TResult>(route: Route, data: T): Promise<TResult> {
+    const response = await fetch(route.to_string(), {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
