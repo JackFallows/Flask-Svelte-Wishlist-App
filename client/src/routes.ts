@@ -1,9 +1,9 @@
-const ViewsRoot = "/";
-const ApiRoot = "/api/";
+const ViewsRoot = "";
+const ApiRoot = "/api";
 
-const EditViewRoot = ViewsRoot + "edit/";
+const EditViewRoot = ViewsRoot + "/edit";
 
-const WishlistsApiRoot = ApiRoot + "wishlists/";
+const WishlistsApiRoot = ApiRoot + "/wishlists";
 
 class Route {
     private route: string;
@@ -13,17 +13,12 @@ class Route {
     }
 
     public append(parameter: string | number): Route {
-        this.route += `${parameter}/`;
+        this.route += `/${parameter}`;
 
         return this;
     }
 
     public to_string(): string {
-        if (this.route.endsWith("/")) {
-            // strip the trailing '/' as Flask doesn't like it
-            return this.route.slice(0, this.route.length - 1);
-        }
-
         return this.route;
     }
 }
@@ -34,8 +29,8 @@ const Views = {
 
 const Api = {
     Wishlists: {
-        Get: new Route(WishlistsApiRoot + "get/"),
-        Post: new Route(WishlistsApiRoot + "post/")
+        Get: new Route(WishlistsApiRoot + "/get"),
+        Post: new Route(WishlistsApiRoot + "/post")
     }
 };
 
