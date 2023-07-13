@@ -7,7 +7,7 @@ const prod = mode === 'production';
 
 module.exports = {
 	entry: {
-		index: './src/main.ts'
+		index: './src/index/main.ts'
 	},
 	resolve: {
 		alias: {

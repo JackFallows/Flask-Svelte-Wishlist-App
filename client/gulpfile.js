@@ -1,4 +1,5 @@
 const { src, dest, series, watch } = require("gulp");
+const less = require("gulp-less");
 const { exec } = require("child_process");
 
 function processCallback(error, stdout, stderr) {
@@ -32,8 +33,14 @@ function copyLibraryContent() {
     .pipe(dest("./public/library_content"));
 }
 
+function copyGlobalStyles() {
+    return src("./src/*.less")
+        .pipe(less())
+        .pipe(dest("./public/build"));
+}
+
 function buildProject() {
-    watch("./src/**/*", { ignoreInitial: false }, series(validateTs, build));
+    watch("./src/**/*", { ignoreInitial: false }, series(copyGlobalStyles, validateTs, build));
 }
 
 exports.default = series(copyLibraryContent, buildProject);

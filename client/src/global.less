@@ -16,14 +16,14 @@ body {
 a {
 	color: rgb(0,100,200);
 	text-decoration: none;
-}
 
-a:hover {
-	text-decoration: underline;
-}
+	&:hover {
+		text-decoration: underline;
+	}
 
-a:visited {
-	color: rgb(0,80,160);
+	&:visited {
+		color: rgb(0,80,160);
+	}
 }
 
 label {
@@ -49,16 +49,18 @@ button {
 	color: #333;
 	background-color: #f4f4f4;
 	outline: none;
-}
 
-button:disabled {
-	color: #999;
-}
+	&:disabled {
+		color: #999;
+	}
 
-button:not(:disabled):active {
-	background-color: #ddd;
-}
+	&:not(:disabled) {
+		&:active {
+			background-color: #ddd;
+		}
+	}
 
-button:focus {
-	border-color: #666;
+	&:focus {
+		border-color: #666;
+	}
 }
