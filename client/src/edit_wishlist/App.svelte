@@ -1,9 +1,12 @@
 <script lang="ts">
+    import { Get, Post } from "../http"
+
     interface $$Props {
         wishlist_id: number;
     }
 
     interface IWishlist {
+        id: number;
         name: string;
     }
 
@@ -18,31 +21,16 @@
             return;
         }
 
-        const wishlist_response = await fetch(`/api/wishlists/get/${wishlist_id}`);
-
-        if (wishlist_response.ok) {
-            const wishlist = await (wishlist_response.json() as Promise<IWishlist>);
-
-            wishlist_name = wishlist.name;
-        }
+        const wishlist = await Get<IWishlist>(`/api/wishlists/get/${wishlist_id}`)
+        wishlist_name = wishlist.name;
     }
 
     async function save_wishlist() {
         if (wishlist_id == null) {
             // create new
-            const create_response = await fetch(`/api/wishlists/post`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: wishlist_name ?? "My wishlist" })
-            });
-
-            if (create_response.ok) {
-                const wishlist = await create_response.json();
-                location.href = `/edit/${wishlist.id}`;
-            }
+            const wishlist = await Post<{ name: string }, IWishlist>(`/api/wishlists/post`, { name: wishlist_name ?? "My wishlist" })
+            
+            location.href = `/edit/${wishlist.id}`;
         } else {
             // update existing
         }
@@ -60,7 +48,7 @@
         </div>
     </div>
     <div class="form-section-right">
-        <button class="btn btn-outline-success" style="margin-bottom: 0" on:click={save_wishlist}>Save wishlist</button>
+        <button class="btn btn-outline-success" style="margin-bottom: 0" on:click={() => loading_promise = save_wishlist()}>Save wishlist</button>
     </div>
 </div>
 {/await}
