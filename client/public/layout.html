@@ -35,20 +35,20 @@
 <body>
     <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Wishlist App</a>
+            <span class="navbar-brand">Wishlist App</span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-supported-content" aria-controls="navbar-supported-content" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbar-supported-content">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                 </ul>
                 {% if user.is_authenticated %}
-                <form class="d-flex" role="create">
-                    <button class="btn btn-outline-primary" style="margin-bottom: 0" type="submit">Create wishlist</button>
-                </form>
+                {% block nav_buttons %}
+                    <a class="btn btn-outline-primary" style="margin-bottom: 0" href="/edit">Create wishlist</a>
+                {% endblock %}
                 {% endif %}
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     {% if user.is_authenticated %}

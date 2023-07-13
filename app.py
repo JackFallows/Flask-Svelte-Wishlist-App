@@ -10,6 +10,7 @@ from flask import (
 from flask_login import (
     LoginManager,
     current_user,
+    login_required
 )
 
 # Internal imports
@@ -28,6 +29,7 @@ app.register_blueprint(auth, url_prefix='/')
 
 # User session management setup
 login_manager = LoginManager()
+login_manager.login_view = 'index' # redirect to home page if user is not logged in when trying to access pages where login is required
 login_manager.init_app(app)
 
 # Database setup
@@ -41,6 +43,12 @@ def load_user(user_id):
 @app.route("/")
 def index():
     return render_template("index.html", user=current_user)
+
+@app.route("/edit/")
+@app.route("/edit/<wishlist_id>")
+@login_required
+def edit_wishlist(wishlist_id=0):
+    return render_template("edit_wishlist.html", user=current_user, wishlist_id=None if wishlist_id == 0 else wishlist_id)
 
 # Serve the content for the pages - JS, CSS, etc.
 @app.route("/<path:path>")

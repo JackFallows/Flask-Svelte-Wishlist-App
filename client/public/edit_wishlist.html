@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block scripts %}
+<script>
+    window.wishlist_id = {{ 'null' if wishlist_id == None else wishlist_id }};
+</script>
+
+<script defer src='/build/edit_wishlist.bundle.js'></script>
+{% endblock %}
+
+{% block nav_buttons %}
+{% endblock %}
+
