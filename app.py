@@ -9,8 +9,7 @@ from flask import (
 )
 from flask_login import (
     LoginManager,
-    current_user,
-    login_required
+    current_user
 )
 
 # Internal imports
@@ -23,9 +22,15 @@ template_dir = os.path.join(template_dir, 'client', 'public')
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 
-from auth import auth
+from views.auth import auth
+from views.edit import edit
+
+from api.wishlists import wishlists
 
 app.register_blueprint(auth, url_prefix='/')
+app.register_blueprint(edit, url_prefix='/edit')
+
+app.register_blueprint(wishlists, url_prefix='/api/wishlists')
 
 # User session management setup
 login_manager = LoginManager()
@@ -43,12 +48,6 @@ def load_user(user_id):
 @app.route("/")
 def index():
     return render_template("index.html", user=current_user)
-
-@app.route("/edit/")
-@app.route("/edit/<wishlist_id>")
-@login_required
-def edit_wishlist(wishlist_id=0):
-    return render_template("edit_wishlist.html", user=current_user, wishlist_id=None if wishlist_id == 0 else wishlist_id)
 
 # Serve the content for the pages - JS, CSS, etc.
 @app.route("/<path:path>")
