@@ -1,6 +1,9 @@
-const { src, dest, series, watch } = require("gulp");
-const less = require("gulp-less");
-const { exec } = require("child_process");
+import gulp from "gulp";
+import less from "gulp-less";
+import { exec } from "child_process";
+
+const { src, dest, series, watch } = gulp;
+
 
 function processCallback(error, stdout, stderr) {
     if (error) {
@@ -43,4 +46,5 @@ function buildProject() {
     watch("./src/**/*", { ignoreInitial: false }, series(copyGlobalStyles, validateTs, build));
 }
 
-exports.default = series(copyLibraryContent, buildProject);
+const _default = series(copyLibraryContent, buildProject);
+export { _default as default };
