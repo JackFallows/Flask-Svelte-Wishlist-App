@@ -13,9 +13,7 @@ class Route {
     }
 
     public append(parameter: string | number): Route {
-        this.route += `/${parameter}`;
-
-        return this;
+        return new Route(this.route + `/${parameter}`);
     }
 
     public to_string(): string {
