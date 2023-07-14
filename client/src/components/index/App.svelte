@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import Wishlist from '../Wishlist.svelte';
-	import { Get } from '../http';
-    import { Api, Views } from "../routes";
+	import { Get } from '../../http';
+    import { Api, Views } from "../../routes";
 
 	export let name: string;
 

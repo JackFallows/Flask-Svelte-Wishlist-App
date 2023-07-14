@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Get, Post } from "../http"
-    import { Api, Views } from "../routes";
+    import { Get, Post } from "../../http"
+    import { Api, Views } from "../../routes";
 
     interface $$Props {
         wishlist_id: number;

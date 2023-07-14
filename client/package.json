@@ -2,13 +2,18 @@
   "name": "svelte-app",
   "version": "1.0.0",
   "devDependencies": {
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
+    "@babel/register": "^7.22.5",
     "@playwright/experimental-ct-svelte": "^1.36.0",
     "@tsconfig/svelte": "^4.0.0",
+    "@types/jasmine": "^4.3.5",
     "@types/node": "^16.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
     "gulp": "^4.0.2",
     "gulp-less": "^5.0.0",
+    "jasmine": "^5.0.2",
     "mini-css-extract-plugin": "^2.6.0",
     "svelte": "^4.0.0",
     "svelte-check": "^3.4.4",
@@ -26,7 +31,8 @@
     "build-debug": "cross-env NODE_ENV=development webpack",
     "dev": "webpack serve",
     "validate": "svelte-check",
-    "test-ct": "playwright test -c playwright-ct.config.ts"
+    "test-ct": "playwright test -c playwright-ct.config.ts",
+    "test-m": "jasmine"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

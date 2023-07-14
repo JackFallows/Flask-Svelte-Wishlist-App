@@ -7,8 +7,8 @@ const prod = mode === 'production';
 
 module.exports = {
 	entry: {
-		index: './src/index/main.ts',
-		edit_wishlist: './src/edit_wishlist/main.ts'
+		index: './src/components/index/main.ts',
+		edit_wishlist: './src/components/edit_wishlist/main.ts'
 	},
 	resolve: {
 		alias: {

@@ -1,0 +1,15 @@
+{
+  "spec_dir": "spec",
+  "spec_files": [
+    "**/*.[sS]pec.ts"
+  ],
+  "helpers": [
+    "helpers/babel.cjs",
+    "helpers/**/*.ts"
+  ],
+  "env": {
+    "stopSpecOnExpectationFailure": false,
+    "random": true
+  },
+  "jsLoader": "import"
+}

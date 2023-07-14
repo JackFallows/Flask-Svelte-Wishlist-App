@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Views } from './routes';
+    import { Views } from '../routes';
 
     export let wishlist: IWishlist;
 </script>
