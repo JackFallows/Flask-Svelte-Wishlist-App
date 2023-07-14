@@ -1,4 +1,3 @@
-from flask import jsonify
 from data_access.db_connect import get_db_connection
 
 class Wishlist():
@@ -50,17 +49,26 @@ class Wishlist():
             deleted=wishlist[4]
         )
         
-        return jsonify(wishlist.as_dict())
+        return wishlist
     
     @staticmethod
     def get_all_for_user(user_id):
         db = get_db_connection()
         
         wishlists = db.execute(
-            "SELECT * FROM wishlist WHERE user_id = ?", (user_id,)
+            "SELECT rowid, user_id, name, shared, deleted FROM wishlist WHERE user_id = ?", (user_id,)
         ).fetchall()
         
-        return list(map(lambda w: Wishlist(id=w[0], user_id=w[1], name=w[2], shared=w[3], deleted=w[4]), wishlists))
+        return list(
+            map(
+                lambda w: Wishlist(
+                    id=w[0],
+                    user_id=w[1],
+                    name=w[2],
+                    shared=w[3],
+                    deleted=w[4]),
+                wishlists)
+            )
     
     @staticmethod
     def create(name, user_id):

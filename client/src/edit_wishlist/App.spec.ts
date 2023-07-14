@@ -4,10 +4,10 @@ import App from './App.svelte';
 test('does not load wishlist info if id not provided', async ({ mount, page }) => {
     let got_called = false;
 
-    await page.route("/api/wishlists/get/*", route => {
+    await page.route("/api/wishlists/get/*", async (route) => {
         got_called = true;
 
-        route.fulfill({
+        await route.fulfill({
             status: 200,
             body: null
         });
@@ -23,10 +23,10 @@ test('does not load wishlist info if id not provided', async ({ mount, page }) =
 test('loads wishlist info if id provided', async ({ mount, page }) => {
     let got_called = false;
 
-    await page.route("/api/wishlists/get/*", route => {
+    await page.route("/api/wishlists/get/*", async (route) => {
         got_called = true;
 
-        route.fulfill({
+        await route.fulfill({
             status: 200,
             body: JSON.stringify({ name: "My wishlist name" })
         });

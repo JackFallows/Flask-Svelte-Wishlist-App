@@ -30,6 +30,7 @@ const Views = {
 const Api = {
     Wishlists: {
         Get: new Route(WishlistsApiRoot + "/get"),
+        GetAllForUser: new Route(WishlistsApiRoot + "/get_all_for_user"),
         Post: new Route(WishlistsApiRoot + "/post")
     }
 };

@@ -6,11 +6,6 @@
         wishlist_id: number;
     }
 
-    interface IWishlist {
-        id: number;
-        name: string;
-    }
-
     export let wishlist_id: number;
 
     let loading_promise = load_wishlist();

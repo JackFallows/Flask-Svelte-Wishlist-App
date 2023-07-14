@@ -14,7 +14,16 @@ def get_wishlist(wishlist_id):
     
     wishlist = Wishlist.get(wishlist_id=wishlist_id, user_id=current_user.id)
     
-    return wishlist
+    return jsonify(wishlist.as_dict())
+
+@login_required
+@wishlists.route('/get_all_for_user')
+def get_all_for_user():
+    user_id = current_user.id
+    
+    wishlists = Wishlist.get_all_for_user(user_id=user_id)
+    
+    return jsonify(list(map(lambda w: w.as_dict(), wishlists)))
 
 @login_required
 @wishlists.route('/post', methods=["POST"])

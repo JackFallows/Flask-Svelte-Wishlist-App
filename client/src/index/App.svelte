@@ -1,7 +1,24 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import Wishlist from '../Wishlist.svelte';
+	import { Get } from '../http';
+    import { Api, Views } from "../routes";
+
 	export let name: string;
 
 	let user_is_authenticated: boolean = name != null;
+
+	let wishlists: IWishlist[] = [];
+	
+	let loading_promise = get_wishlists();
+
+	async function get_wishlists() {
+		if (!user_is_authenticated) {
+			return;
+		}
+
+		wishlists = await Get<IWishlist[]>(Api.Wishlists.GetAllForUser);
+	}
 </script>
 
 <main>
@@ -10,9 +27,25 @@
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 	{:else}
 	<h1>Hello {name}!</h1>
-	<p>View your wishlists below...</p>
 	{/if}
 </main>
+
+{#if user_is_authenticated}
+{#await loading_promise}
+<p>Loading...</p>
+{:then}
+<h2>Your wishlists</h2>
+<div class="container">
+	<div class="row row-cols-2">
+		{#each wishlists as w (w.id)}
+		<div class="col">
+			<Wishlist wishlist={w} />
+		</div>
+		{/each}
+	</div>
+</div>
+{/await}
+{/if}
 
 <style>
 	main {
