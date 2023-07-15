@@ -17,6 +17,8 @@ class Route {
 const ViewsRoot = new Route("");
 const ApiRoot = ViewsRoot.append("api");
 
+const AuthViewRoot = ViewsRoot.append("auth");
+const ExternalAuthRoot = AuthViewRoot.append("external");
 const EditViewRoot = ViewsRoot.append("edit");
 
 const WishlistsApiRoot = ApiRoot.append("wishlists");
@@ -27,6 +29,12 @@ const Views = {
 }
 
 const Api = {
+    Auth: {
+        Logout: AuthViewRoot.append("logout"),
+        External: {
+            Login: ExternalAuthRoot.append("login")
+        }
+    },
     Wishlists: {
         Get: WishlistsApiRoot.append("get"),
         GetAllForUser: WishlistsApiRoot.append("get_all_for_user"),

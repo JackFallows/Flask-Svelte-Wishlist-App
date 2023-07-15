@@ -23,12 +23,14 @@ app = Flask(__name__, template_folder=template_dir)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 
 from views.auth import auth
+from views.external_auth import external_auth
 from views.edit import edit
 
 from api.wishlists import wishlists
 from api.wishlist_items import wishlist_items
 
-app.register_blueprint(auth, url_prefix='/')
+app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(external_auth, url_prefix='/auth/external')
 app.register_blueprint(edit, url_prefix='/edit')
 
 app.register_blueprint(wishlists, url_prefix='/api/wishlists')

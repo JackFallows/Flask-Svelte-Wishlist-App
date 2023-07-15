@@ -58,12 +58,12 @@
                             <img src="{{ user.profile_pic }}" alt="Profile pic" width="24" height="24" class="d-inline-block align-text-top" style="border-radius: 20px">
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                          <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
                         </ul>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Log in</a>
+                        <a class="nav-link" href="/auth/external/login">Log in</a>
                     </li>
                     {% endif %}
                 </div>
