@@ -20,18 +20,18 @@ def get_all_for_wishlist(wishlist_id):
     
     return jsonify(list(map(lambda w: w.as_dict(), wishlist_items)))
 
-@login_required
-@wishlist_items.route('/post', methods=["POST"])
-def post_wishlist_item():
-    wishlist_item = json.loads(request.data)
+# @login_required
+# @wishlist_items.route('/post', methods=["POST"])
+# def post_wishlist_item():
+#     wishlist_item = json.loads(request.data)
     
-    wishlist = Wishlist.get(wishlist_item['wishlist_id'], current_user.id)
+#     wishlist = Wishlist.get(wishlist_item['wishlist_id'], current_user.id)
     
-    if (wishlist is None):
-        return "Not found", 404
+#     if (wishlist is None):
+#         return "Not found", 404
     
-    # TODO validation
+#     # TODO validation
     
-    wishlist_item_id = WishlistItem.create(wishlist_id=wishlist.id, link=wishlist_item['link'], notes=wishlist_item['notes'])
+#     wishlist_item_id = WishlistItem.create(wishlist_id=wishlist.id, link=wishlist_item['link'], notes=wishlist_item['notes'])
     
-    return jsonify(id=wishlist_item_id)
+#     return jsonify(id=wishlist_item_id)

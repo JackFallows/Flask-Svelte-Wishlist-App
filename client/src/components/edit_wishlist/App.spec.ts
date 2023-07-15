@@ -28,7 +28,7 @@ test('loads wishlist info if id provided', async ({ mount, page }) => {
 
         await route.fulfill({
             status: 200,
-            body: JSON.stringify({ name: "My wishlist name" })
+            body: JSON.stringify({ name: "My wishlist name", wishlist_items: [] })
         });
     });
 

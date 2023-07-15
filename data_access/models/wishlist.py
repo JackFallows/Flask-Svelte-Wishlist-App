@@ -28,6 +28,16 @@ class Wishlist():
             )
             
             db.commit()
+            
+    @staticmethod
+    def from_json(json):
+        return Wishlist(
+            id=json['id'],
+            user_id=json['user_id'],
+            name=json['name'],
+            shared=json['shared'],
+            deleted=json['deleted']
+        )
 
     @staticmethod
     def get(wishlist_id, user_id):

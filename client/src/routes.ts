@@ -1,15 +1,8 @@
-const ViewsRoot = "";
-const ApiRoot = "/api";
-
-const EditViewRoot = ViewsRoot + "/edit";
-
-const WishlistsApiRoot = ApiRoot + "/wishlists";
-
 class Route {
     private route: string;
 
     constructor(route: string) {
-        this.route = route;
+        this.route = route ?? "";
     }
 
     public append(parameter: string | number): Route {
@@ -21,15 +14,28 @@ class Route {
     }
 }
 
+const ViewsRoot = new Route("");
+const ApiRoot = ViewsRoot.append("api");
+
+const EditViewRoot = ViewsRoot.append("edit");
+
+const WishlistsApiRoot = ApiRoot.append("wishlists");
+const WishlistItemsApiRoot = ApiRoot.append("wishlist_items");
+
 const Views = {
-    Edit: new Route(EditViewRoot)
+    Edit: EditViewRoot
 }
 
 const Api = {
     Wishlists: {
-        Get: new Route(WishlistsApiRoot + "/get"),
-        GetAllForUser: new Route(WishlistsApiRoot + "/get_all_for_user"),
-        Post: new Route(WishlistsApiRoot + "/post")
+        Get: WishlistsApiRoot.append("get"),
+        GetAllForUser: WishlistsApiRoot.append("get_all_for_user"),
+        Post: WishlistsApiRoot.append("post"),
+        Put: WishlistsApiRoot.append("put")
+    },
+    WishlistItems: {
+        GetAllForWishlist: WishlistItemsApiRoot.append("get_all_for_wishlist"),
+        Post: WishlistItemsApiRoot.append("post")
     }
 };
 
