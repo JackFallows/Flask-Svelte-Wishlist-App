@@ -7,19 +7,6 @@ class Wishlist():
         self.name = name
         self.shared = shared
         self.deleted = deleted
-
-    def apply_changes(self):
-        if (self.id == None):
-            return
-        
-        db = get_db_connection()
-        
-        db.execute(
-            "UPDATE wishlist SET name = ?, shared = ?, deleted = ? WHERE rowid = ?",
-            (self.name, self.shared, self.deleted, self.id,)
-        )
-        
-        db.commit()
         
     def as_dict(self):
         return {
@@ -30,46 +17,56 @@ class Wishlist():
             "deleted": self.deleted
         }
 
+    def apply_changes(self):
+        if (self.id == None):
+            return
+        
+        with get_db_connection() as db:
+            db.execute(
+                "UPDATE wishlist SET name = ?, shared = ?, deleted = ? WHERE rowid = ?",
+                (self.name, self.shared, self.deleted, self.id,)
+            )
+            
+            db.commit()
+
     @staticmethod
     def get(wishlist_id, user_id):
-        db = get_db_connection()
-        
-        wishlist = db.execute(
-            "SELECT rowid, user_id, name, shared, deleted FROM wishlist WHERE rowid = ? AND user_id = ?", (wishlist_id, user_id,)
-        ).fetchone()
-        
-        if not wishlist:
-            return None
-        
-        wishlist = Wishlist(
-            id = wishlist[0],
-            user_id=wishlist[1],
-            name=wishlist[2],
-            shared=wishlist[3],
-            deleted=wishlist[4]
-        )
-        
-        return wishlist
+        with get_db_connection() as db:
+            wishlist = db.execute(
+                "SELECT rowid, user_id, name, shared, deleted FROM wishlist WHERE rowid = ? AND user_id = ?", (wishlist_id, user_id,)
+            ).fetchone()
+            
+            if not wishlist:
+                return None
+            
+            wishlist = Wishlist(
+                id = wishlist[0],
+                user_id=wishlist[1],
+                name=wishlist[2],
+                shared=wishlist[3],
+                deleted=wishlist[4]
+            )
+            
+            return wishlist
     
     @staticmethod
     def get_all_for_user(user_id):
-        db = get_db_connection()
+        with get_db_connection() as db:
+            wishlists = db.execute(
+                "SELECT rowid, user_id, name, shared, deleted FROM wishlist WHERE user_id = ?", (user_id,)
+            ).fetchall()
+            
+            return list(
+                map(
+                    lambda w: Wishlist(
+                        id=w[0],
+                        user_id=w[1],
+                        name=w[2],
+                        shared=w[3],
+                        deleted=w[4]),
+                    wishlists)
+                )
         
-        wishlists = db.execute(
-            "SELECT rowid, user_id, name, shared, deleted FROM wishlist WHERE user_id = ?", (user_id,)
-        ).fetchall()
-        
-        return list(
-            map(
-                lambda w: Wishlist(
-                    id=w[0],
-                    user_id=w[1],
-                    name=w[2],
-                    shared=w[3],
-                    deleted=w[4]),
-                wishlists)
-            )
-    
     @staticmethod
     def create(name, user_id):
         with get_db_connection() as db:
@@ -82,8 +79,7 @@ class Wishlist():
             db.commit()
             
             wishlist_id = db.execute(
-                "SELECT rowid FROM wishlist WHERE name = ?",
-                (name,)
+                "SELECT last_insert_rowid()"
             ).fetchone()[0]
             
             return wishlist_id

@@ -26,11 +26,13 @@ from views.auth import auth
 from views.edit import edit
 
 from api.wishlists import wishlists
+from api.wishlist_items import wishlist_items
 
 app.register_blueprint(auth, url_prefix='/')
 app.register_blueprint(edit, url_prefix='/edit')
 
 app.register_blueprint(wishlists, url_prefix='/api/wishlists')
+app.register_blueprint(wishlist_items, url_prefix='/api/wishlist_items')
 
 # User session management setup
 login_manager = LoginManager()
