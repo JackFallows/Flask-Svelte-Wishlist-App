@@ -43,7 +43,7 @@ function copyGlobalStyles() {
 }
 
 function buildProject() {
-    watch("./src/**/*", { ignoreInitial: false }, series(copyGlobalStyles, validateTs, build));
+    watch(["./src/**/*", "!./src/**/*.spec.ts"], { ignoreInitial: false }, series(copyGlobalStyles, validateTs, build));
 }
 
 const _default = series(copyLibraryContent, buildProject);

@@ -34,6 +34,13 @@
 <p>Loading...</p>
 {:then}
 <h2>Your wishlists</h2>
+
+{#if wishlists.length === 0}
+<div class="text-center">
+	<p>You have no wishlists. Click the button below to create one.</p>
+	<a class="btn btn-primary" href="{Views.Edit.to_string()}" id="no-wishlists-create-button">Create wishlist</a>
+</div>
+{:else}
 <div class="container">
 	<div class="row row-cols-2">
 		{#each wishlists as w (w.id)}
@@ -43,6 +50,8 @@
 		{/each}
 	</div>
 </div>
+{/if}
+
 {/await}
 {/if}
 
