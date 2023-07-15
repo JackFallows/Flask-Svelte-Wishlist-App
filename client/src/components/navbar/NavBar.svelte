@@ -20,25 +20,23 @@
                 </li>
             </ul>
             {#if user_is_authenticated}
-                <a class="btn btn-outline-primary" style="margin-bottom: 0" href="/edit">Create wishlist</a>
-            {/if}
-            <ul class="navbar-nav mb-2 mb-lg-0">
-                {#if user_is_authenticated}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="btn btn-outline-primary me-2" style="margin-bottom: 0" href="/edit">Create wishlist</a>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Hi, { name }
                         <img src="{ profile_pic }" alt="Profile pic" width="24" height="24" class="d-inline-block align-text-top" style="border-radius: 20px">
-                    </a>
+                    </button>
                     <ul class="dropdown-menu">
                       <li><a class="dropdown-item" href="{ Views.Auth.Logout.to_string() }">Logout</a></li>
                     </ul>
-                </li>
-                {:else}
+                </div>
+            {:else}
+            <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="{ Views.Auth.External.Login.to_string() }">Log in</a>
                 </li>
-                {/if}
             </ul>
+            {/if}
         </div>
     </div>
 </nav>
