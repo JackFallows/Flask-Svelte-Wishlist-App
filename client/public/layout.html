@@ -26,50 +26,23 @@
             {% else %}
             void 0
             {% endif %};
+
+        window.profile_pic = 
+            {% if user.is_authenticated and user.profile_pic %}
+            "{{ user.profile_pic }}"
+            {% else %}
+            void 0
+            {% endif %};
     </script>
+
+    <script defer src='/build/navbar.bundle.js'></script>
 
     {% block scripts %}
     {% endblock %}
 </head>
 
 <body>
-    <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <span class="navbar-brand">Wishlist App</span>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-supported-content" aria-controls="navbar-supported-content" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbar-supported-content">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
-                    </li>
-                </ul>
-                {% if user.is_authenticated %}
-                {% block nav_buttons %}
-                    <a class="btn btn-outline-primary" style="margin-bottom: 0" href="/edit">Create wishlist</a>
-                {% endblock %}
-                {% endif %}
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Hi, {{ user.name }}
-                            <img src="{{ user.profile_pic }}" alt="Profile pic" width="24" height="24" class="d-inline-block align-text-top" style="border-radius: 20px">
-                        </a>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/external/login">Log in</a>
-                    </li>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </nav>
+    <div id="nav-content"></div>
 
     {% block content %}
     <div id="app-content"></div>

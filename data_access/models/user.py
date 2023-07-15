@@ -10,6 +10,14 @@ class User(UserMixin):
         self.profile_pic = profile_pic
         self.internal_password = internal_password
 
+
+    def as_dict(self):
+        return {
+            "name": self.name,
+            "email": self.name,
+            "profile_pic": self.profile_pic
+        }
+
     def apply_changes(self):
         if self.id == None:
             return

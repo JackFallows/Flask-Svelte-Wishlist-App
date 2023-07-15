@@ -25,16 +25,16 @@ const WishlistsApiRoot = ApiRoot.append("wishlists");
 const WishlistItemsApiRoot = ApiRoot.append("wishlist_items");
 
 const Views = {
-    Edit: EditViewRoot
-}
-
-const Api = {
     Auth: {
         Logout: AuthViewRoot.append("logout"),
         External: {
             Login: ExternalAuthRoot.append("login")
         }
     },
+    Edit: EditViewRoot
+}
+
+const Api = {
     Wishlists: {
         Get: WishlistsApiRoot.append("get"),
         GetAllForUser: WishlistsApiRoot.append("get_all_for_user"),
