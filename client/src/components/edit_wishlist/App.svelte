@@ -32,11 +32,8 @@
                     name: wishlist_name ?? "My wishlist", wishlist_items
                 });
             
-            // we don't want the promise to resolve while waiting for the page to load
-            await new Promise(() => {
-                location.href = Views.Edit.append(wishlist.id).to_string();
-            });
-
+            wishlist_id = wishlist.id;
+            window.history.pushState({ id: wishlist.id }, "Edit wishlist", Views.Edit.append(wishlist.id).to_string());
         } else {
             // update existing
             await Put<IWishlist, any>(Api.Wishlists.Put, {
@@ -47,12 +44,9 @@
                 deleted: false,
                 wishlist_items: wishlist_items
             });
-
-            // we don't want the promise to resolve while waiting for the page to load
-            await new Promise(() => {
-                location.reload();
-            });
         }
+        
+        await load_wishlist();
     }
 
     function add_item() {
