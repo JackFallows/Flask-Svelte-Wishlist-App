@@ -32,7 +32,11 @@
                     name: wishlist_name ?? "My wishlist", wishlist_items
                 });
             
-            location.href = Views.Edit.append(wishlist.id).to_string();
+            // we don't want the promise to resolve while waiting for the page to load
+            await new Promise(() => {
+                location.href = Views.Edit.append(wishlist.id).to_string();
+            });
+
         } else {
             // update existing
             await Put<IWishlist, any>(Api.Wishlists.Put, {
@@ -44,7 +48,10 @@
                 wishlist_items: wishlist_items
             });
 
-            location.reload();
+            // we don't want the promise to resolve while waiting for the page to load
+            await new Promise(() => {
+                location.reload();
+            });
         }
     }
 
