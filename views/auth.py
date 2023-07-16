@@ -1,7 +1,8 @@
-from flask import Blueprint, redirect, url_for, render_template
-from flask_login import login_required, logout_user, current_user
+from flask import Blueprint, redirect, url_for
+from flask_login import login_required, logout_user
 
 from decorators import enable_internal_auth
+from helpers import custom_render_template
 
 auth = Blueprint('auth', __name__)
 
@@ -14,9 +15,9 @@ def logout():
 @auth.route("/sign-up")
 @enable_internal_auth
 def sign_up():
-    return render_template("sign_up.html", user=current_user)
+    return custom_render_template("sign_up.html")
 
 @auth.route("/login")
 @enable_internal_auth
 def login():
-    return render_template("login.html", user=current_user)
+    return custom_render_template("login.html")

@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, jsonify
-from flask_login import login_required, current_user
+from flask import Blueprint
+from flask_login import login_required
 
-from data_access.models.wishlist import Wishlist
+from helpers import custom_render_template
 
 edit = Blueprint('edit', __name__)
 
@@ -9,5 +9,5 @@ edit = Blueprint('edit', __name__)
 @edit.route('/<wishlist_id>')
 @login_required
 def edit_wishlist(wishlist_id=0):
-    return render_template("edit_wishlist.html", user=current_user, wishlist_id=None if wishlist_id == 0 else wishlist_id)
+    return custom_render_template("edit_wishlist.html", wishlist_id=None if wishlist_id == 0 else wishlist_id)
 

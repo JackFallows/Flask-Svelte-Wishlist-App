@@ -4,15 +4,15 @@ import os
 # Third party libraries
 from flask import (
     Flask,
-    send_from_directory,
-    render_template
+    send_from_directory
 )
 from flask_login import (
-    LoginManager,
-    current_user
+    LoginManager
 )
 
 # Internal imports
+from helpers import custom_render_template
+
 from data_access.db import init_db_command
 from data_access.models.user import User
 
@@ -53,7 +53,7 @@ def load_user(user_id):
 
 @app.route("/")
 def index():
-    return render_template("index.html", user=current_user)
+    return custom_render_template("index.html")
 
 # Serve the content for the pages - JS, CSS, etc.
 @app.route("/<path:path>")
