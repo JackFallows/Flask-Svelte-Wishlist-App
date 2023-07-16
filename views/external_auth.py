@@ -2,10 +2,11 @@ import json
 import os
 
 from flask import Blueprint, request, redirect, url_for
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 
+from decorators import logout_required
 from data_access.models.user import User
 
 # Configuration
@@ -21,6 +22,7 @@ external_auth = Blueprint('external_auth', __name__)
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 @external_auth.route("/login")
+@logout_required
 def login():
     # Find out what URL to hit for Google's login
     google_provider_cfg = get_google_provider_cfg()
