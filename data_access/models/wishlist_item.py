@@ -47,7 +47,8 @@ class WishlistItem():
         with get_db_connection() as db:
             wishlist_items = db.execute(
                 "SELECT rowid, wishlist_id, link, notes, bought, order_number "
-                "FROM wishlist_item WHERE wishlist_id = ? "
+                "FROM wishlist_item "
+                "WHERE wishlist_id = ? AND bought = 0 "
                 "ORDER BY order_number", (wishlist_id,)
             ).fetchall()
             
@@ -62,6 +63,22 @@ class WishlistItem():
                         order_number=w[5]),
                     wishlist_items)
                 )
+            
+    @staticmethod
+    def get_is_available_to_user(wishlist_item_id, user_id):
+        with get_db_connection() as db:
+            wishlist_item = db.execute(
+                "SELECT wishlist_item.rowid "
+                "FROM wishlist_item "
+                "INNER JOIN wishlist ON wishlist.rowid = wishlist_item.wishlist_id "
+                "WHERE wishlist_item.rowid = ? AND wishlist.user_id = ?",
+                (wishlist_item_id, user_id,)
+            ).fetchone()
+            
+            if not wishlist_item:
+                return False
+            
+            return True
         
     @staticmethod
     def create(wishlist_id, link, notes, order_number):
@@ -79,3 +96,12 @@ class WishlistItem():
             ).fetchone()[0]
             
             return wishlist_item_id
+        
+    @staticmethod
+    def set_as_bought(wishlist_item_id):
+        with get_db_connection() as db:
+            db.execute(
+                "UPDATE wishlist_item SET bought = 1 WHERE rowid = ?",
+                (wishlist_item_id,)
+            )
+            db.commit()

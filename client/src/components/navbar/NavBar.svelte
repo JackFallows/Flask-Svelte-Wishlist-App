@@ -28,7 +28,7 @@
                         Hi, { name }
                         <img src="{ profile_pic }" alt="Profile pic" width="24" height="24" class="d-inline-block align-text-top" style="border-radius: 20px">
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" style="left: -34px">
                       <li><a class="dropdown-item" href="{ Views.Auth.Logout.to_string() }">Logout</a></li>
                     </ul>
                 </div>

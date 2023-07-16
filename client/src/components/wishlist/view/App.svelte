@@ -25,11 +25,11 @@
     Loading...
 {:then}
 <h1>{wishlist_name}</h1>
-<button class="btn btn-outline-primary float-end" on:click={() => location.href = Views.Wishlist.Edit.append(wishlist_id).to_string()}>
+<a class="btn btn-outline-primary float-end" href="{ Views.Wishlist.Edit.append(wishlist_id).to_string() }">
     Edit
-</button>
+</a>
 <h2>Items</h2>
 {#each wishlist_items as wishlist_item(wishlist_item)}
-    <WishlistItem wishlist_item={wishlist_item} />
+    <WishlistItem wishlist_item={wishlist_item} on:bought={() => loading_promise = load_wishlist()} />
 {/each}
 {/await}

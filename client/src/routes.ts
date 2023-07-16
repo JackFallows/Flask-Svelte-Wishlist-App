@@ -55,7 +55,7 @@ const Api = {
     },
     WishlistItems: {
         GetAllForWishlist: WishlistItemsApiRoot.append("get_all_for_wishlist"),
-        Post: WishlistItemsApiRoot.append("post")
+        MarkAsBought: WishlistItemsApiRoot.append("mark-as-bought")
     }
 };
 
