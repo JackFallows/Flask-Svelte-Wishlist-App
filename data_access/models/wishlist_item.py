@@ -63,6 +63,16 @@ class WishlistItem():
                         order_number=w[5]),
                     wishlist_items)
                 )
+    @staticmethod
+    def get_ids_for_wishlist(wishlist_id):
+        with get_db_connection() as db:
+            ids = db.execute(
+                "SELECT rowid FROM wishlist_item WHERE wishlist_id = ?",
+                (wishlist_id,)
+            ).fetchall()
+            
+            return list(map(lambda x: x[0], ids))
+    
             
     @staticmethod
     def get_is_available_to_user(wishlist_item_id, user_id):
@@ -102,6 +112,15 @@ class WishlistItem():
         with get_db_connection() as db:
             db.execute(
                 "UPDATE wishlist_item SET bought = 1 WHERE rowid = ?",
+                (wishlist_item_id,)
+            )
+            db.commit()
+            
+    @staticmethod
+    def remove(wishlist_item_id):
+        with get_db_connection() as db:
+            db.execute(
+                "DELETE FROM wishlist_item WHERE rowid = ?",
                 (wishlist_item_id,)
             )
             db.commit()

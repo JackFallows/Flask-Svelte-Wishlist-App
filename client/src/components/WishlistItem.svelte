@@ -29,9 +29,18 @@
 
 <div class="alert alert-secondary" id="{html_id}">
     {#if is_edit}
-    <input class="form-control" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
-    <textarea class="form-control" bind:value={notes} id="{html_id + "-notes"}" placeholder="Notes"></textarea>
-    {:else}
+    <div class="view-container">
+        <div class="view-left-column">
+            <input class="form-control" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
+            <textarea class="form-control" bind:value={notes} id="{html_id + "-notes"}" placeholder="Notes"></textarea>
+        </div>
+        <div class="view-right-column">
+            <button class="btn btn-outline-danger" on:click={() => dispatch('delete', wishlist_item)}>
+                <span class="fa-solid fa-trash" style="pointer-events: none;"></span>
+            </button>
+        </div>
+    </div>
+{:else}
     <div class="view-container">
         <div class="view-left-column">
             <a href="{link}">{link}</a>

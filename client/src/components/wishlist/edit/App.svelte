@@ -61,6 +61,18 @@
             return wi;
         })];
     }
+
+    function remove_item(event: CustomEvent<IWishlistItem>) {
+        const item = event.detail;
+
+        const item_index = wishlist_items.indexOf(item);
+        if (item_index === -1) {
+            return;
+        }
+
+        wishlist_items.splice(item_index, 1);
+        wishlist_items = wishlist_items; // trigger reactivity
+    }
 </script>
 
 {#await loading_promise}
@@ -75,7 +87,7 @@
         <h2>Items</h2>
         <button class="btn btn-primary mb-3" id="add-item-button" on:click={() => add_item()}>Add item</button>
         {#each wishlist_items as wishlist_item(wishlist_item)}
-            <WishlistItem wishlist_item={wishlist_item} is_edit={true} />
+            <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={remove_item} />
         {/each}
     </div>
     <div class="form-section-right">

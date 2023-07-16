@@ -70,6 +70,14 @@ def put_wishlist():
     
     wishlist.apply_changes()
     
+    existing_item_ids = WishlistItem.get_ids_for_wishlist(wishlist_id=wishlist.id)
+    saving_ids = list(map(lambda item: item.id, filter(lambda item: item.id is not None, wishlist_items)))
+    
+    ids_to_remove = list(filter(lambda existing_id: existing_id not in saving_ids, existing_item_ids))
+    
+    for id_to_remove in ids_to_remove:
+        WishlistItem.remove(wishlist_item_id=id_to_remove)
+    
     for wishlist_item in wishlist_items:
         if wishlist_item.id is None:
             WishlistItem.create(
