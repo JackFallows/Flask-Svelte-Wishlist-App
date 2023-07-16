@@ -124,3 +124,12 @@ class WishlistItem():
                 (wishlist_item_id,)
             )
             db.commit()
+            
+    @staticmethod
+    def remove_all_for_wishlist(wishlist_id):
+        with get_db_connection() as db:
+            db.execute(
+                "DELETE FROM wishlist_item WHERE wishlist_id = ?",
+                (wishlist_id,)
+            )
+            db.commit()

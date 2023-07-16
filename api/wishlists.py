@@ -89,3 +89,16 @@ def put_wishlist():
             wishlist_item.apply_changes()
             
     return jsonify({})
+
+@login_required
+@wishlists.route('/delete/<wishlist_id>', methods=["DELETE"])
+def delete(wishlist_id):
+    wishlist = Wishlist.get(wishlist_id=wishlist_id, user_id=current_user.id)
+    
+    if wishlist is None:
+        return "Not found", 404
+    
+    WishlistItem.remove_all_for_wishlist(wishlist_id=wishlist_id)
+    Wishlist.remove(wishlist_id=wishlist_id)
+    
+    return jsonify({})

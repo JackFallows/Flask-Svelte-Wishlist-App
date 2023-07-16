@@ -2,10 +2,13 @@
     import { Get, Post, Put } from "../../../http"
     import { Api, Views } from "../../../routes";
     import WishlistItem from "../../WishlistItem.svelte";
+    import ConfirmModal from "../../ConfirmModal.svelte";
 
     export let wishlist_id: number;
 
     let loading_promise = load_wishlist();
+
+    let confirm_modal: { show: () => Promise<boolean> };
 
     let wishlist_name: string;
     let wishlist_items: IWishlistItem[] = [];
@@ -62,7 +65,12 @@
         })];
     }
 
-    function remove_item(event: CustomEvent<IWishlistItem>) {
+    async function remove_item(event: CustomEvent<IWishlistItem>) {
+        const confirmed = await confirm_modal.show();
+        if (!confirmed) {
+            return;
+        }
+
         const item = event.detail;
 
         const item_index = wishlist_items.indexOf(item);
@@ -95,6 +103,8 @@
     </div>
 </div>
 {/await}
+
+<ConfirmModal bind:methods={confirm_modal} />
 
 <style lang="less">
     .form-container {

@@ -46,3 +46,21 @@ export async function Put<T, TResult>(route: Route, data: T): Promise<TResult> {
 
     return null;
 }
+
+export async function Delete<T, TResult>(route: Route, data: T): Promise<TResult> {
+    const response = await fetch(route.to_string(), {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        const result = await response.json();
+        return result;
+    }
+
+    return null;
+}

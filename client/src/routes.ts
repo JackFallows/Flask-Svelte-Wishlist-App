@@ -51,7 +51,8 @@ const Api = {
         Get: WishlistsApiRoot.append("get"),
         GetAllForUser: WishlistsApiRoot.append("get_all_for_user"),
         Post: WishlistsApiRoot.append("post"),
-        Put: WishlistsApiRoot.append("put")
+        Put: WishlistsApiRoot.append("put"),
+        Delete: WishlistsApiRoot.append("delete")
     },
     WishlistItems: {
         GetAllForWishlist: WishlistItemsApiRoot.append("get_all_for_wishlist"),

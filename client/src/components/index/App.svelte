@@ -45,7 +45,7 @@
 	<div class="row row-cols-2">
 		{#each wishlists as w (w.id)}
 		<div class="col">
-			<Wishlist wishlist={w} />
+			<Wishlist wishlist={w} on:delete={() => loading_promise = get_wishlists()} />
 		</div>
 		{/each}
 	</div>

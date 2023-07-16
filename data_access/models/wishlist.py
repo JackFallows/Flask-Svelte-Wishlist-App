@@ -93,4 +93,13 @@ class Wishlist():
             ).fetchone()[0]
             
             return wishlist_id
-        
+
+    @staticmethod
+    def remove(wishlist_id):
+        with get_db_connection() as db:
+            db.execute(
+                "DELETE FROM wishlist WHERE rowid = ?",
+                (wishlist_id,)
+            )
+            db.commit()
+
