@@ -1,11 +1,7 @@
 <script lang="ts">
-    import { Get, Post, Put } from "../../http"
-    import { Api, Views } from "../../routes";
-    import WishlistItem from "../WishlistItem.svelte";
-
-    interface $$Props {
-        wishlist_id: number;
-    }
+    import { Get, Post, Put } from "../../../http"
+    import { Api, Views } from "../../../routes";
+    import WishlistItem from "../../WishlistItem.svelte";
 
     export let wishlist_id: number;
 
@@ -31,9 +27,8 @@
                 Api.Wishlists.Post, {
                     name: wishlist_name ?? "My wishlist", wishlist_items
                 });
-            
+
             wishlist_id = wishlist.id;
-            window.history.pushState({ id: wishlist.id }, "Edit wishlist", Views.Edit.append(wishlist.id).to_string());
         } else {
             // update existing
             await Put<IWishlist, any>(Api.Wishlists.Put, {
@@ -45,8 +40,10 @@
                 wishlist_items: wishlist_items
             });
         }
-        
-        await load_wishlist();
+
+        await new Promise(() => {
+            location.href = Views.Wishlist.View.append(wishlist_id).to_string();
+        });
     }
 
     function add_item() {
@@ -78,7 +75,7 @@
         <h2>Items</h2>
         <button class="btn btn-primary mb-3" id="add-item-button" on:click={() => add_item()}>Add item</button>
         {#each wishlist_items as wishlist_item(wishlist_item)}
-            <WishlistItem wishlist_item={wishlist_item} />
+            <WishlistItem wishlist_item={wishlist_item} is_edit={true} />
         {/each}
     </div>
     <div class="form-section-right">

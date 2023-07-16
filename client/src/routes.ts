@@ -19,7 +19,7 @@ const ApiRoot = ViewsRoot.append("api");
 
 const AuthViewRoot = ViewsRoot.append("auth");
 const ExternalAuthRoot = AuthViewRoot.append("external");
-const EditViewRoot = ViewsRoot.append("edit");
+const WishlistViewRoot = ViewsRoot.append("wishlist");
 
 const UsersApiRoot = ApiRoot.append("users");
 const WishlistsApiRoot = ApiRoot.append("wishlists");
@@ -34,7 +34,11 @@ const Views = {
             Login: ExternalAuthRoot.append("login")
         }
     },
-    Edit: EditViewRoot,
+    Wishlist: {
+        Create: WishlistViewRoot.append("create"),
+        Edit: WishlistViewRoot.append("edit"),
+        View: WishlistViewRoot.append("view")
+    },
     Home: ViewsRoot.to_string() + "/"
 }
 

@@ -18,11 +18,11 @@
         <div class="collapse navbar-collapse" id="navbar-supported-content">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{ Views.Home }">Home</a>
                 </li>
             </ul>
             {#if user_is_authenticated}
-                <a class="btn btn-outline-primary me-2" style="margin-bottom: 0" href="/edit">Create wishlist</a>
+                <a class="btn btn-outline-primary me-2" style="margin-bottom: 0" href="{ Views.Wishlist.Create.to_string() }">Create wishlist</a>
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Hi, { name }

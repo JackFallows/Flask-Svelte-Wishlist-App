@@ -38,7 +38,7 @@
 {#if wishlists.length === 0}
 <div class="text-center">
 	<p>You have no wishlists. Click the button below to create one.</p>
-	<a class="btn btn-primary" href="{Views.Edit.to_string()}" id="no-wishlists-create-button">Create wishlist</a>
+	<a class="btn btn-primary" href="{Views.Wishlist.Create.to_string()}" id="no-wishlists-create-button">Create wishlist</a>
 </div>
 {:else}
 <div class="container">

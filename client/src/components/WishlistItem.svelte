@@ -1,5 +1,6 @@
 <script lang="ts">
     export let wishlist_item: IWishlistItem;
+    export let is_edit: boolean = false;
 
     const html_id = `wishlist-item-${wishlist_item.id ?? "new"}`
     
@@ -15,8 +16,15 @@
 </script>
 
 <div class="alert alert-secondary" id="{html_id}">
+    {#if is_edit}
     <input class="form-control" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
     <textarea class="form-control" bind:value={notes} id="{html_id + "-notes"}" placeholder="Notes"></textarea>
+    {:else}
+    <a href="{link}">{link}</a>
+    <div>
+        {notes}
+    </div>
+    {/if}
 </div>
 
 <style lang="less">

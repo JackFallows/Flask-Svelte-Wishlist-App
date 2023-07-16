@@ -11,7 +11,8 @@ module.exports = {
 		sign_up: './src/components/sign_up/main.ts',
 		login: './src/components/login/main.ts',
 		index: './src/components/index/main.ts',
-		edit_wishlist: './src/components/edit_wishlist/main.ts'
+		view_wishlist: './src/components/wishlist/view/main.ts',
+		edit_wishlist: './src/components/wishlist/edit/main.ts'
 	},
 	resolve: {
 		alias: {

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/experimental-ct-svelte';
-import App from './App.svelte';
+import App from '../../wishlist/edit/App.svelte';
 
 test('does not load wishlist info if id not provided', async ({ mount, page }) => {
     let got_called = false;
