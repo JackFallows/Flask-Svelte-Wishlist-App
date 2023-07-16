@@ -49,8 +49,8 @@
             </div>
         </div>
         <div class="view-right-column">
-            <button class="btn" on:click={mark_as_bought}>
-                <span class="fa-solid fa-bag-shopping" style="pointer-events: none"></span>
+            <button class="btn btn-light" on:click={mark_as_bought}>
+                <span class="fa-solid fa-basket-shopping" style="pointer-events: none"></span>
             </button>
         </div>
     </div>
