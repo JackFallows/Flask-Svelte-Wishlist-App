@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Views } from '../../routes'
 
+    export let internal_login_enabled: boolean;
     export let name: string;
     export let profile_pic: string;
 
@@ -32,6 +33,9 @@
                 </div>
             {:else}
             <ul class="navbar-nav mb-2 mb-lg-0">
+                {#if internal_login_enabled}
+                <a class="nav-link" href="{ Views.Auth.SignUp.to_string() }">Sign up</a>
+                {/if}
                 <li class="nav-item">
                     <a class="nav-link" href="{ Views.Auth.External.Login.to_string() }">Log in</a>
                 </li>

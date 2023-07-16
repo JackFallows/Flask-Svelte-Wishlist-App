@@ -7,6 +7,6 @@ def custom_render_template(template_name, **context):
     return render_template(
         template_name_or_list=template_name,
         user=current_user,
-        internal_login_enabled=ENABLE_INTERNAL_AUTH,
+        internal_login_enabled= None if ENABLE_INTERNAL_AUTH is None or ENABLE_INTERNAL_AUTH.lower() == 'false' else 'true',
         **context
     )
