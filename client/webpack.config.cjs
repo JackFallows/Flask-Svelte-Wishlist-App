@@ -8,6 +8,8 @@ const prod = mode === 'production';
 module.exports = {
 	entry: {
 		navbar: './src/components/navbar/main.ts',
+		sign_up: './src/components/sign_up/main.ts',
+		login: './src/components/login/main.ts',
 		index: './src/components/index/main.ts',
 		edit_wishlist: './src/components/edit_wishlist/main.ts'
 	},

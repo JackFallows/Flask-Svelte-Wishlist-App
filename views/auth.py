@@ -1,12 +1,7 @@
-import json
-import os
+from flask import Blueprint, redirect, url_for, render_template
+from flask_login import login_required, logout_user, current_user
 
-from flask import Blueprint, request, redirect, url_for
-from flask_login import login_user, login_required, logout_user
-from oauthlib.oauth2 import WebApplicationClient
-import requests
-
-from data_access.models.user import User
+from decorators import enable_internal_auth
 
 auth = Blueprint('auth', __name__)
 
@@ -15,3 +10,13 @@ auth = Blueprint('auth', __name__)
 def logout():
     logout_user()
     return redirect(url_for("index"))
+
+@auth.route("/sign-up")
+@enable_internal_auth
+def sign_up():
+    return render_template("sign_up.html", user=current_user)
+
+@auth.route("/login")
+@enable_internal_auth
+def login():
+    return render_template("login.html", user=current_user)

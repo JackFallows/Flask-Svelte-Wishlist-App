@@ -21,11 +21,14 @@ const AuthViewRoot = ViewsRoot.append("auth");
 const ExternalAuthRoot = AuthViewRoot.append("external");
 const EditViewRoot = ViewsRoot.append("edit");
 
+const UsersApiRoot = ApiRoot.append("users");
 const WishlistsApiRoot = ApiRoot.append("wishlists");
 const WishlistItemsApiRoot = ApiRoot.append("wishlist_items");
 
 const Views = {
     Auth: {
+        Login: AuthViewRoot.append("login"),
+        SignUp: AuthViewRoot.append("sign-up"),
         Logout: AuthViewRoot.append("logout"),
         External: {
             Login: ExternalAuthRoot.append("login")
@@ -35,6 +38,10 @@ const Views = {
 }
 
 const Api = {
+    Users: {
+        Create: UsersApiRoot.append("create"),
+        Authenticate: UsersApiRoot.append("authenticate")
+    },
     Wishlists: {
         Get: WishlistsApiRoot.append("get"),
         GetAllForUser: WishlistsApiRoot.append("get_all_for_user"),

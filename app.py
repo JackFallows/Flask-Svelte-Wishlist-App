@@ -26,6 +26,7 @@ from views.auth import auth
 from views.external_auth import external_auth
 from views.edit import edit
 
+from api.users import users
 from api.wishlists import wishlists
 from api.wishlist_items import wishlist_items
 
@@ -33,6 +34,7 @@ app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(external_auth, url_prefix='/auth/external')
 app.register_blueprint(edit, url_prefix='/edit')
 
+app.register_blueprint(users, url_prefix='/api/users')
 app.register_blueprint(wishlists, url_prefix='/api/wishlists')
 app.register_blueprint(wishlist_items, url_prefix='/api/wishlist_items')
 

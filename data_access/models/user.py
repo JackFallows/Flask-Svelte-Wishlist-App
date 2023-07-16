@@ -45,6 +45,27 @@ class User(UserMixin):
                 profile_pic=user[3],
                 internal_password=user[4]
             )
+            
+            return user
+        
+    @staticmethod
+    def get_by_email(email):
+        with get_db_connection() as db:
+            user = db.execute(
+                "SELECT id, name, email, profile_pic, internal_password FROM user WHERE email = ?", (email,)
+            ).fetchone()
+            
+            if not user:
+                return None
+            
+            user = User(
+                id_ = user[0],
+                name=user[1],
+                email=user[2],
+                profile_pic=user[3],
+                internal_password=user[4]
+            )
+            
             return user
     
     @staticmethod
