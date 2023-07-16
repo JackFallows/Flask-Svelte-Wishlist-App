@@ -34,7 +34,8 @@ const Views = {
             Login: ExternalAuthRoot.append("login")
         }
     },
-    Edit: EditViewRoot
+    Edit: EditViewRoot,
+    Home: ViewsRoot.to_string() + "/"
 }
 
 const Api = {

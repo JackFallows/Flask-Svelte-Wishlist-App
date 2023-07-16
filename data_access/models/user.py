@@ -24,8 +24,9 @@ class User(UserMixin):
         
         with get_db_connection() as db:
             db.execute(
-                "UPDATE user SET name = ?, email = ?, profile_pic = ?, internal_password = ?",
-                (self.name, self.email, self.profile_pic, self.internal_password)
+                "UPDATE user SET name = ?, email = ?, profile_pic = ?, internal_password = ? "
+                "WHERE id = ?",
+                (self.name, self.email, self.profile_pic, self.internal_password, self.id)
             )
             db.commit()
 

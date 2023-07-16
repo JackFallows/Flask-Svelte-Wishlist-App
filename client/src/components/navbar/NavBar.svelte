@@ -6,6 +6,7 @@
     export let profile_pic: string;
 
     const user_is_authenticated = name != null;
+    const external_login_page = internal_login_enabled ? Views.Auth.Login : Views.Auth.External.Login;
 </script>
 
 <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
@@ -37,7 +38,7 @@
                 <a class="nav-link" href="{ Views.Auth.SignUp.to_string() }">Sign up</a>
                 {/if}
                 <li class="nav-item">
-                    <a class="nav-link" href="{ Views.Auth.External.Login.to_string() }">Log in</a>
+                    <a class="nav-link" href="{ external_login_page.to_string() }">Log in</a>
                 </li>
             </ul>
             {/if}

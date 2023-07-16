@@ -15,7 +15,9 @@ users = Blueprint('users', __name__)
 def sign_up():
     request_json = json.loads(request.data)
     
-    # TODO: validation
+    # TODO: more validation
+    if request_json['password1'] != request_json['password2']:
+        return { "error": "Passwords do not match" }, 403
     
     User.create(
         id_=str(uuid.uuid4()),
@@ -36,6 +38,6 @@ def login():
         return "Not found", 404
     
     if check_password_hash(user.internal_password, request_json["password"]):
-        login_user(user, remember=True)
+        login_user(user)
 
     return jsonify({})
