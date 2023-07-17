@@ -25,3 +25,8 @@ interface IWishlist {
 
     wishlist_items: IWishlistItem[];
 }
+
+interface IWishlistShare extends IWishlist {
+    owner_name: string;
+    owner_email: string;
+}

@@ -78,30 +78,6 @@ class Wishlist():
                 )
         
     @staticmethod
-    def get_shared_with_user(user_id):
-        with get_db_connection() as db:
-            wishlists = db.execute(
-                "SELECT w.rowid, w.user_id, w.name, w.shared, w.deleted "
-                "FROM wishlist AS w "
-                "INNER JOIN user_shared_wishlist AS usw ON usw.wishlist_id = w.rowid "
-                "WHERE usw.user_id = ? AND w.shared = 1 AND usw.accepted = 1 ",
-                (user_id,)
-            ).fetchall()
-            
-            return list(
-                map(
-                    lambda w: Wishlist(
-                        id=w[0],
-                        user_id=w[1],
-                        name=w[2],
-                        shared=w[3],
-                        deleted=w[4],
-                    ),
-                    wishlists
-                )
-            )
-        
-    @staticmethod
     def create(name, user_id):
         with get_db_connection() as db:
             db.execute(
@@ -117,6 +93,15 @@ class Wishlist():
             ).fetchone()[0]
             
             return wishlist_id
+
+    @staticmethod
+    def set_shared(wishlist_id):
+        with get_db_connection() as db:
+            db.execute(
+                "UPDATE wishlist SET shared = 1 WHERE rowid = ?",
+                (wishlist_id,)
+            )
+            db.commit()
 
     @staticmethod
     def remove(wishlist_id):

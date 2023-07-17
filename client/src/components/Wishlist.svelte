@@ -5,6 +5,7 @@
     import Modal from './Modal.svelte';
 
     export let wishlist: IWishlist;
+    export let is_third_party: boolean = false; // someone shared it with us
 
     let delete_modal: Modal;
     let share_modal: Modal;
@@ -45,13 +46,16 @@
     <button class="btn btn-outline-primary wishlist-button" on:click={() => location.href = Views.Wishlist.View.append(wishlist.id).to_string()}>
         <h2>{wishlist.name}</h2>
     </button>
+    {#if !is_third_party}
     <button class="btn btn-outline-warning" on:click={share_wishlist}>
         <span class="fa-solid fa-share-nodes"></span>
     </button>
     <button class="btn btn-outline-danger" on:click={delete_wishlist}>
         <span class="fa-solid fa-trash" style="pointer-events: none;"></span>
     </button>
+    {/if}
 </div>
+
 
 <Modal bind:this={delete_modal} id="delete-{wishlist.id}" is_danger={true}>
     <span slot="header">

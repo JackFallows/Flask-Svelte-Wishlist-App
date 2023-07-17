@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 
 from data_access.models.user import User
 from data_access.models.wishlist import Wishlist
+from data_access.models.wishlist_share import WishlistShare
 from data_access.models.wishlist_item import WishlistItem
 from data_access.models.user_shared_wishlist import UserSharedWishlist
 
@@ -34,7 +35,7 @@ def get_all_for_user():
 @login_required
 @wishlists.route('/get_shared_with_user')
 def get_shared_with_user():
-    wishlists = Wishlist.get_shared_with_user(current_user.id)
+    wishlists = WishlistShare.get_shared_with_user(current_user.id)
     return jsonify(list(map(lambda w: w.as_dict(), wishlists)))
     
 @login_required
@@ -75,6 +76,7 @@ def share_wishlist():
         return "Not found", 404
     
     UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
+    Wishlist.set_shared(wishlist_id=wishlist.id)
     
     return jsonify({})
 

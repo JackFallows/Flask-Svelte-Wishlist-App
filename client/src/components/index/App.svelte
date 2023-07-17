@@ -8,6 +8,7 @@
 	let user_is_authenticated: boolean = name != null;
 
 	let wishlists: IWishlist[] = [];
+	let shared_wishlists: IWishlistShare[] = [];
 	
 	let loading_promise = get_wishlists();
 
@@ -17,6 +18,7 @@
 		}
 
 		wishlists = await Get<IWishlist[]>(Api.Wishlists.GetAllForUser);
+		shared_wishlists = await Get<IWishlistShare[]>(Api.Wishlists.GetSharedWithUser);
 	}
 </script>
 
@@ -47,6 +49,25 @@
 		<div class="col">
 			<Wishlist wishlist={w} on:delete={() => loading_promise = get_wishlists()} />
 		</div>
+		{/each}
+	</div>
+</div>
+{/if}
+
+{#if shared_wishlists.length > 0}
+<h2>Friends' lists</h2>
+<div class="container">
+	<div class="row row-cols-2">
+		{#each shared_wishlists as shared_wishlist(shared_wishlist.id)}
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">{shared_wishlist.owner_name}</h5>
+						<h6 class="card-subtitle mb-2 text-body-secondary">{shared_wishlist.owner_email}</h6>
+						<Wishlist wishlist={shared_wishlist} is_third_party />
+					</div>
+				</div>
+			</div>
 		{/each}
 	</div>
 </div>
