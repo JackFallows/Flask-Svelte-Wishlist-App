@@ -17,6 +17,12 @@ def get_wishlist(wishlist_id):
         return jsonify({})
     
     wishlist = Wishlist.get(wishlist_id=wishlist_id, user_id=current_user.id)
+    if wishlist == None:
+        wishlist = WishlistShare.get(user_id=current_user.id, wishlist_id=wishlist_id)
+        
+    if wishlist == None:
+        return "Not found", 404
+    
     wishlist_items = WishlistItem.get_all_for_wishlist(wishlist_id=wishlist.id)
     
     wishlist_merged = { **wishlist.as_dict(), **{ "wishlist_items": list(map(lambda wi: wi.as_dict(), wishlist_items)) } }

@@ -23,8 +23,8 @@ class Wishlist():
         
         with get_db_connection() as db:
             db.execute(
-                "UPDATE wishlist SET name = ?, shared = ?, deleted = ? WHERE rowid = ?",
-                (self.name, self.shared, self.deleted, self.id,)
+                "UPDATE wishlist SET name = ? WHERE rowid = ?",
+                (self.name, self.id,)
             )
             
             db.commit()

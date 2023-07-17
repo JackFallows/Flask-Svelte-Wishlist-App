@@ -81,8 +81,9 @@ class WishlistItem():
                 "SELECT wishlist_item.rowid "
                 "FROM wishlist_item "
                 "INNER JOIN wishlist ON wishlist.rowid = wishlist_item.wishlist_id "
-                "WHERE wishlist_item.rowid = ? AND wishlist.user_id = ?",
-                (wishlist_item_id, user_id,)
+                "LEFT OUTER JOIN user_shared_wishlist AS usw ON usw.wishlist_id = wishlist.rowid "
+                "WHERE wishlist_item.rowid = ? AND (wishlist.user_id = ? OR (usw.user_id = ? AND usw.accepted = 1 AND wishlist.shared = 1))",
+                (wishlist_item_id, user_id, user_id,)
             ).fetchone()
             
             if not wishlist_item:

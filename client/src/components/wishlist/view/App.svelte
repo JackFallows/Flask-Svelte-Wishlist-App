@@ -7,7 +7,11 @@
 
     let loading_promise: Promise<void> = load_wishlist();
 
-    let wishlist_name: string;
+    let wishlist: IWishlist;
+    let wishlist_as_share: IWishlistShare;
+
+    $: wishlist_as_share = (<IWishlistShare>wishlist)?.owner_name != null ? (<IWishlistShare>wishlist) : null;
+
     let wishlist_items: IWishlistItem[];
 
     async function load_wishlist() {
@@ -15,8 +19,7 @@
             return;
         }
 
-        const wishlist = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id))
-        wishlist_name = wishlist.name;
+        wishlist = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id))
         wishlist_items = wishlist.wishlist_items;
     }
 </script>
@@ -24,10 +27,15 @@
 {#await loading_promise}
     Loading...
 {:then}
-<h1>{wishlist_name}</h1>
+<h1>{wishlist.name}</h1>
+{#if wishlist_as_share != null}
+<h3 class="text-body-secondary">{wishlist_as_share.owner_name}</h3>
+<h4 class="text-body-secondary">{wishlist_as_share.owner_email}</h4>
+{:else}
 <a class="btn btn-outline-primary float-end" href="{ Views.Wishlist.Edit.append(wishlist_id).to_string() }">
     Edit
 </a>
+{/if}
 <h2>Items</h2>
 {#each wishlist_items as wishlist_item(wishlist_item)}
     <WishlistItem wishlist_item={wishlist_item} on:bought={() => loading_promise = load_wishlist()} />
