@@ -2,8 +2,10 @@ import json
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 
+from data_access.models.user import User
 from data_access.models.wishlist import Wishlist
 from data_access.models.wishlist_item import WishlistItem
+from data_access.models.user_shared_wishlist import UserSharedWishlist
 
 wishlists = Blueprint('wishlists', __name__)
 
@@ -30,6 +32,18 @@ def get_all_for_user():
     return jsonify(list(map(lambda w: w.as_dict(), wishlists)))
 
 @login_required
+@wishlists.route('/get_shared_with_user')
+def get_shared_with_user():
+    wishlists = Wishlist.get_shared_with_user(current_user.id)
+    return jsonify(list(map(lambda w: w.as_dict(), wishlists)))
+    
+@login_required
+@wishlists.route('/get_pending_shares_for_user')
+def get_pending_shares_for_user():
+    pending = UserSharedWishlist.get_pending_shares(current_user.id)
+    return jsonify(pending)
+
+@login_required
 @wishlists.route('/post', methods=["POST"])
 def post_wishlist():
     wishlist = json.loads(request.data)
@@ -48,6 +62,21 @@ def post_wishlist():
             order_number=wishlist_item.order_number)
     
     return jsonify(id=wishlist_id)
+
+@login_required
+@wishlists.route('/share', methods=["POST"])
+def share_wishlist():
+    request_json = json.loads(request.data)
+    
+    wishlist = Wishlist.get(request_json['wishlist_id'], current_user.id)
+    target_user = User.get_by_email(request_json['email'])
+
+    if not wishlist or not target_user:
+        return "Not found", 404
+    
+    UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
+    
+    return jsonify({})
 
 @login_required
 @wishlists.route('/put', methods=["PUT"])
@@ -88,6 +117,18 @@ def put_wishlist():
         else:
             wishlist_item.apply_changes()
             
+    return jsonify({})
+
+@login_required
+@wishlists.route('/accept_share/<wishlist_id>', methods=["PUT"])
+def accept_share(wishlist_id):
+    UserSharedWishlist.set_accepted(user_id=current_user.id, wishlist_id=wishlist_id, accepted=True)
+    return jsonify({})
+    
+@login_required
+@wishlists.route('/reject_share/<wishlist_id>', methods=["PUT"])
+def reject_share(wishlist_id):
+    UserSharedWishlist.set_accepted(user_id=current_user.id, wishlist_id=wishlist_id, accepted=False)
     return jsonify({})
 
 @login_required

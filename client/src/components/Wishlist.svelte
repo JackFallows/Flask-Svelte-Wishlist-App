@@ -1,18 +1,36 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import { Delete } from '../http';
+    import { Delete, Post } from '../http';
     import { Views, Api } from '../routes';
-    import ConfirmModal from './ConfirmModal.svelte';
+    import Modal from './Modal.svelte';
 
     export let wishlist: IWishlist;
 
-    let confirm_modal: ConfirmModal;
+    let delete_modal: Modal;
+    let share_modal: Modal;
+
+    let share_email: string;
 
     const dispatch = createEventDispatcher();
 
-    async function delete_wishlist() {
-        const confirmed = await confirm_modal.show();
+    async function share_wishlist() {
+        const confirmed = await share_modal.show();
+        if (!confirmed) {
+            return;
+        }
 
+        await Post(Api.Wishlists.Share, {
+            wishlist_id: wishlist.id,
+            email: share_email
+        });
+
+        share_email = "";
+
+        dispatch('shared');
+    }
+
+    async function delete_wishlist() {
+        const confirmed = await delete_modal.show();
         if (!confirmed) {
             return;
         }
@@ -27,12 +45,36 @@
     <button class="btn btn-outline-primary wishlist-button" on:click={() => location.href = Views.Wishlist.View.append(wishlist.id).to_string()}>
         <h2>{wishlist.name}</h2>
     </button>
+    <button class="btn btn-outline-warning" on:click={share_wishlist}>
+        <span class="fa-solid fa-share-nodes"></span>
+    </button>
     <button class="btn btn-outline-danger" on:click={delete_wishlist}>
         <span class="fa-solid fa-trash" style="pointer-events: none;"></span>
     </button>
 </div>
 
-<ConfirmModal bind:this={confirm_modal} />
+<Modal bind:this={delete_modal} id="delete-{wishlist.id}" is_danger={true}>
+    <span slot="header">
+        Are you sure?
+    </span>
+    <span slot="body">
+        This action cannot be undone.
+    </span>
+    <span slot="buttons" let:close_modal={close}>
+        <button class="btn btn-secondary" on:click={() => close()}>Cancel</button>
+        <button class="btn btn-danger" on:click={() => close("true")}>Delete</button>
+    </span>
+</Modal>
+
+<Modal bind:this={share_modal} id="share-{wishlist.id}">
+    <span slot="header">
+        Share wishlist '{wishlist.name}'
+    </span>
+    <span slot="body">
+        Enter the email address of the user you want to share this wishlist with:
+        <input type="email" class="form-control" bind:value={share_email} />
+    </span>
+</Modal>
 
 <style lang="less">
     .wishlist-button {

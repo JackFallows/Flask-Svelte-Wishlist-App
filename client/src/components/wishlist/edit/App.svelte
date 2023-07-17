@@ -2,13 +2,13 @@
     import { Get, Post, Put } from "../../../http"
     import { Api, Views } from "../../../routes";
     import WishlistItem from "../../WishlistItem.svelte";
-    import ConfirmModal from "../../ConfirmModal.svelte";
+    import Modal from "../../Modal.svelte";
 
     export let wishlist_id: number;
 
     let loading_promise = load_wishlist();
 
-    let confirm_modal: ConfirmModal;
+    let confirm_modal: Modal;
 
     let wishlist_name: string;
     let wishlist_items: IWishlistItem[] = [];
@@ -67,6 +67,7 @@
 
     async function remove_item(event: CustomEvent<IWishlistItem>) {
         const confirmed = await confirm_modal.show();
+        
         if (!confirmed) {
             return;
         }
@@ -104,11 +105,18 @@
 </div>
 {/await}
 
-<ConfirmModal bind:this={confirm_modal}>
+<Modal bind:this={confirm_modal} is_danger={true} id="delete">
+    <span slot="header">
+        Are you sure?
+    </span>
     <span slot="body">
         Once the wishlist is saved, this action cannot be undone.
     </span>
-</ConfirmModal>
+    <span slot="buttons" let:close_modal={close}>
+        <button class="btn btn-secondary" on:click={() => close()}>Cancel</button>
+        <button class="btn btn-danger" on:click={() => close("true")}>Delete</button>
+    </span>
+</Modal>
 
 <style lang="less">
     .form-container {

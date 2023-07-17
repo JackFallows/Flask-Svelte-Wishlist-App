@@ -50,8 +50,13 @@ const Api = {
     Wishlists: {
         Get: WishlistsApiRoot.append("get"),
         GetAllForUser: WishlistsApiRoot.append("get_all_for_user"),
+        GetSharedWithUser: WishlistsApiRoot.append("get_shared_with_user"),
+        GetPendingSharedForUser: WishlistsApiRoot.append("get_pending_shares_for_user"),
         Post: WishlistsApiRoot.append("post"),
+        Share: WishlistsApiRoot.append("share"),
         Put: WishlistsApiRoot.append("put"),
+        AcceptShare: WishlistsApiRoot.append("accept_share"),
+        RejectShare: WishlistsApiRoot.append("reject_share"),
         Delete: WishlistsApiRoot.append("delete")
     },
     WishlistItems: {
