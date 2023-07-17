@@ -8,7 +8,7 @@
 
     let loading_promise = load_wishlist();
 
-    let confirm_modal: { show: () => Promise<boolean> };
+    let confirm_modal: ConfirmModal;
 
     let wishlist_name: string;
     let wishlist_items: IWishlistItem[] = [];
@@ -104,7 +104,11 @@
 </div>
 {/await}
 
-<ConfirmModal bind:methods={confirm_modal} />
+<ConfirmModal bind:this={confirm_modal}>
+    <span slot="body">
+        Once the wishlist is saved, this action cannot be undone.
+    </span>
+</ConfirmModal>
 
 <style lang="less">
     .form-container {

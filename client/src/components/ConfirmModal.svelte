@@ -22,26 +22,32 @@
     }
 
     // methods exposed to parent components via bind
-    export const methods = {
-        show(): Promise<boolean> {
-            modal.showModal();
+    export function show(): Promise<boolean> {
+        modal.showModal();
 
-            const open_promise = new Promise<boolean>(r => {
-                promise_resolver = r;
-            });
+        const open_promise = new Promise<boolean>(r => {
+            promise_resolver = r;
+        });
 
-            return open_promise;
-        }
+        return open_promise;
     }
 </script>
 
 <dialog id="confirm-modal" class="dialog" on:close={close_modal_hander}>
     <div class="header">
-        <h3>Are you sure?</h3>
+        <h3>
+            <slot name="header">
+                Are you sure?
+            </slot>
+        </h3>
     </div>
     <div class="body">
-        <p>This action cannot be undone.</p>
-        <button class="btn btn-secondary" on:click={cancel_modal}>Cancel</button>
+        <div>
+            <slot name="body">
+                This action cannot be undone.
+            </slot>
+        </div>
+    <button class="btn btn-secondary" on:click={cancel_modal}>Cancel</button>
         <button class="btn btn-danger" on:click={confirm_modal}>Delete</button>
     </div>
 </dialog>

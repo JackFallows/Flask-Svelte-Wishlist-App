@@ -6,7 +6,7 @@
 
     export let wishlist: IWishlist;
 
-    let confirm_modal: { show: () => Promise<boolean> };
+    let confirm_modal: ConfirmModal;
 
     const dispatch = createEventDispatcher();
 
@@ -32,7 +32,7 @@
     </button>
 </div>
 
-<ConfirmModal bind:methods={confirm_modal} />
+<ConfirmModal bind:this={confirm_modal} />
 
 <style lang="less">
     .wishlist-button {
