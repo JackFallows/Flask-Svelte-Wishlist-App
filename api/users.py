@@ -34,10 +34,8 @@ def login():
     request_json = json.loads(request.data)
     
     user = User.get_by_email(email=request_json["email"])
-    if user is None:
-        return "Not found", 404
+    if user is None or not check_password_hash(user.internal_password, request_json["password"]):
+        return "Forbidden", 403
     
-    if check_password_hash(user.internal_password, request_json["password"]):
-        login_user(user)
-
+    login_user(user)
     return jsonify({})

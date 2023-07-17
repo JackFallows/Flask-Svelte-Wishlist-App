@@ -11,7 +11,7 @@ class UserSharedWishlist():
     def get_pending_shares(user_id):
         with get_db_connection() as db:
             pending = db.execute(
-                "SELECT u.name, u.email, usw.wishlist_id, w.link "
+                "SELECT u.name AS user_name, u.email, usw.wishlist_id, w.name AS wishlist_name "
                 "FROM user_shared_wishlist AS usw "
                 "INNER JOIN wishlist AS w ON w.rowid = usw.wishlist_id "
                 "INNER JOIN user AS u ON u.id = w.user_id "
@@ -22,10 +22,10 @@ class UserSharedWishlist():
             return list(
                 map(
                     lambda usw: {
-                        "name": usw[0],
+                        "user_name": usw[0],
                         "email": usw[1],
                         "wishlist_id": usw[2],
-                        "link": usw[3]
+                        "wishlist_name": usw[3]
                     },
                     pending
                 )
