@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Views, Api } from '../../routes';
-    import { Get, Put } from '../../http';
+    import { Get, Patch } from '../../http';
 
     export let internal_login_enabled: boolean;
     export let name: string;
@@ -27,12 +27,12 @@
     }
 
     async function accept_share(wishlist_id: number): Promise<void> {
-        await Put(Api.Wishlists.AcceptShare.append(wishlist_id), null);
+        await Patch(Api.Wishlists.PatchAcceptShare.append(wishlist_id), null);
         share_notifications_loading_promise = load_share_notifications();
     }
 
     async function reject_share(wishlist_id: number): Promise<void> {
-        await Put(Api.Wishlists.RejectShare.append(wishlist_id), null);
+        await Patch(Api.Wishlists.PatchRejectShare.append(wishlist_id), null);
         share_notifications_loading_promise = load_share_notifications();
     }
 </script>

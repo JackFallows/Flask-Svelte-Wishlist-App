@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import { Delete, Post } from '../http';
+    import { Delete, Patch } from '../http';
     import { Views, Api } from '../routes';
     import Modal from './Modal.svelte';
 
@@ -20,7 +20,7 @@
             return;
         }
 
-        await Post(Api.Wishlists.Share, {
+        await Patch(Api.Wishlists.PatchShare, {
             wishlist_id: wishlist.id,
             email: share_email
         });

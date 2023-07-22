@@ -71,22 +71,6 @@ def post_wishlist():
     return jsonify(id=wishlist_id)
 
 @login_required
-@wishlists.route('/share', methods=["POST"])
-def share_wishlist():
-    request_json = json.loads(request.data)
-    
-    wishlist = Wishlist.get(request_json['wishlist_id'], current_user.id)
-    target_user = User.get_by_email(request_json['email'])
-
-    if not wishlist or not target_user:
-        return "Not found", 404
-    
-    UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
-    Wishlist.set_shared(wishlist_id=wishlist.id)
-    
-    return jsonify({})
-
-@login_required
 @wishlists.route('/put', methods=["PUT"])
 def put_wishlist():
     wishlist_json = json.loads(request.data)
@@ -128,13 +112,29 @@ def put_wishlist():
     return jsonify({})
 
 @login_required
-@wishlists.route('/accept_share/<wishlist_id>', methods=["PUT"])
+@wishlists.route('/share', methods=["PATCH"])
+def share_wishlist():
+    request_json = json.loads(request.data)
+    
+    wishlist = Wishlist.get(request_json['wishlist_id'], current_user.id)
+    target_user = User.get_by_email(request_json['email'])
+
+    if not wishlist or not target_user:
+        return "Not found", 404
+    
+    UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
+    Wishlist.set_shared(wishlist_id=wishlist.id)
+    
+    return jsonify({})
+
+@login_required
+@wishlists.route('/accept_share/<wishlist_id>', methods=["PATCH"])
 def accept_share(wishlist_id):
     UserSharedWishlist.set_accepted(user_id=current_user.id, wishlist_id=wishlist_id, accepted=True)
     return jsonify({})
     
 @login_required
-@wishlists.route('/reject_share/<wishlist_id>', methods=["PUT"])
+@wishlists.route('/reject_share/<wishlist_id>', methods=["PATCH"])
 def reject_share(wishlist_id):
     UserSharedWishlist.set_accepted(user_id=current_user.id, wishlist_id=wishlist_id, accepted=False)
     return jsonify({})

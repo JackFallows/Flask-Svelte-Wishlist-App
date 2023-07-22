@@ -7,6 +7,11 @@ interface Window {
     wishlist_id?: number;
 }
 
+interface IRoute {
+    append(parameter: string | number): IRoute;
+    to_string(): string;
+}
+
 interface IWishlistItem {
     id: number;
     wishlist_id: number;

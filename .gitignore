@@ -4,5 +4,5 @@ client/public/build
 node_modules
 secure
 .DS_Store
-sqlite_db
+*.db
 client/public/library_content

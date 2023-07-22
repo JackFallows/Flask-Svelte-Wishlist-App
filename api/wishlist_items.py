@@ -21,7 +21,7 @@ def get_all_for_wishlist(wishlist_id):
     return jsonify(list(map(lambda w: w.as_dict(), wishlist_items)))
 
 @login_required
-@wishlist_items.route('/mark-as-bought/<wishlist_item_id>', methods=["PUT"])
+@wishlist_items.route('/mark-as-bought/<wishlist_item_id>', methods=["PATCH"])
 def mark_as_bought(wishlist_item_id):
     if not WishlistItem.get_is_available_to_user(wishlist_item_id=wishlist_item_id, user_id=current_user.id):
         return "Not found", 404

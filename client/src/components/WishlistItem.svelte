@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import { Put } from '../http';
+    import { Patch } from '../http';
     import { Api } from '../routes';
 
     export let wishlist_item: IWishlistItem;
@@ -21,7 +21,7 @@
     }
 
     async function mark_as_bought() {
-        await Put(Api.WishlistItems.MarkAsBought.append(wishlist_item.id), null);
+        await Patch(Api.WishlistItems.PatchMarkAsBought.append(wishlist_item.id), null);
 
         dispatch('bought');
     }
