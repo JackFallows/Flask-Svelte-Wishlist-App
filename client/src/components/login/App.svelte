@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { Post } from '../../http';
+    import { HttpResult, Post } from '../../http';
     import { Views, Api } from '../../routes';
 
     let email: string = "";
     let password: string = "";
 
-    let loading_promise: Promise<void>;
+    let loading_promise: Promise<HttpResult<void>>;
 
     async function external_login() {
         loading_promise = new Promise(() => {

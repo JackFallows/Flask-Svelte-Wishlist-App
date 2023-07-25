@@ -6,7 +6,7 @@ from os.path import isfile, join
 from flask import render_template
 from flask_login import current_user
 
-from decorators import ENABLE_INTERNAL_AUTH
+from decorators.auth import ENABLE_INTERNAL_AUTH
 
 bundle_files_path = 'client/public/build'
 
@@ -17,7 +17,7 @@ def get_bundle_files():
 def get_css():
     bundle_files = get_bundle_files()
     css_file = list(filter(lambda f: pathlib.Path(f).suffix == '.css', bundle_files))[0]
-    return join('build', css_file)
+    return "/" + join('build', css_file)
 
 def get_js():
     bundle_files = get_bundle_files()
@@ -54,6 +54,6 @@ def custom_render_template(template_name, **context):
         user=current_user,
         internal_login_enabled= None if ENABLE_INTERNAL_AUTH is None or ENABLE_INTERNAL_AUTH.lower() == 'false' else 'true',
         auto_bundles=get_js(),
-        global_css=get_css(),
+        module_css=get_css(),
         **context
     )

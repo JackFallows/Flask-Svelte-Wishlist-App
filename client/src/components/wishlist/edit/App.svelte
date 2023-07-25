@@ -18,7 +18,7 @@
             return;
         }
 
-        const wishlist = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id))
+        const wishlist = (await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id))).get_json();
         wishlist_name = wishlist.name;
         wishlist_items = wishlist.wishlist_items;
     }
@@ -26,10 +26,12 @@
     async function save_wishlist() {
         if (wishlist_id == null) {
             // create new
-            const wishlist = await Post<{ name: string, wishlist_items: IWishlistItem[] }, IWishlist>(
+            const wishlist_response = await Post<{ name: string, wishlist_items: IWishlistItem[] }, IWishlist>(
                 Api.Wishlists.Post, {
                     name: wishlist_name ?? "My wishlist", wishlist_items
                 });
+            
+            const wishlist = wishlist_response.get_json();
 
             wishlist_id = wishlist.id;
         } else {

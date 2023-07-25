@@ -6,18 +6,16 @@ from flask_login import login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from data_access.models.user import User
-from decorators import enable_internal_auth
+from decorators.auth import enable_internal_auth
+from decorators.validation import validate_user
 
 users = Blueprint('users', __name__)
 
 @enable_internal_auth
 @users.route("/create", methods=["POST"])
+@validate_user
 def sign_up():
     request_json = json.loads(request.data)
-    
-    # TODO: more validation
-    if request_json['password1'] != request_json['password2']:
-        return { "error": "Passwords do not match" }, 403
     
     User.create(
         id_=str(uuid.uuid4()),

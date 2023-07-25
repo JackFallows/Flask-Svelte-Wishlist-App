@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { Get } from '../../../http';
+    import { Get, HttpResult } from '../../../http';
     import { Api, Views } from '../../../routes';
     import WishlistItem from '../../WishlistItem.svelte';
 
     export let wishlist_id: number;
 
-    let loading_promise: Promise<void> = load_wishlist();
+    let loading_promise: Promise<any> = load_wishlist();
 
     let wishlist: IWishlist;
     let wishlist_as_share: IWishlistShare;
@@ -19,7 +19,7 @@
             return;
         }
 
-        wishlist = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id))
+        wishlist = (await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id))).get_json();
         wishlist_items = wishlist.wishlist_items;
     }
 </script>

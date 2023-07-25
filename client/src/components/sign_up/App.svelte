@@ -7,7 +7,7 @@
     let password1: string = "";
     let password2: string = "";
 
-    let loading_promise: Promise<void> = null;
+    let loading_promise: Promise<any> = null;
 
     async function sign_up() {
         const payload = {
@@ -17,13 +17,17 @@
             password2
         };
 
-        loading_promise = Post(Api.Users.Create, payload);
+        const response = await Post(Api.Users.Create, payload);
 
-        await loading_promise;
+        if (response.ok) {
+            await new Promise(() => {
+                location.href = Views.Home
+            });
 
-        await new Promise(() => {
-            location.href = Views.Home
-        });
+            return;
+        }
+
+        console.error(response.get_error());
     }
 </script>
 
@@ -42,5 +46,5 @@ Loading...
 <label for="password2" class="form-label">Confirm password</label>
 <input type="password" class="form-control" id="password2" bind:value={password2} />
 
-<button class="btn btn-success" id="sign-up" on:click={sign_up}>Sign up</button>
+<button class="btn btn-success" id="sign-up" on:click={() => loading_promise = sign_up()}>Sign up</button>
 {/await}
