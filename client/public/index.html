@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block scripts %}
-<script defer src='/build/index.bundle.js'></script>
+<script type="module" defer src='{{ auto_bundles["index"] }}'></script>
 {% endblock %}
 
 

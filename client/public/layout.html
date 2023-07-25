@@ -10,7 +10,9 @@
 
 	<link rel='icon' type='image/png' href='/favicon.png'>
 
-    <link rel="stylesheet" href="/build/global.css" />
+    <link rel="stylesheet" href="/gulp_build/global.css" />
+
+    <link rel="stylesheet" href="/{{ global_css }}" />
 
     {% block styles %}
     {% endblock %}
@@ -18,10 +20,6 @@
     <script async src="https://kit.fontawesome.com/2442daaea1.js" crossorigin="anonymous"></script>
     <script async src="/library_content/popper.min.js"></script>
     <script async src="/library_content/bootstrap.min.js"></script>
-
-    {% for bundle in auto_bundles %}
-    <script async src="/build/{{ bundle }}"></script>
-    {% endfor %}
 
     <script>
         window.internal_login_enabled = 
@@ -46,7 +44,7 @@
             {% endif %};
     </script>
 
-    <script defer src='/build/navbar.bundle.js'></script>
+    <script type="module" defer src='{{ auto_bundles["navbar"] }}'></script>
 
     {% block scripts %}
     {% endblock %}

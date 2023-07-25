@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
 
 {% block scripts %}
-<script defer src='/build/sign_up.bundle.js'></script>
+<script type="module" defer src='{{ auto_bundles["sign_up"] }}'></script>
 {% endblock %}
