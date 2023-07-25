@@ -7,6 +7,11 @@ interface Window {
     wishlist_id?: number;
 }
 
+interface IValidationState {
+    is_valid: boolean;
+    failures: { [property: string]: string }[]
+}
+
 interface IRoute {
     append(parameter: string | number): IRoute;
     to_string(): string;

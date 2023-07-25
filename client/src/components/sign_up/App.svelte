@@ -27,7 +27,7 @@
             return;
         }
 
-        console.error(response.get_error());
+        console.error(response.get_error<IValidationState>());
     }
 </script>
 

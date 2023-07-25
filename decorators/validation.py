@@ -9,8 +9,8 @@ def validate_user(func):
     @wraps(func)
     def inner(*args, **kwargs):
         request_json = json.loads(request.data)
-        valid, message = validate(request_json)
-        if not valid:
-            return jsonify({ "error": message }), 403
+        state = validate(request_json)
+        if not state.is_valid:
+            return jsonify(state.as_dict()), 403
         return func(*args, **kwargs)
     return inner
