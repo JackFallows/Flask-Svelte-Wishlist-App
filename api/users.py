@@ -7,13 +7,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from data_access.models.user import User
 from decorators.auth import enable_internal_auth
-from decorators.validation import validate_user
+from decorators.validation import validate
+
+from validators.user import validate as user_validator
 
 users = Blueprint('users', __name__)
 
 @enable_internal_auth
 @users.route("/create", methods=["POST"])
-@validate_user
+@validate(user_validator)
 def sign_up():
     request_json = json.loads(request.data)
     
