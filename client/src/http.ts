@@ -42,5 +42,5 @@ async function SendRequest<T, TResult>(method: string, route: IRoute, data: T): 
         return result;
     }
 
-    return null;
+    throw response;
 }

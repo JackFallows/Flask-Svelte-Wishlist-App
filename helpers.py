@@ -4,7 +4,7 @@ from os.path import isfile, join
 from flask import render_template
 from flask_login import current_user
 
-from decorators import ENABLE_INTERNAL_AUTH
+from decorators.auth import ENABLE_INTERNAL_AUTH
 
 bundle_files_path = 'client/public/build'
 

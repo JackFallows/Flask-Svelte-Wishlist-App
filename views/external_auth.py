@@ -6,7 +6,7 @@ from flask_login import login_user
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 
-from decorators import logout_required
+from decorators.auth import logout_required
 from data_access.models.user import User
 
 # Configuration

@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, url_for
 from flask_login import login_required, logout_user
 
-from decorators import enable_internal_auth, logout_required
+from decorators.auth import enable_internal_auth, logout_required
 from helpers import custom_render_template
 
 auth = Blueprint('auth', __name__)

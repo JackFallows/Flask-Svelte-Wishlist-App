@@ -17,13 +17,18 @@
             password2
         };
 
-        loading_promise = Post(Api.Users.Create, payload);
+        try {
 
-        await loading_promise;
+            loading_promise = Post(Api.Users.Create, payload);
 
-        await new Promise(() => {
-            location.href = Views.Home
-        });
+            await loading_promise;
+
+            // await new Promise(() => {
+            //     location.href = Views.Home
+            // });
+        } catch (response) {
+            console.log(response);
+        }
     }
 </script>
 

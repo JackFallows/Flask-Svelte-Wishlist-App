@@ -69,7 +69,7 @@ module.exports = {
 			filename: '[name].css'
 		})
 	],
-	devtool: prod ? false : 'inline-source-map',
+	devtool: prod ? false : 'source-map',
 	devServer: {
 		hot: true,
 		static: {
