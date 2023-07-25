@@ -23,7 +23,7 @@
             return [];
         }
 
-        return await Get(Api.Wishlists.GetPendingSharedForUser);
+        return Get<INotification[]>(Api.Wishlists.GetPendingSharedForUser).then(r => r.get_json());
     }
 
     async function accept_share(wishlist_id: number): Promise<void> {

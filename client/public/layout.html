@@ -12,14 +12,14 @@
 
     <link rel="stylesheet" href="/gulp_build/global.css" />
 
-    <link rel="stylesheet" href="/{{ global_css }}" />
+    <link rel="stylesheet" href="{{ module_css }}" />
 
     {% block styles %}
     {% endblock %}
 
     <script async src="https://kit.fontawesome.com/2442daaea1.js" crossorigin="anonymous"></script>
-    <script async src="/library_content/popper.min.js"></script>
-    <script async src="/library_content/bootstrap.min.js"></script>
+    <script src="/library_content/popper.min.js"></script>
+    <script src="/library_content/bootstrap.min.js"></script>
 
     <script>
         window.internal_login_enabled = 
