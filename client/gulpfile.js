@@ -39,7 +39,7 @@ function copyLibraryContent() {
 function copyGlobalStyles() {
     return src("./src/*.less")
         .pipe(less())
-        .pipe(dest("./public/build"));
+        .pipe(dest("./public/gulp_build"));
 }
 
 function buildProject() {

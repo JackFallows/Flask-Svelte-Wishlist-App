@@ -5,5 +5,5 @@
     window.wishlist_id = {{ 'null' if wishlist_id == None else wishlist_id }};
 </script>
 
-<script defer src='/build/view_wishlist.bundle.js'></script>
+<script type="module" defer src='{{ auto_bundles["view_wishlist"] }}'></script>
 {% endblock %}

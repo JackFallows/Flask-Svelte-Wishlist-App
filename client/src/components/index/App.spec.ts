@@ -25,6 +25,12 @@ test('no wishlists - text and button shown', async ({ mount, page }) => {
             body: JSON.stringify([])
         });
     });
+    await page.route("/api/wishlists/get_shared_with_user", async (route) => {
+        await route.fulfill({
+            status: 200,
+            body: JSON.stringify([])
+        });
+    });
 
     const component = await mount(App, {
         props: {
@@ -41,6 +47,12 @@ test('one wishlist - wishlist component shown', async ({ mount, page }) => {
         await route.fulfill({
             status: 200,
             body: JSON.stringify([{ id: 1, name: "My test wishlist" }])
+        });
+    });
+    await page.route("/api/wishlists/get_shared_with_user", async (route) => {
+        await route.fulfill({
+            status: 200,
+            body: JSON.stringify([])
         });
     });
 
