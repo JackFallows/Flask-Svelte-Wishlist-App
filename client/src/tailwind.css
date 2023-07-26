@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.icon-button {
+    @apply rounded-full h-10 w-10 text-center hover:bg-purple-600 hover:text-white transition-all text-3xl;
+}
+
+.button {
+    @apply bg-white hover:bg-purple-600 text-purple-600 hover:text-white rounded-full transition-all p-1;
+}
+
+.button-group {
+    @apply bg-white rounded-full h-10 flex items-center px-0.5 space-x-2;
+}

@@ -33,18 +33,26 @@
 
 {#await loading_promise}
 Loading...
-{:then} 
-<label for="email" class="form-label">Email address</label>
-<input type="email" class="form-control" id="email" bind:value={email} />
+{:then}
+<div>
+    <label for="email" class="form-label">Email address</label>
+    <input type="email" class="form-control" id="email" bind:value={email} />
+</div>
 
-<label for="name" class="form-label">Name</label>
-<input type="text" class="form-control" id="name" bind:value={name} />
+<div>
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" bind:value={name} />
+</div>
 
-<label for="password1" class="form-label">Password</label>
-<input type="password" class="form-control" id="password1" bind:value={password1} />
+<div>
+    <label for="password1" class="form-label">Password</label>
+    <input type="password" class="form-control" id="password1" bind:value={password1} />
+</div>
 
-<label for="password2" class="form-label">Confirm password</label>
-<input type="password" class="form-control" id="password2" bind:value={password2} />
+<div>
+    <label for="password2" class="form-label">Confirm password</label>
+    <input type="password" class="form-control" id="password2" bind:value={password2} />
+</div>
 
 <button class="btn btn-success" id="sign-up" on:click={() => loading_promise = sign_up()}>Sign up</button>
 {/await}

@@ -1,16 +1,10 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-
     export let id: string;
     export let is_danger: boolean = false;
 
     let promise_resolver: (val?: string) => void;
 
     let modal: HTMLDialogElement;
-
-    onMount(() => {
-        modal = <HTMLDialogElement>document.getElementById(`modal-${id}`);
-    });
 
     function close_modal(return_value?: string) {
         modal.close(return_value);
@@ -34,7 +28,7 @@
     }
 </script>
 
-<dialog id="modal-{id}" class="dialog {is_danger ? "dialog-danger" : "dialog-primary"}" on:close={close_modal_handler}>
+<dialog id="modal-{id}" class="dialog {is_danger ? "dialog-danger" : "dialog-primary"}" bind:this={modal} on:close={close_modal_handler}>
     <div class="header">
         <h3>
             <slot name="header"></slot>

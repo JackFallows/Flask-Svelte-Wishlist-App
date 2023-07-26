@@ -1,4 +1,6 @@
 <script lang="ts">
+	import '../../tailwind.css';
+
 	import Wishlist from '../Wishlist.svelte';
 	import { Get } from '../../http';
     import { Api, Views } from "../../routes";
@@ -24,10 +26,10 @@
 
 <main>
 	{#if !user_is_authenticated}
-	<h1>Hello there!</h1>
+	<h1 class="text-purple-600">Hello there!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 	{:else}
-	<h1>Hello {name}!</h1>
+	<h1 class="text-purple-600">Hello {name}!</h1>
 	{/if}
 </main>
 
@@ -76,7 +78,7 @@
 {/await}
 {/if}
 
-<style>
+<style lang="postcss">
 	main {
 		text-align: center;
 		padding: 1em;
@@ -85,7 +87,6 @@
 	}
 
 	h1 {
-		color: #ff3e00;
 		text-transform: uppercase;
 		font-size: 4em;
 		font-weight: 100;
