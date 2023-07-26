@@ -26,6 +26,8 @@
     let notifications_dropdown_button: HTMLElement;
     let notifications_dropdown: DropDownMenu;
 
+    let notifications: INotification[];
+
     let share_notifications_loading_promise: Promise<INotification[]> = load_share_notifications();
 
     async function load_share_notifications(): Promise<INotification[]> {
@@ -33,7 +35,9 @@
             return [];
         }
 
-        return Get<INotification[]>(Api.Wishlists.GetPendingSharedForUser).then(r => r.get_json());
+        notifications = await Get<INotification[]>(Api.Wishlists.GetPendingSharedForUser).then(r => r.get_json());
+
+        return notifications;
     }
 
     async function accept_share(wishlist_id: number): Promise<void> {
@@ -53,13 +57,13 @@
         {#if user_is_authenticated}
             <a class="button" href="{ Views.Wishlist.Create.to_string() }">Create wishlist</a>
             <div class="relative">
-                <button class="icon-button" type="button" aria-label="Notifications button" bind:this={notifications_dropdown_button} on:click={() => notifications_dropdown.toggle()}>
+                <button class="icon-button {notifications?.length > 0 ? 'text-orange-600' : ''}" type="button" aria-label="Notifications button" bind:this={notifications_dropdown_button} on:click={() => notifications_dropdown.toggle()}>
                     <span class="fa-solid fa-bell pointer-events-none"></span>
                 </button>
                 <DropDownMenu bind:this={notifications_dropdown} button={notifications_dropdown_button} classes="right-0 w-80">
                     {#await share_notifications_loading_promise}
                         Loading...
-                    {:then notifications}
+                    {:then}
                         {#if notifications.length === 0}
                             <p>
                                 No notifications
@@ -69,13 +73,15 @@
                             <div>
                                 <p>{notification.user_name} has given you access to '{notification.wishlist_name}'</p>
                                 <p>Accept?</p>
-                                <div class="button-group">
-                                    <button class="button" on:click={() => accept_share(notification.wishlist_id)}>
-                                        <span class="fa-solid fa-check"></span> Yes
-                                    </button>
-                                    <button class="button" on:click={() => reject_share(notification.wishlist_id)}>
-                                        <span class="fa-solid fa-xmark"></span> No
-                                    </button>
+                                <div class="inline-block">
+                                    <div class="button-group">
+                                        <button class="button" on:click={() => accept_share(notification.wishlist_id)}>
+                                            <span class="fa-solid fa-check"></span> Yes
+                                        </button>
+                                        <button class="button" on:click={() => reject_share(notification.wishlist_id)}>
+                                            <span class="fa-solid fa-xmark"></span> No
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         {/each}
@@ -83,7 +89,7 @@
                 </DropDownMenu>
             </div>
             <div class="relative h-10">
-                <button class="rounded-full h-10 w-10 hover:bg-purple-600" type="button" bind:this={user_dropdown_button} on:click={() => user_dropdown.toggle()}>
+                <button class="rounded-full h-10 w-10 hover:bg-purple-600 transition-all" type="button" bind:this={user_dropdown_button} on:click={() => user_dropdown.toggle()}>
                     <img src="{ profile_pic }" alt="Hi, {name}" width="30" height="30" class="rounded-full mx-auto pointer-events-none">
                 </button>
                 <DropDownMenu bind:this={user_dropdown} button={user_dropdown_button} classes="right-0 w-48">
