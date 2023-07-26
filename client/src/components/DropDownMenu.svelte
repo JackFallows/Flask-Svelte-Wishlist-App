@@ -20,7 +20,7 @@
 
 <svelte:window on:click={auto_hide} />
 
-<div class="{visible ? 'block' : 'hidden'} absolute bg-white shadow-lg border-slate-400 border p-2 {classes}" bind:this={dropdown}>
+<div class="{visible ? 'block' : 'hidden'} absolute bg-white shadow-lg border-slate-400 border p-2 rounded-md {classes}" bind:this={dropdown}>
     <slot>
     </slot>
 </div>
