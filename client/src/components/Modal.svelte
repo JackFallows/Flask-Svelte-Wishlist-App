@@ -1,4 +1,6 @@
 <script lang="ts">
+    import '../tailwind.css';
+
     export let id: string;
     export let is_danger: boolean = false;
 
@@ -28,39 +30,26 @@
     }
 </script>
 
-<dialog id="modal-{id}" class="dialog {is_danger ? "dialog-danger" : "dialog-primary"}" bind:this={modal} on:close={close_modal_handler}>
-    <div class="header">
-        <h3>
-            <slot name="header"></slot>
-        </h3>
-    </div>
-    <div class="body">
-        <div>
-            <slot name="body"></slot>
+<dialog id="modal-{id}" class="w-96 h-96 rounded-md border-2 shadow-md {is_danger ? 'border-red-600' : 'border-slate-200'}" bind:this={modal} on:close={close_modal_handler}>
+    <div class="flex flex-col h-full">
+        <div class="{is_danger ? 'bg-red-600' : 'bg-slate-200'} p-2">
+            <h1 class="text-xl {is_danger ? 'text-white' : 'text-black'}">
+                <slot name="header"></slot>
+            </h1>
         </div>
-        <slot name="buttons" {close_modal}>
-            <button class="btn btn-secondary" on:click={() => close_modal()}>Cancel</button>
-            <button class="btn btn-{is_danger ? "danger" : "primary"}" on:click={() => close_modal("true")}>Ok</button>
-        </slot>
-</div>
+        <div class="p-2 grow">
+            <div>
+                <slot name="body"></slot>
+            </div>
+        </div>
+        <div class="p-2">
+            <slot name="buttons" {close_modal}>
+                <button class="button" on:click={() => close_modal()}>Cancel</button>
+                <button class="button" on:click={() => close_modal("true")}>Ok</button>
+            </slot>
+        </div>
+    </div>
 </dialog>
 
 <style lang=less>
-    .dialog {
-        &.dialog-danger {
-            .header {
-                background-color: #dc3545;
-            }
-        }
-
-        &.dialog-primary {
-            .header {
-                background-color: #0d6efd;
-            }
-        }
-
-        .header {
-            color: #fff;
-        }
-    }
 </style>

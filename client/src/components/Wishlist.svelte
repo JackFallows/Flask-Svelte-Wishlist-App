@@ -67,8 +67,8 @@
         This action cannot be undone.
     </span>
     <span slot="buttons" let:close_modal={close}>
-        <button class="btn btn-secondary" on:click={() => close()}>Cancel</button>
-        <button class="btn btn-danger" on:click={() => close("true")}>Delete</button>
+        <button class="button" on:click={() => close()}>Cancel</button>
+        <button class="danger-button" on:click={() => close("true")}>Delete</button>
     </span>
 </Modal>
 
