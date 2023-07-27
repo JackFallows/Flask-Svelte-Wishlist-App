@@ -1,4 +1,6 @@
 <script lang="ts">
+    import '../../../tailwind.css';
+
     import { Get, Post, Put } from "../../../http"
     import { Api, Views } from "../../../routes";
     import WishlistItem from "../../WishlistItem.svelte";
@@ -89,21 +91,23 @@
 {#await loading_promise}
 <p>Loading...</p>
 {:then}
-<div class="form-container">
-    <div class="form-section-left">
-        <div class="mb-3">
-            <label class="form-label" for="wishlist-name">Wishlist name</label>
-            <input class="form-control" id="wishlist-name" placeholder="My wishlist" bind:value={wishlist_name} />
+<div class="flex space-x-3">
+    <div class="grow">
+        <div class="">
+            <label class="" for="wishlist-name">Wishlist name</label>
+            <input class="text-input" id="wishlist-name" placeholder="My wishlist" bind:value={wishlist_name} />
         </div>
-        <h2>Items</h2>
-        <button class="btn btn-primary mb-3" id="add-item-button" on:click={() => add_item()}>Add item</button>
-        {#each wishlist_items as wishlist_item(wishlist_item)}
-            <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={remove_item} />
-        {/each}
+        <h2 class="mt-2.5 text-lg">Items</h2>
+        <button class="button my-2.5" id="add-item-button" on:click={() => add_item()}>Add item</button>
+        <div class="flex flex-col space-y-3">
+            {#each wishlist_items as wishlist_item(wishlist_item)}
+                <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={remove_item} />
+            {/each}
+        </div>
     </div>
-    <div class="form-section-right">
-        <button class="btn btn-outline-success" style="margin-bottom: 0" on:click={() => loading_promise = save_wishlist()}>Save wishlist</button>
-    </div>
+    <aside class="h-screen sticky top-0">
+        <button class="success-button" on:click={() => loading_promise = save_wishlist()}>Save wishlist</button>
+    </aside>
 </div>
 {/await}
 
@@ -115,26 +119,10 @@
         Once the wishlist is saved, this action cannot be undone.
     </span>
     <span slot="buttons" let:close_modal={close}>
-        <button class="btn btn-secondary" on:click={() => close()}>Cancel</button>
-        <button class="btn btn-danger" on:click={() => close("true")}>Delete</button>
+        <button class="button" on:click={() => close()}>Cancel</button>
+        <button class="danger-button" on:click={() => close("true")}>Delete</button>
     </span>
 </Modal>
 
 <style lang="less">
-    .form-container {
-        display: flex;
-
-        padding-top: 20px;
-
-        .form-section-left {
-            flex-grow: 1;
-            padding-right: 120px;
-        }
-
-        .form-section-right {
-            flex-grow: 0;
-            right: 8px;
-            position: fixed;
-        }
-    }
 </style>

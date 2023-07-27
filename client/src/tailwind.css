@@ -14,10 +14,18 @@
     @apply bg-white min-w-[36px] border-red-600 border-2 text-red-600 hover:text-white hover:bg-red-600 transition-all rounded-full p-1;
 }
 
+.success-button {
+    @apply bg-white min-w-[36px] border-green-600 border-2 text-green-600 hover:text-white hover:bg-green-600 transition-all rounded-full p-1;
+}
+
 .button-group {
     @apply bg-white rounded-full flex items-center p-0.5 space-x-2 border-2 border-purple-600;
 }
 
 .button-group > .button {
     @apply border-white border-0;
+}
+
+.text-input {
+    @apply p-2 border-2 border-slate-300 rounded-md w-full md:w-96;
 }

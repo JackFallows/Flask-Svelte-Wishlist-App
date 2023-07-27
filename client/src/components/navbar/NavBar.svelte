@@ -51,7 +51,7 @@
     }
 </script>
 
-<nav class="fixed top-0 flex w-screen bg-slate-300 h-16 items-center text-xl px-3 justify-between shadow-md">
+<nav class="z-50 fixed top-0 flex w-screen bg-slate-300 h-16 items-center text-xl px-3 justify-between shadow-md">
     <a class="icon-button" aria-current="page" href="{ Views.Home }" aria-label="Home button"><span class="fa-solid fa-home"></span></a>
     <div class="flex space-x-3 items-center">
         {#if user_is_authenticated}

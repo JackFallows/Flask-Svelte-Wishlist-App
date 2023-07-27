@@ -1,4 +1,6 @@
 <script lang="ts">
+    import '../tailwind.css';
+
     import { createEventDispatcher } from 'svelte';
     import { Patch } from '../http';
     import { Api } from '../routes';
@@ -27,16 +29,18 @@
     }
 </script>
 
-<div class="alert alert-secondary" id="{html_id}">
+<div class="rounded-md bg-slate-200 p-2" id="{html_id}">
     {#if is_edit}
-    <div class="view-container">
-        <div class="view-left-column">
-            <input class="form-control" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
-            <textarea class="form-control" bind:value={notes} id="{html_id + "-notes"}" placeholder="Notes"></textarea>
+    <div class="flex items-center space-x-3">
+        <div class="grow">
+            <div class="flex items-start space-y-3 flex-col lg:flex-row lg:space-y-0 lg:space-x-3">
+                <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
+                <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Notes"></textarea>
+            </div>
         </div>
         <div class="view-right-column">
-            <button class="btn btn-outline-danger" on:click={() => dispatch('delete', wishlist_item)}>
-                <span class="fa-solid fa-trash" style="pointer-events: none;"></span>
+            <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
+                <span class="fa-solid fa-trash pointer-events-none"></span>
             </button>
         </div>
     </div>
@@ -49,8 +53,8 @@
             </div>
         </div>
         <div class="view-right-column">
-            <button class="btn btn-light" on:click={mark_as_bought}>
-                <span class="fa-solid fa-basket-shopping" style="pointer-events: none"></span>
+            <button class="icon-button" on:click={mark_as_bought}>
+                <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
             </button>
         </div>
     </div>

@@ -77,7 +77,7 @@
         Share wishlist '{wishlist.name}'
     </span>
     <span slot="body">
-        Enter the email address of the user you want to share this wishlist with:
+        Enter the email address of the user with whom you want to share this wishlist:
         <input type="email" class="form-control" bind:value={share_email} />
     </span>
 </Modal>
