@@ -38,21 +38,21 @@
                 <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Notes"></textarea>
             </div>
         </div>
-        <div class="view-right-column">
+        <div class="">
             <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
                 <span class="fa-solid fa-trash pointer-events-none"></span>
             </button>
         </div>
     </div>
 {:else}
-    <div class="view-container">
-        <div class="view-left-column">
-            <a href="{link}">{link}</a>
+    <div class="flex items-center space-x-3">
+        <div class="grow">
+            <a class="text-lg text-black" href="{link}">{link}</a>
             <div>
                 {notes}
             </div>
         </div>
-        <div class="view-right-column">
+        <div class="text-base text-slate-600">
             <button class="icon-button" on:click={mark_as_bought}>
                 <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
             </button>
@@ -62,16 +62,4 @@
 </div>
 
 <style lang="less">
-    .view-container {
-        display: flex;
-        align-items: center;
-
-        .view-left-column {
-            flex-grow: 1;
-        }
-
-        .view-right-column {
-            flex-grow: 0;
-        }
-    }
 </style>

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .icon-button {
-    @apply rounded-full h-10 w-10 text-center hover:bg-purple-600 hover:text-white transition-all text-3xl;
+    @apply rounded-full h-10 w-10 text-center text-black hover:bg-purple-600 hover:text-white transition-all text-3xl;
 }
 
 .button {
