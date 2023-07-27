@@ -47,10 +47,10 @@
         <h2>{wishlist.name}</h2>
     </button>
     {#if !is_third_party}
-    <button class="btn btn-outline-warning" on:click={share_wishlist}>
+    <button class="btn btn-outline-warning" aria-label="Share button" on:click={share_wishlist}>
         <span class="fa-solid fa-share-nodes"></span>
     </button>
-    <button class="btn btn-outline-danger" on:click={delete_wishlist}>
+    <button class="btn btn-outline-danger" aria-label="Delete button" on:click={delete_wishlist}>
         <span class="fa-solid fa-trash" style="pointer-events: none;"></span>
     </button>
     {/if}

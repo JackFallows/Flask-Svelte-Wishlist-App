@@ -37,44 +37,51 @@
 {#await loading_promise}
 <p>Loading...</p>
 {:then}
-<h2>Your wishlists</h2>
-
-{#if wishlists.length === 0}
-<div class="text-center">
-	<p>You have no wishlists. Click the button below to create one.</p>
-	<a class="btn btn-primary" href="{Views.Wishlist.Create.to_string()}" id="no-wishlists-create-button">Create wishlist</a>
-</div>
-{:else}
-<div class="container">
-	<div class="row row-cols-2">
-		{#each wishlists as w (w.id)}
-		<div class="col">
-			<Wishlist wishlist={w} on:delete={() => loading_promise = get_wishlists()} />
+<div class="flex flex-col space-y-3 md:flex-row md:space-x-3 md:space-y-0">
+	<div class="grow">
+		<div class="rounded-md border-2 border-slate-200">
+			<div class="bg-slate-200 text-center p-2">
+				<h2>Your wishlists</h2>
+			</div>
+			<div class="p-2">
+				{#if wishlists.length === 0}
+				<div class="text-center">
+					<p>You have no wishlists. Click the button below to create one.</p>
+					<a class="button" href="{Views.Wishlist.Create.to_string()}" id="no-wishlists-create-button">Create wishlist</a>
+				</div>
+				{:else}
+				<div class="">
+					{#each wishlists as w (w.id)}
+					<div class="">
+						<Wishlist wishlist={w} on:delete={() => loading_promise = get_wishlists()} />
+					</div>
+					{/each}
+				</div>
+				{/if}
+			</div>
 		</div>
-		{/each}
 	</div>
-</div>
-{/if}
-
-{#if shared_wishlists.length > 0}
-<h2>Friends' lists</h2>
-<div class="container">
-	<div class="row row-cols-2">
-		{#each shared_wishlists as shared_wishlist(shared_wishlist.id)}
-			<div class="col">
+	{#if shared_wishlists.length > 0}
+	<div class="grow">
+		<div class="rounded-md border-2 border-slate-200">
+			<div class="bg-slate-200 text-center p-2">
+				<h2>Friends' lists</h2>
+			</div>
+			<div class="p-2">
+				{#each shared_wishlists as shared_wishlist(shared_wishlist.id)}
 				<div class="card">
 					<div class="card-body">
-						<h5 class="card-title">{shared_wishlist.owner_name}</h5>
-						<h6 class="card-subtitle mb-2 text-body-secondary">{shared_wishlist.owner_email}</h6>
+						<p class="card-title">{shared_wishlist.owner_name}</p>
+						<p class="card-subtitle mb-2 text-body-secondary">{shared_wishlist.owner_email}</p>
 						<Wishlist wishlist={shared_wishlist} is_third_party />
 					</div>
 				</div>
+				{/each}
 			</div>
-		{/each}
+		</div>
 	</div>
+	{/if}
 </div>
-{/if}
-
 {/await}
 {/if}
 
