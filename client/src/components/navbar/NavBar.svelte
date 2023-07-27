@@ -89,9 +89,15 @@
                 </DropDownMenu>
             </div>
             <div class="relative h-10">
+                {#if profile_pic != null}
                 <button class="rounded-full h-10 w-10 hover:bg-purple-600 transition-all" type="button" bind:this={user_dropdown_button} on:click={() => user_dropdown.toggle()}>
                     <img src="{ profile_pic }" alt="Hi, {name}" width="30" height="30" class="rounded-full mx-auto pointer-events-none">
                 </button>
+                {:else}
+                <button class="icon-button" aria-label="Hi, {name}" bind:this={user_dropdown_button} on:click={() => user_dropdown.toggle()}>
+                    <span class="fa-solid fa-user pointer-events-none"></span>
+                </button>
+                {/if}
                 <DropDownMenu bind:this={user_dropdown} button={user_dropdown_button} classes="right-0 w-48">
                     <a class="button w-full block" href="{ Views.Auth.Logout.to_string() }">Logout</a>
                 </DropDownMenu>

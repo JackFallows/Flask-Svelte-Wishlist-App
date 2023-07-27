@@ -50,7 +50,7 @@
 					<a class="button" href="{Views.Wishlist.Create.to_string()}" id="no-wishlists-create-button">Create wishlist</a>
 				</div>
 				{:else}
-				<div class="">
+				<div class="flex flex-col space-y-3">
 					{#each wishlists as w (w.id)}
 					<div class="">
 						<Wishlist wishlist={w} on:delete={() => loading_promise = get_wishlists()} />
@@ -69,12 +69,12 @@
 			</div>
 			<div class="p-2">
 				{#each shared_wishlists as shared_wishlist(shared_wishlist.id)}
-				<div class="card">
-					<div class="card-body">
-						<p class="card-title">{shared_wishlist.owner_name}</p>
-						<p class="card-subtitle mb-2 text-body-secondary">{shared_wishlist.owner_email}</p>
-						<Wishlist wishlist={shared_wishlist} is_third_party />
+				<div class="rounded-md border border-slate-200 p-2">
+					<div>
+						<span class="text-base text-black">{shared_wishlist.owner_name}</span>
+						<span class="text-sm text-slate-500">{shared_wishlist.owner_email}</span>
 					</div>
+					<Wishlist wishlist={shared_wishlist} is_third_party />
 				</div>
 				{/each}
 			</div>

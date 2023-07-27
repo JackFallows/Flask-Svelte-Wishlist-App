@@ -1,4 +1,6 @@
 <script lang="ts">
+    import '../tailwind.css';
+
     import { createEventDispatcher } from 'svelte';
     import { Delete, Patch } from '../http';
     import { Views, Api } from '../routes';
@@ -42,15 +44,15 @@
     }
 </script>
 
-<div class="mb-3 btn-group" role="group" style="width: 100%" id="wishlist-{wishlist.id}">
-    <button class="btn btn-outline-primary wishlist-button" on:click={() => location.href = Views.Wishlist.View.append(wishlist.id).to_string()}>
+<div class="flex flex-nowrap space-x-3" style="width: 100%" id="wishlist-{wishlist.id}">
+    <button class="button grow" on:click={() => location.href = Views.Wishlist.View.append(wishlist.id).to_string()}>
         <h2>{wishlist.name}</h2>
     </button>
     {#if !is_third_party}
-    <button class="btn btn-outline-warning" aria-label="Share button" on:click={share_wishlist}>
+    <button class="icon-button" aria-label="Share button" on:click={share_wishlist}>
         <span class="fa-solid fa-share-nodes"></span>
     </button>
-    <button class="btn btn-outline-danger" aria-label="Delete button" on:click={delete_wishlist}>
+    <button class="icon-button" aria-label="Delete button" on:click={delete_wishlist}>
         <span class="fa-solid fa-trash" style="pointer-events: none;"></span>
     </button>
     {/if}
@@ -81,7 +83,5 @@
 </Modal>
 
 <style lang="less">
-    .wishlist-button {
-        width: 100%;
-    }
+    
 </style>
