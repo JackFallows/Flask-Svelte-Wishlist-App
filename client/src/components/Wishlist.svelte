@@ -44,9 +44,12 @@
     }
 </script>
 
-<div class="flex flex-nowrap space-x-3" style="width: 100%" id="wishlist-{wishlist.id}">
-    <button class="button grow" on:click={() => location.href = Views.Wishlist.View.append(wishlist.id).to_string()}>
-        <h2>{wishlist.name}</h2>
+<div class="flex flex-nowrap space-x-3 w-full" id="wishlist-{wishlist.id}">
+    <button class="button grow flex items-center relative" on:click={() => location.href = Views.Wishlist.View.append(wishlist.id).to_string()}>
+        {#if wishlist.shared}
+        <span class="fa-solid fa-users absolute right-2.5"></span>
+        {/if}
+        <h2 class="grow">{wishlist.name}</h2>
     </button>
     {#if !is_third_party}
     <button class="icon-button" aria-label="Share button" on:click={share_wishlist}>
