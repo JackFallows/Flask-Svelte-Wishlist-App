@@ -34,15 +34,30 @@
 {#await loading_promise}
 Loading...
 {:then}
-<button class="btn btn-outline-danger" on:click={external_login}>Log in with Google</button>
+<div class="flex flex-col space-y-3 md:flex-row md:items-center md:space-x-10">
+    <div>
+        <h1 class="text-2xl">Log in</h1>
 
-<h2>Or</h2>
+        <div class="mb-2">
+            <label class="" for="email">Email address</label><br />
+            <input class="text-input" id="email" type="email" bind:value={email} />
+        </div>
+        
+        <div class="mb-2">
+            <label class="" for="password">Password</label><br />
+            <input class="text-input" id="password" type="password" bind:value={password} />
+        </div>
+        
+        <button class="button" on:click={internal_login}>Log in</button>
+    </div>
+    <div class="text-center md:text-left">
+        <span class="text-4xl text-purple-600">OR</span>
+    </div>
+    <div class="text-center md:text-left">
+        <button class="danger-button" on:click={external_login}>Log in with Google</button>
+    </div>
+</div>
 
-<label class="form-label" for="email">Email address</label>
-<input class="form-control" id="email" type="email" bind:value={email} />
 
-<label class="form-label" for="password">Password</label>
-<input class="form-control" id="password" type="password" bind:value={password} />
 
-<button class="btn btn-primary" on:click={internal_login}>Log in</button>
 {/await}

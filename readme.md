@@ -1,4 +1,4 @@
-# Wishlist web app written in Python/Flask with a Svelte frontend
+# Wishlist web app written in Python/Flask with a Svelte and Tailwind frontend
 
 Build client code with:
 ```

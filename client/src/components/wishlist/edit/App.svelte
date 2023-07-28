@@ -94,7 +94,7 @@
 <div class="flex space-x-3">
     <div class="grow">
         <div class="">
-            <label class="" for="wishlist-name">Wishlist name</label>
+            <label class="" for="wishlist-name">Wishlist name</label><br />
             <input class="text-input" id="wishlist-name" placeholder="My wishlist" bind:value={wishlist_name} />
         </div>
         <h2 class="mt-2.5 text-lg">Items</h2>

@@ -27,15 +27,6 @@ function build() {
     return exec("npm run build-debug", processCallback);
 }
 
-function copyLibraryContent() {
-    return src([
-        "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-        "./node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "./node_modules/@popperjs/core/dist/umd/popper.min.js"
-    ])
-    .pipe(dest("./public/library_content"));
-}
-
 function copyGlobalStyles() {
     return src("./src/*.less")
         .pipe(less())
@@ -46,5 +37,5 @@ function buildProject() {
     watch(["./src/**/*", "!./src/**/*.spec.ts"], { ignoreInitial: false }, series(copyGlobalStyles, validateTs, build));
 }
 
-const _default = series(copyLibraryContent, buildProject);
+const _default = buildProject;
 export { _default as default };
