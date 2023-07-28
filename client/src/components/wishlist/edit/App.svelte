@@ -105,7 +105,7 @@
             {/each}
         </div>
     </div>
-    <aside class="h-screen sticky top-0">
+    <aside class="">
         <button class="success-button" on:click={() => loading_promise = save_wishlist()}>Save wishlist</button>
     </aside>
 </div>

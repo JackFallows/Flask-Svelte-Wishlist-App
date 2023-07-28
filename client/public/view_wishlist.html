@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 
+{% block global_script %}
+<script>
+    window.page_title = "View wishlist"
+</script>
+{% endblock %}
+
 {% block scripts %}
 <script>
     window.wishlist_id = {{ 'null' if wishlist_id == None else wishlist_id }};

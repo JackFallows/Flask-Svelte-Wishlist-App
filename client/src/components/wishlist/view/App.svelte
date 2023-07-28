@@ -48,7 +48,7 @@
     </div>
 
     {#if wishlist_as_share == null}
-    <aside class="h-screen sticky top-0">
+    <aside class="">
         <a class="button" href="{ Views.Wishlist.Edit.append(wishlist_id).to_string() }">
             Edit wishlist
         </a>

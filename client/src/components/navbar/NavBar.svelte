@@ -6,6 +6,7 @@
 
     import DropDownMenu from '../DropDownMenu.svelte';
 
+    export let page: string = "";
     export let internal_login_enabled: boolean;
     export let name: string;
     export let profile_pic: string;
@@ -52,8 +53,14 @@
 </script>
 
 <nav class="z-50 fixed top-0 flex w-screen bg-slate-300 h-16 items-center text-xl px-3 justify-between shadow-md">
-    <a class="icon-button" aria-current="page" href="{ Views.Home }" aria-label="Home button"><span class="fa-solid fa-home"></span></a>
-    <div class="flex space-x-3 items-center">
+    <div class="flex items-center space-x-3">
+        <a class="icon-button" aria-current="page" href="{ Views.Home }" aria-label="Home button"><span class="fa-solid fa-home"></span></a>
+        {#if page != ""}
+        <span class="fa fa-chevron-right"></span>
+        <span>{page}</span>
+        {/if}
+    </div>
+<div class="flex space-x-3 items-center">
         {#if user_is_authenticated}
             <a class="button" href="{ Views.Wishlist.Create.to_string() }">Create wishlist</a>
             <div class="relative">

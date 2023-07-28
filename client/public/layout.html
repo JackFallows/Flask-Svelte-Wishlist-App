@@ -40,6 +40,9 @@
             {% endif %};
     </script>
 
+    {% block global_script %}
+    {% endblock %}
+
     <script type="module" defer src='{{ auto_bundles["navbar"] }}'></script>
 
     {% block scripts %}

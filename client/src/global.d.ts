@@ -1,6 +1,7 @@
 /// <reference types="svelte" />
 
 interface Window {
+    page_title?: string;
     internal_login_enabled: boolean;
     user_name?: string;
     profile_pic?: string;
