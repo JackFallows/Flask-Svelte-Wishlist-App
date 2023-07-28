@@ -1,4 +1,6 @@
 <script lang="ts">
+    import '../../tailwind.css';
+
     import { Post } from "../../http";
     import { Api, Views } from "../../routes";
 
@@ -34,25 +36,36 @@
 {#await loading_promise}
 Loading...
 {:then}
-<div>
-    <label for="email" class="form-label">Email address</label>
-    <input type="email" class="form-control" id="email" bind:value={email} />
-</div>
+<div class="flex flex-col space-y-3 md:flex-row md:items-center md:space-x-10">
+    <div>
+        <h1 class="text-2xl">Sign up</h1>
+        <div class="mb-2">
+            <label for="email" class="">Email address</label><br />
+            <input type="email" class="text-input" id="email" bind:value={email} />
+        </div>
 
-<div>
-    <label for="name" class="form-label">Name</label>
-    <input type="text" class="form-control" id="name" bind:value={name} />
-</div>
+        <div class="mb-2">
+            <label for="name" class="">Name</label><br />
+            <input type="text" class="text-input" id="name" bind:value={name} />
+        </div>
 
-<div>
-    <label for="password1" class="form-label">Password</label>
-    <input type="password" class="form-control" id="password1" bind:value={password1} />
-</div>
+        <div class="mb-2">
+            <label for="password1" class="">Password</label><br />
+            <input type="password" class="text-input" id="password1" bind:value={password1} />
+        </div>
 
-<div>
-    <label for="password2" class="form-label">Confirm password</label>
-    <input type="password" class="form-control" id="password2" bind:value={password2} />
-</div>
+        <div class="mb-2">
+            <label for="password2" class="">Confirm password</label><br />
+            <input type="password" class="text-input" id="password2" bind:value={password2} />
+        </div>
 
-<button class="btn btn-success" id="sign-up" on:click={() => loading_promise = sign_up()}>Sign up</button>
+        <button class="success-button" id="sign-up" on:click={() => loading_promise = sign_up()}>Sign up</button>
+    </div>
+    <div class="text-center md:text-left">
+        <span class="text-4xl text-purple-600">OR</span>
+    </div>
+    <div class="text-center md:text-left">
+        <a class="danger-button" href="{ Views.Auth.External.Login.to_string() }">Log in with Google</a>
+    </div>
+</div>
 {/await}

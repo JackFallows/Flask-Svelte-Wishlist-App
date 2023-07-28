@@ -29,22 +29,23 @@
 {#await loading_promise}
     Loading...
 {:then}
-<h1 class="text-2xl">{wishlist.name}</h1>
-{#if wishlist_as_share != null}
-<div>
-    <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
-    <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
-</div>
-{/if}
 <div class="flex space-x-3">
     <div class="grow">
+        <h1 class="text-2xl">{wishlist.name}</h1>
+        {#if wishlist_as_share != null}
+        <div>
+            <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
+            <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
+        </div>
+        {/if}
+
         <h2 class="text-lg">Items</h2>
         <div class="flex space-y-3 flex-col">
             {#each wishlist_items as wishlist_item(wishlist_item)}
                 <WishlistItem wishlist_item={wishlist_item} on:bought={() => loading_promise = load_wishlist()} />
             {/each}
         </div>
-</div>
+    </div>
 
     {#if wishlist_as_share == null}
     <aside class="h-screen sticky top-0">
