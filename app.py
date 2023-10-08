@@ -44,7 +44,8 @@ login_manager.login_view = 'index' # redirect to home page if user is not logged
 login_manager.init_app(app)
 
 # Database setup
-init_db_command()
+with app.app_context():
+    init_db_command()
 
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader

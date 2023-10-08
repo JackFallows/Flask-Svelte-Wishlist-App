@@ -6,6 +6,7 @@ interface Window {
     user_name?: string;
     profile_pic?: string;
     wishlist_id?: number;
+    base_path: string;
 }
 
 interface IValidationState {

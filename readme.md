@@ -28,4 +28,5 @@ GOOGLE_CLIENT_SECRET
 Optional environment variables
 ```
 ENABLE_INTERNAL_AUTH
+BASE_PATH
 ```

@@ -1,12 +1,24 @@
 import pathlib
 import functools
-from os import listdir
+from os import listdir, environ
 from os.path import isfile, join
 
 from flask import render_template
 from flask_login import current_user
 
 from decorators.auth import ENABLE_INTERNAL_AUTH
+
+def get_base_path():
+    env = environ.get("BASE_PATH")
+    if (env is None):
+        return "/"
+        
+    if (env.endswith("/")):
+        return env
+        
+    return env + "/"
+
+BASE_PATH = get_base_path()
 
 bundle_files_path = 'client/public/build'
 
@@ -17,7 +29,7 @@ def get_bundle_files():
 def get_css():
     bundle_files = get_bundle_files()
     css_file = list(filter(lambda f: pathlib.Path(f).suffix == '.css', bundle_files))[0]
-    return "/" + join('build', css_file)
+    return join(BASE_PATH, 'build', css_file)
 
 def get_js():
     bundle_files = get_bundle_files()
@@ -25,7 +37,7 @@ def get_js():
     def map_file(file: str):
         last_index = file.rindex("-")
         file_dict = {
-            file[0:last_index]: "/" + join('build', file)
+            file[0:last_index]: join(BASE_PATH, 'build', file)
         }
         return file_dict
     
@@ -55,5 +67,6 @@ def custom_render_template(template_name, **context):
         internal_login_enabled= None if ENABLE_INTERNAL_AUTH is None or ENABLE_INTERNAL_AUTH.lower() == 'false' else 'true',
         auto_bundles=get_js(),
         module_css=get_css(),
+        base_path=BASE_PATH,
         **context
     )

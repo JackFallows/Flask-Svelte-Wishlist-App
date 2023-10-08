@@ -6,9 +6,9 @@
 
 	<title>Wishlist app</title>
 
-	<link rel='icon' type='image/png' href='/favicon.png'>
+	<link rel='icon' type='image/png' href='{{ base_path }}favicon.png'>
 
-    <link rel="stylesheet" href="/gulp_build/global.css" />
+    <link rel="stylesheet" href="{{ base_path }}gulp_build/global.css" />
 
     <link rel="stylesheet" href="{{ module_css }}" />
 
@@ -38,6 +38,8 @@
             {% else %}
             void 0
             {% endif %};
+
+        window.base_path = "{{ base_path }}".slice(0, "{{ base_path }}".length - 1);
     </script>
 
     {% block global_script %}

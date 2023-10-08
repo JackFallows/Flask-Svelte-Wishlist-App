@@ -47,10 +47,10 @@ def init_db():
         
         SchemaVersion.create(filename=upgrade_file)
 
-@with_appcontext
+#@with_appcontext
 def init_db_command():
     init_db()
 
 def init_app(app):
     app.teardown_appcontext(close_db)
-    app.cli.add_command(init_db_command)
+#    app.cli.add_command(init_db_command)

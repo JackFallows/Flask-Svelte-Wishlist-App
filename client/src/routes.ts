@@ -114,7 +114,7 @@ class DeleteRoute implements IRoute {
     }
 }
 
-const ViewsRoot = new Route("");
+const ViewsRoot = new Route(window.base_path);
 const ApiRoot = ViewsRoot.append("api");
 
 const AuthViewRoot = ViewsRoot.append("auth");
