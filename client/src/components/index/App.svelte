@@ -19,8 +19,11 @@
 			return;
 		}
 
-		wishlists = (await Get<IWishlist[]>(Api.Wishlists.GetAllForUser)).get_json();
-		shared_wishlists = (await Get<IWishlistShare[]>(Api.Wishlists.GetSharedWithUser)).get_json();
+		const wishlistsPayload = await Get<IWishlist[]>(Api.Wishlists.GetAllForUser);
+		const sharedWishlistsPayload = await Get<IWishlistShare[]>(Api.Wishlists.GetSharedWithUser);
+
+		wishlists = wishlistsPayload.get_json();
+		shared_wishlists = sharedWishlistsPayload.get_json();
 	}
 </script>
 

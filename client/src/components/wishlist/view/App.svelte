@@ -20,8 +20,10 @@
         if (wishlist_id == null) {
             return;
         }
+        
+        const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
 
-        wishlist = (await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id))).get_json();
+        wishlist = wishlistPayload.get_json();
         wishlist_items = wishlist.wishlist_items;
     }
 </script>
