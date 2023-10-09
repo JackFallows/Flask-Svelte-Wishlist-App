@@ -16,6 +16,7 @@
     "gulp": "^4.0.2",
     "gulp-less": "^5.0.0",
     "jasmine": "^5.0.2",
+    "jasmine-reporters": "^2.5.2",
     "mini-css-extract-plugin": "^2.6.0",
     "postcss": "^8.4.27",
     "svelte": "^4.0.0",
@@ -32,7 +33,7 @@
     "build-debug": "vite build",
     "validate": "svelte-check",
     "test-ct": "playwright test -c playwright-ct.config.ts",
-    "test-m": "jasmine"
+    "test-m": "node jasmineTests.js"
   },
   "type": "module"
 }

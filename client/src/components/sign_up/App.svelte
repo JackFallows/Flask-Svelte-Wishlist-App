@@ -2,7 +2,9 @@
     import '../../tailwind.css';
 
     import { Post } from "../../http";
-    import { Api, Views } from "../../routes";
+    import { makeRoutes } from "../../routes";
+
+    const { Api, Views } = makeRoutes(window.base_path);
 
     let email: string = "";
     let name: string = "";

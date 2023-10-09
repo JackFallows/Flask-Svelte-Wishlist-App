@@ -3,11 +3,13 @@
 
     import { createEventDispatcher } from 'svelte';
     import { Delete, Patch } from '../http';
-    import { Views, Api } from '../routes';
+    import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
 
     export let wishlist: IWishlist;
     export let is_third_party: boolean = false; // someone shared it with us
+
+    const { Views, Api } = makeRoutes(window.base_path);
 
     let delete_modal: Modal;
     let share_modal: Modal;

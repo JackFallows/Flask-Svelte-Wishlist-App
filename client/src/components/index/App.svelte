@@ -3,9 +3,11 @@
 
 	import Wishlist from '../Wishlist.svelte';
 	import { Get } from '../../http';
-    import { Api, Views } from "../../routes";
+    import { makeRoutes } from "../../routes";
 
 	export let name: string;
+
+	const { Api, Views } = makeRoutes(window.base_path);
 
 	let user_is_authenticated: boolean = name != null;
 

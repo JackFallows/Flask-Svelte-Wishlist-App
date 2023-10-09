@@ -1,7 +1,7 @@
 <script lang="ts">
     import '../../tailwind.css';
 
-    import { Views, Api } from '../../routes';
+    import { makeRoutes } from '../../routes';
     import { Get, Patch } from '../../http';
 
     import DropDownMenu from '../DropDownMenu.svelte';
@@ -17,6 +17,8 @@
         wishlist_id: number;
         wishlist_name: string;
     }
+
+    const { Views, Api } = makeRoutes(window.base_path);
 
     const user_is_authenticated = name != null;
     const external_login_page = internal_login_enabled ? Views.Auth.Login : Views.Auth.External.Login;

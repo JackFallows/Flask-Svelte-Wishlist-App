@@ -3,11 +3,13 @@
 
     import { createEventDispatcher } from 'svelte';
     import { Patch } from '../http';
-    import { Api } from '../routes';
+    import { makeRoutes } from '../routes';
 
     export let wishlist_item: IWishlistItem;
     export let is_edit: boolean = false;
 
+    const { Api } = makeRoutes(window.base_path);
+    
     const dispatch = createEventDispatcher();
 
     const html_id = `wishlist-item-${wishlist_item.id ?? "new"}`

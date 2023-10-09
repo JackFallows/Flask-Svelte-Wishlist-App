@@ -1,5 +1,7 @@
 import "jasmine";
-import { Route, Views, Api } from '../src/routes';
+import { makeRoutes } from '../src/routes';
+
+const { Views } = makeRoutes("");
 
 describe("Views route", () => {
     it("should be immutable", () => {

@@ -2,10 +2,12 @@
     import '../../../tailwind.css';
 
     import { Get } from '../../../http';
-    import { Api, Views } from '../../../routes';
+    import { makeRoutes } from '../../../routes';
     import WishlistItem from '../../WishlistItem.svelte';
 
     export let wishlist_id: number;
+
+    const { Api, Views } = makeRoutes(window.base_path);
 
     let loading_promise: Promise<any> = load_wishlist();
 

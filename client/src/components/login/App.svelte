@@ -1,6 +1,8 @@
 <script lang="ts">
     import { HttpResult, Post } from '../../http';
-    import { Views, Api } from '../../routes';
+    import { makeRoutes } from '../../routes';
+
+    const { Views, Api } = makeRoutes(window.base_path);
 
     let email: string = "";
     let password: string = "";
