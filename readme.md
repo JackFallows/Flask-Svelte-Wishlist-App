@@ -4,6 +4,10 @@ Build client code with:
 ```
 ./node_modules/.bin/gulp
 ```
+Or, for release builds, set the `RELEASE` environment variable to `1` and run:
+```
+./node_modules/.bin/gulp buildOnly
+```
 
 Run Playwright component tests with:
 ```
