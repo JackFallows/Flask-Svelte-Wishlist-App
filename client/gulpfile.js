@@ -27,6 +27,10 @@ function build() {
     return exec("npm run build-debug", processCallback);
 }
 
+function buildRelease() {
+    return exec("npm run build-release", processCallback);
+}
+
 function copyGlobalStyles() {
     return src("./src/*.less")
         .pipe(less())
@@ -37,5 +41,8 @@ function buildProject() {
     watch(["./src/**/*", "!./src/**/*.spec.ts"], { ignoreInitial: false }, series(copyGlobalStyles, validateTs, build));
 }
 
+const buildProjectRelease = series(copyGlobalStyles, validateTs, buildRelease);
+
 const _default = buildProject;
 export { _default as default };
+export { buildProjectRelease as releaseBuild }

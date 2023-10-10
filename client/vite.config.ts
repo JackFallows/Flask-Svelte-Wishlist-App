@@ -2,6 +2,8 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 
+const isRelease = process.env.RELEASE == "1" ? true : false;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [svelte()],
@@ -16,8 +18,8 @@ export default defineConfig({
         edit_wishlist: resolve(__dirname, './src/components/wishlist/edit/main.ts'),
       },
     },
-    sourcemap: true,
-    minify: false,
+    sourcemap: !isRelease,
+    minify: isRelease,
     cssCodeSplit: false,
     copyPublicDir: false,
     outDir: './public/build',
