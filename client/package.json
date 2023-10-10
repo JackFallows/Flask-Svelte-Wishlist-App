@@ -30,8 +30,7 @@
     "vite": "^4.4.5"
   },
   "scripts": {
-    "build-debug": "vite build",
-    "build-release": "RELEASE=1 vite build",
+    "build": "vite build",
     "validate": "svelte-check",
     "test-ct": "playwright test -c playwright-ct.config.ts",
     "test-m": "node jasmineTests.js"

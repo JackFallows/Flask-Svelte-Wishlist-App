@@ -24,11 +24,7 @@ function validateTs() {
 }
 
 function build() {
-    return exec("npm run build-debug", processCallback);
-}
-
-function buildRelease() {
-    return exec("npm run build-release", processCallback);
+    return exec("npm run build", processCallback);
 }
 
 function copyGlobalStyles() {
@@ -37,12 +33,12 @@ function copyGlobalStyles() {
         .pipe(dest("./public/gulp_build"));
 }
 
+const buildOnly = series(copyGlobalStyles, validateTs, build);
+
 function buildProject() {
     watch(["./src/**/*", "!./src/**/*.spec.ts"], { ignoreInitial: false }, series(copyGlobalStyles, validateTs, build));
 }
 
-const buildProjectRelease = series(copyGlobalStyles, validateTs, buildRelease);
-
 const _default = buildProject;
 export { _default as default };
-export { buildProjectRelease as releaseBuild }
+export { buildOnly }
