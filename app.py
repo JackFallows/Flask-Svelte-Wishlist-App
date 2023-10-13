@@ -1,6 +1,9 @@
 # Python standard libraries
 import os
 
+if os.environ.get("WORKING_DIR") is not None:
+    os.chdir(os.environ.get("WORKING_DIR"))
+
 # Third party libraries
 from flask import (
     Flask,

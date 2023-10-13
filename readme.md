@@ -33,4 +33,6 @@ Optional environment variables
 ```
 ENABLE_INTERNAL_AUTH
 BASE_PATH
+WORKING_DIR
+SQLITE_DB
 ```
