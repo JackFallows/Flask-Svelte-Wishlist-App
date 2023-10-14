@@ -2,20 +2,20 @@ import json
 import uuid
 
 from flask import Blueprint, jsonify, request
-from flask_login import login_user
+from flask_login import login_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from data_access.models.user import User
 from decorators.auth import enable_internal_auth
 from decorators.validation import validate
 
-from validators.user import validate as user_validator
+from validators.user import validate_create as user_create_validator
 
 users = Blueprint('users', __name__)
 
 @enable_internal_auth
 @users.route("/create", methods=["POST"])
-@validate(user_validator)
+@validate(user_create_validator)
 def sign_up():
     request_json = json.loads(request.data)
     
@@ -38,4 +38,29 @@ def login():
         return "Forbidden", 403
     
     login_user(user)
+    return jsonify({})
+
+@login_required
+@users.route('/get')
+def get():
+    user = User.get(current_user.id)
+        
+    if user == None:
+        return "Not found", 404
+    
+    return jsonify(user.as_dict())
+
+@login_required
+@users.route("/update", methods=["PATCH"])
+#@validate(user_update_validator)
+def update():
+    request_json = json.loads(request.data)
+    
+    user = User.get(current_user.id)
+    
+    user.email_on_share = request_json["email_on_share"]
+    user.email_on_update = request_json["email_on_update"]
+    
+    user.apply_changes()
+
     return jsonify({})

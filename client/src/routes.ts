@@ -121,6 +121,7 @@ function makeRoutes(base_path: string) {
     const AuthViewRoot = ViewsRoot.append("auth");
     const ExternalAuthRoot = AuthViewRoot.append("external");
     const WishlistViewRoot = ViewsRoot.append("wishlist");
+    const ProfileViewRoot = ViewsRoot.append("profile");
     
     const UsersApiRoot = ApiRoot.append("users");
     const WishlistsApiRoot = ApiRoot.append("wishlists");
@@ -140,13 +141,16 @@ function makeRoutes(base_path: string) {
             Edit: WishlistViewRoot.append("edit"),
             View: WishlistViewRoot.append("view")
         },
+        Profile: ProfileViewRoot.to_string() + "/",
         Home: ViewsRoot.to_string() + "/"
     }
     
     const Api = {
         Users: {
             Create: UsersApiRoot.append("create").as_post(),
-            Authenticate: UsersApiRoot.append("authenticate").as_post()
+            Authenticate: UsersApiRoot.append("authenticate").as_post(),
+            Get: UsersApiRoot.append("get").as_get(),
+            Update: UsersApiRoot.append("update").as_patch()
         },
         Wishlists: {
             Get: WishlistsApiRoot.append("get").as_get(),

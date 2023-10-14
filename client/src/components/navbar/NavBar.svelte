@@ -108,6 +108,7 @@
                 </button>
                 {/if}
                 <DropDownMenu bind:this={user_dropdown} button={user_dropdown_button} classes="right-0 w-48">
+                    <a class="button w-full block" href="{ Views.Profile }">Profile</a>
                     <a class="button w-full block" href="{ Views.Auth.Logout.to_string() }">Logout</a>
                 </DropDownMenu>
             </div>
