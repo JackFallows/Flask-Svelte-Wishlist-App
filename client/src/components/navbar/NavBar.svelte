@@ -11,11 +11,11 @@
     export let name: string;
     export let profile_pic: string;
 
-    interface INotification {
-        user_name: string;
-        email: string;
-        wishlist_id: number;
-        wishlist_name: string;
+    interface INotificationDto {
+        id: number;
+        message: string;
+        created_at: Date;
+        shared_wishlist_id: number;
     }
 
     const { Views, Api } = makeRoutes(window.base_path);
@@ -29,28 +29,33 @@
     let notifications_dropdown_button: HTMLElement;
     let notifications_dropdown: DropDownMenu;
 
-    let notifications: INotification[];
+    let notifications: INotificationDto[];
 
-    let share_notifications_loading_promise: Promise<INotification[]> = load_share_notifications();
+    let notifications_loading_promise: Promise<INotificationDto[]> = load_notifications();
 
-    async function load_share_notifications(): Promise<INotification[]> {
+    async function load_notifications(): Promise<INotificationDto[]> {
         if (!user_is_authenticated) {
             return [];
         }
 
-        notifications = await Get<INotification[]>(Api.Wishlists.GetPendingSharedForUser).then(r => r.get_json());
+        notifications = await Get<INotificationDto[]>(Api.Notifications.Get).then(r => r.get_json());
 
         return notifications;
     }
 
-    async function accept_share(wishlist_id: number): Promise<void> {
-        await Patch(Api.Wishlists.PatchAcceptShare.append(wishlist_id), null);
-        share_notifications_loading_promise = load_share_notifications();
+    async function read_notification(notification_id: number): Promise<void> {
+        await Patch(Api.Notifications.PatchRead.append(notification_id), null);
+        notifications_loading_promise = load_notifications();
     }
 
-    async function reject_share(wishlist_id: number): Promise<void> {
-        await Patch(Api.Wishlists.PatchRejectShare.append(wishlist_id), null);
-        share_notifications_loading_promise = load_share_notifications();
+    async function accept_share(notification_id: number): Promise<void> {
+        await Patch(Api.Notifications.PatchAcceptShare.append(notification_id), null);
+        notifications_loading_promise = load_notifications();
+    }
+
+    async function reject_share(notification_id: number): Promise<void> {
+        await Patch(Api.Notifications.PatchRejectShare.append(notification_id), null);
+        notifications_loading_promise = load_notifications();
     }
 </script>
 
@@ -70,7 +75,7 @@
                     <span class="fa-solid fa-bell pointer-events-none"></span>
                 </button>
                 <DropDownMenu bind:this={notifications_dropdown} button={notifications_dropdown_button} classes="right-0 w-80">
-                    {#await share_notifications_loading_promise}
+                    {#await notifications_loading_promise}
                         Loading...
                     {:then}
                         {#if notifications.length === 0}
@@ -80,18 +85,24 @@
                         {/if}
                         {#each notifications as notification}
                             <div>
-                                <p>{notification.user_name} has given you access to '{notification.wishlist_name}'</p>
+                                <p>{notification.message}</p>
+                                {#if notification.shared_wishlist_id != null}
                                 <p>Accept?</p>
                                 <div class="inline-block">
                                     <div class="button-group">
-                                        <button class="button" on:click={() => accept_share(notification.wishlist_id)}>
+                                        <button class="button" on:click={() => accept_share(notification.id)}>
                                             <span class="fa-solid fa-check"></span> Yes
                                         </button>
-                                        <button class="button" on:click={() => reject_share(notification.wishlist_id)}>
+                                        <button class="button" on:click={() => reject_share(notification.id)}>
                                             <span class="fa-solid fa-xmark"></span> No
                                         </button>
                                     </div>
                                 </div>
+                                {:else}
+                                <button class="button" on:click={() => read_notification(notification.id)}>
+                                    <span class="fa-solid fa-x"></span>
+                                </button>
+                                {/if}
                             </div>
                         {/each}
                     {/await}

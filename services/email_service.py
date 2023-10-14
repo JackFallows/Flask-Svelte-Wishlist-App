@@ -1,5 +1,7 @@
 import os
 import smtplib, ssl
+from typing import List
+from email.message import EmailMessage
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -44,3 +46,30 @@ def send_share_email(receiver_email: str, sender_name: str, sender_email: str, s
     with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT, context=context) as server:
         server.login(SMTP_EMAIL, SMTP_PASSWORD)
         server.sendmail(SMTP_EMAIL, receiver_email, message.as_string())
+        
+def send_update_email(receiver_emails: List[str], sender_name: str, sender_email: str, sender_wishlist: str):
+    if SMTP_EMAIL is None or SMTP_SERVER is None or SMTP_PORT is None or SMTP_PASSWORD is None:
+        return
+    
+    email = EmailMessage()
+    email['Subject'] = f"{sender_name} just updated their wishlist"
+    email["From"] = SMTP_EMAIL
+    email["Bcc"] = receiver_emails
+    
+    email.set_content(f"""\
+    <html>
+    <body>
+        <p>
+        {sender_name} ({sender_email}) just updated the wishlist '{sender_wishlist}' that they shared with you.<br />
+    Log into the website to see what's new.<br />
+    - Wishlist App
+        </p>
+    </body>
+    </html>
+    """, subtype='html')
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT, context=context) as server:
+        server.login(SMTP_EMAIL, SMTP_PASSWORD)
+        server.send_message(email)

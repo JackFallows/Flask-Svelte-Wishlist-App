@@ -33,6 +33,7 @@ from views.profile import profile
 from api.users import users
 from api.wishlists import wishlists
 from api.wishlist_items import wishlist_items
+from api.notifications import notifications
 
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(external_auth, url_prefix='/auth/external')
@@ -42,6 +43,7 @@ app.register_blueprint(profile, url_prefix='/profile')
 app.register_blueprint(users, url_prefix='/api/users')
 app.register_blueprint(wishlists, url_prefix='/api/wishlists')
 app.register_blueprint(wishlist_items, url_prefix='/api/wishlist_items')
+app.register_blueprint(notifications, url_prefix='/api/notifications')
 
 # User session management setup
 login_manager = LoginManager()
