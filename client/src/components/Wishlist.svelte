@@ -82,8 +82,14 @@
         Share wishlist '{wishlist.name}'
     </span>
     <span slot="body">
-        Enter the email address of the user with whom you want to share this wishlist:
-        <input type="email" class="form-control" bind:value={share_email} />
+        <p>
+            Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
+            <input type="email" class="text-input" style="width: 100%" bind:value={share_email} />
+        </p>
+        <p>
+            Please be aware that <b>the recipient will gain visibility of the name and email address of the sender</b> (that's you!).<br />
+            Only share wishlists with those you trust with this information.
+        </p>
     </span>
 </Modal>
 

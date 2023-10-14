@@ -8,6 +8,8 @@ from data_access.models.wishlist_share import WishlistShare
 from data_access.models.wishlist_item import WishlistItem
 from data_access.models.user_shared_wishlist import UserSharedWishlist
 
+from services.email_service import send_share_email
+
 wishlists = Blueprint('wishlists', __name__)
 
 @login_required
@@ -124,6 +126,10 @@ def share_wishlist():
     
     UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
     Wishlist.set_shared(wishlist_id=wishlist.id)
+    
+    user = User.get(current_user.id)
+    
+    send_share_email(target_user.email, user.name, user.email, wishlist.name)
     
     return jsonify({})
 
