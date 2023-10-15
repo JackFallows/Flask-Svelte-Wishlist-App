@@ -40,6 +40,10 @@
 
         notifications = await Get<INotificationDto[]>(Api.Notifications.Get).then(r => r.get_json());
 
+        for (const notification of notifications) {
+            notification.created_at = new Date(<number><any>notification.created_at * 1000)
+        }
+
         return notifications;
     }
 
@@ -71,8 +75,11 @@
         {#if user_is_authenticated}
             <a class="button" href="{ Views.Wishlist.Create.to_string() }">Create wishlist</a>
             <div class="relative">
-                <button class="icon-button {notifications?.length > 0 ? 'text-orange-600' : ''}" type="button" aria-label="Notifications button" bind:this={notifications_dropdown_button} on:click={() => notifications_dropdown.toggle()}>
-                    <span class="fa-solid fa-bell pointer-events-none"></span>
+                <button class="icon-button relative" type="button" aria-label="Notifications button" bind:this={notifications_dropdown_button} on:click={() => notifications_dropdown.toggle()}>
+                    <span class="fa-solid fa-bell pointer-events-none {notifications?.length > 0 ? 'text-orange-600' : ''}"></span>
+                    {#if notifications?.length > 0}
+                    <span class="absolute text-white text-xl w-full left-0 top-1 text-center pointer-events-none">{notifications.length < 10 ? notifications.length : '*'}</span>
+                    {/if}
                 </button>
                 <DropDownMenu bind:this={notifications_dropdown} button={notifications_dropdown_button} classes="right-0 w-80">
                     {#await notifications_loading_promise}
@@ -86,6 +93,7 @@
                         {#each notifications as notification}
                             <div>
                                 <p>{notification.message}</p>
+                                <p class="text-slate-600">{notification.created_at.toLocaleString()}</p>
                                 {#if notification.shared_wishlist_id != null}
                                 <p>Accept?</p>
                                 <div class="inline-block">
