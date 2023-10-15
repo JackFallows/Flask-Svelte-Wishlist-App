@@ -160,6 +160,7 @@ function makeRoutes(base_path: string) {
             Post: WishlistsApiRoot.append("post").as_post(),
             Put: WishlistsApiRoot.append("put").as_put(),
             PatchShare: WishlistsApiRoot.append("share").as_patch(),
+            PatchShareLink: WishlistsApiRoot.append("share-link").as_patch(),
             Delete: WishlistsApiRoot.append("delete").as_delete()
         },
         WishlistItems: {

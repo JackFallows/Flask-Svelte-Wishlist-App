@@ -133,6 +133,18 @@ def share_wishlist():
     return jsonify({})
 
 @login_required
+@wishlists.route('/share-link/<wishlist_id>', methods=["PATCH"])
+def share_wishlist_link(wishlist_id: int):
+    wishlist = Wishlist.get(wishlist_id, current_user.id)
+    
+    if not wishlist.share_guid:
+        wishlist.share_guid = Wishlist.set_share_guid(wishlist_id)
+        
+    return jsonify({
+        "share_guid": wishlist.share_guid
+    })
+
+@login_required
 @wishlists.route('/delete/<wishlist_id>', methods=["DELETE"])
 def delete(wishlist_id):
     wishlist = Wishlist.get(wishlist_id=wishlist_id, user_id=current_user.id)

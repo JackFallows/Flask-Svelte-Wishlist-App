@@ -1,12 +1,15 @@
+import string
+import random
 from data_access.db_connect import get_db_connection
 
 class Wishlist():
-    def __init__(self, id, user_id, name, shared, deleted):
+    def __init__(self, id, user_id, name, shared, deleted, share_guid):
         self.id = id
         self.user_id = user_id
         self.name = name
         self.shared = shared
         self.deleted = deleted
+        self.share_guid = share_guid
         
     def as_dict(self):
         return {
@@ -14,7 +17,8 @@ class Wishlist():
             "user_id": self.user_id,
             "name": self.name,
             "shared": self.shared,
-            "deleted": self.deleted
+            "deleted": self.deleted,
+            "share_guid": self.share_guid
         }
 
     def apply_changes(self):
@@ -36,14 +40,15 @@ class Wishlist():
             user_id=json['user_id'],
             name=json['name'],
             shared=json['shared'],
-            deleted=json['deleted']
+            deleted=json['deleted'],
+            share_guid=json['share_guid']
         )
 
     @staticmethod
     def get(wishlist_id, user_id):
         with get_db_connection() as db:
             wishlist = db.execute(
-                "SELECT rowid, user_id, name, shared, deleted FROM wishlist WHERE rowid = ? AND user_id = ?", (wishlist_id, user_id,)
+                "SELECT rowid, user_id, name, shared, deleted, share_guid FROM wishlist WHERE rowid = ? AND user_id = ?", (wishlist_id, user_id,)
             ).fetchone()
             
             if not wishlist:
@@ -54,7 +59,8 @@ class Wishlist():
                 user_id=wishlist[1],
                 name=wishlist[2],
                 shared=wishlist[3],
-                deleted=wishlist[4]
+                deleted=wishlist[4],
+                share_guid=wishlist[5]
             )
             
             return wishlist
@@ -63,7 +69,7 @@ class Wishlist():
     def get_all_for_user(user_id):
         with get_db_connection() as db:
             wishlists = db.execute(
-                "SELECT rowid, user_id, name, shared, deleted FROM wishlist WHERE user_id = ?", (user_id,)
+                "SELECT rowid, user_id, name, shared, deleted, share_guid FROM wishlist WHERE user_id = ?", (user_id,)
             ).fetchall()
             
             return list(
@@ -73,7 +79,8 @@ class Wishlist():
                         user_id=w[1],
                         name=w[2],
                         shared=w[3],
-                        deleted=w[4]),
+                        deleted=w[4],
+                        share_guid=w[5]),
                     wishlists)
                 )
         
@@ -81,8 +88,8 @@ class Wishlist():
     def create(name, user_id):
         with get_db_connection() as db:
             db.execute(
-                "INSERT INTO wishlist (user_id, name, shared, deleted) "
-                "VALUES (?, ?, 0, 0)",
+                "INSERT INTO wishlist (user_id, name, shared, deleted, share_guid) "
+                "VALUES (?, ?, 0, 0, NULL)",
                 (user_id, name,),
             )
             
@@ -102,6 +109,19 @@ class Wishlist():
                 (wishlist_id,)
             )
             db.commit()
+            
+    @staticmethod
+    def set_share_guid(wishlist_id) -> str:
+        with get_db_connection() as db:
+            alphabet = string.ascii_lowercase + string.digits
+            share_guid = ''.join(random.choices(alphabet, k=8))
+            
+            db.execute(
+                "UPDATE wishlist SET share_guid = ? WHERE rowid = ?",
+                (share_guid, wishlist_id,)
+            )
+            
+            return share_guid
 
     @staticmethod
     def remove(wishlist_id):
