@@ -49,6 +49,7 @@
                 name: wishlist_name,
                 shared: false,
                 deleted: false,
+                share_guid: null,
                 wishlist_items: wishlist_items
             });
         }

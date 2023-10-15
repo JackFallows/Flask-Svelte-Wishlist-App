@@ -7,6 +7,7 @@
 
     export let wishlist_item: IWishlistItem;
     export let is_edit: boolean = false;
+    export let share_guid: string = null;
 
     const { Api } = makeRoutes(window.base_path);
     
@@ -25,7 +26,11 @@
     }
 
     async function mark_as_bought() {
-        await Patch(Api.WishlistItems.PatchMarkAsBought.append(wishlist_item.id), null);
+        if (share_guid != null) {
+            await Patch(Api.WishlistItems.PatchLinkShareMarkBought.append(share_guid).append(wishlist_item.id), null);
+        } else {
+            await Patch(Api.WishlistItems.PatchMarkAsBought.append(wishlist_item.id), null);
+        }
 
         dispatch('bought');
     }

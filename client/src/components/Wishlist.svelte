@@ -5,6 +5,8 @@
     import { Delete, Patch } from '../http';
     import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
+    import Collapse from './Collapse.svelte';
+    import Accordion from './Accordion.svelte';
 
     export let wishlist: IWishlist;
     export let is_third_party: boolean = false; // someone shared it with us
@@ -13,6 +15,13 @@
 
     let delete_modal: Modal;
     let share_modal: Modal;
+    let share_accordion: Accordion;
+    let is_sharing_to_user: boolean = true;
+    let share_link: string = null;
+
+    function sharing_to_user_change(e: { detail: { collapsed: boolean } }) {
+        is_sharing_to_user = !e.detail.collapsed;
+    }
 
     let share_email: string;
 
@@ -32,6 +41,12 @@
         share_email = "";
 
         dispatch('shared');
+    }
+
+    async function get_share_link() {
+        const result = await Patch<any, { share_guid: string }>(Api.Wishlists.PatchShareLink.append(wishlist.id), {});
+        const json = result.get_json();
+        share_link = `${location.origin}/share/${json.share_guid}`;
     }
 
     async function delete_wishlist() {
@@ -77,19 +92,38 @@
     </span>
 </Modal>
 
-<Modal bind:this={share_modal} id="share-{wishlist.id}">
+<Modal bind:this={share_modal} id="share-{wishlist.id}" is_wide={true}>
     <span slot="header">
         Share wishlist '{wishlist.name}'
     </span>
     <span slot="body">
-        <p>
-            Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
-            <input type="email" class="text-input" style="width: 100%" bind:value={share_email} />
-        </p>
-        <p>
-            Please be aware that <b>the recipient will gain visibility of the name and email address of the sender</b> (that's you!).<br />
-            Only share wishlists with those you trust with this information.
-        </p>
+        <Accordion bind:this={share_accordion}>
+            <Collapse heading="Share to existing user" bind:accordion={share_accordion} on:collapse_change={sharing_to_user_change}>
+                <p>
+                    Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
+                    <input type="email" class="text-input" style="width: 100%" bind:value={share_email} />
+                </p>
+                <p>
+                    Please be aware that <b>the recipient will gain visibility of the name and email address of the sender</b> (that's you!).<br />
+                    Only share wishlists with those you trust with this information.
+                </p>
+            </Collapse>
+            <Collapse heading="Share with link" collapsed={true} bind:accordion={share_accordion}>
+                <p>Click the button below to generate a unique link to your wishlist which you can share with people who do not have an account on this website.</p>
+                {#if !share_link}
+                <button class="button" on:click={get_share_link}>Get link</button>
+                {:else}
+                <input type="text" class="text-input" style="width: 100%" readonly bind:value={share_link} />
+                <button class="button mt-1" on:click={() => navigator.clipboard.writeText(share_link)}>Copy to clipboard</button>
+                {/if}
+            </Collapse>
+        </Accordion>
+    </span>
+    <span slot="buttons" let:close_modal={close}>
+        <button class="button" on:click={() => close()}>Cancel</button>
+        {#if is_sharing_to_user}
+        <button class="button" on:click={() => close("true")}>Ok</button>
+        {/if}
     </span>
 </Modal>
 

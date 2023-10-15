@@ -155,16 +155,19 @@ function makeRoutes(base_path: string) {
         },
         Wishlists: {
             Get: WishlistsApiRoot.append("get").as_get(),
+            GetLinkShare: WishlistsApiRoot.append("get_link_share").as_get(),
             GetAllForUser: WishlistsApiRoot.append("get_all_for_user").as_get(),
             GetSharedWithUser: WishlistsApiRoot.append("get_shared_with_user").as_get(),
             Post: WishlistsApiRoot.append("post").as_post(),
             Put: WishlistsApiRoot.append("put").as_put(),
             PatchShare: WishlistsApiRoot.append("share").as_patch(),
+            PatchShareLink: WishlistsApiRoot.append("share-link").as_patch(),
             Delete: WishlistsApiRoot.append("delete").as_delete()
         },
         WishlistItems: {
             GetAllForWishlist: WishlistItemsApiRoot.append("get_all_for_wishlist").as_get(),
-            PatchMarkAsBought: WishlistItemsApiRoot.append("mark-as-bought").as_patch()
+            PatchMarkAsBought: WishlistItemsApiRoot.append("mark-as-bought").as_patch(),
+            PatchLinkShareMarkBought: WishlistItemsApiRoot.append("link_share_mark_bought").as_patch()
         },
         Notifications: {
             Get: NotificationsApiRoot.append("get").as_get(),

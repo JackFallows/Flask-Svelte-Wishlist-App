@@ -3,6 +3,7 @@
 
     export let id: string;
     export let is_danger: boolean = false;
+    export let is_wide: boolean = false;
 
     let promise_resolver: (val?: string) => void;
 
@@ -30,7 +31,7 @@
     }
 </script>
 
-<dialog id="modal-{id}" class="w-96 h-96 rounded-md border-2 shadow-md {is_danger ? 'border-red-600' : 'border-slate-200'}" bind:this={modal} on:close={close_modal_handler}>
+<dialog id="modal-{id}" class="{is_wide ? 'w-[32rem]' : 'w-96'} h-96 rounded-md border-2 shadow-md {is_danger ? 'border-red-600' : 'border-slate-200'}" bind:this={modal} on:close={close_modal_handler}>
     <div class="flex flex-col h-full">
         <div class="{is_danger ? 'bg-red-600' : 'bg-slate-200'} p-2">
             <h1 class="text-xl {is_danger ? 'text-white' : 'text-black'}">
