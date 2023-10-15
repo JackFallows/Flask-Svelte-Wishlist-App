@@ -31,6 +31,22 @@ def get_wishlist(wishlist_id):
     
     return jsonify(wishlist_merged)
 
+@wishlists.route('/get_link_share/<share_guid>')
+def get_link_share(share_guid):
+    if share_guid is None or len(share_guid) != 8:
+        return jsonify({})
+    
+    wishlist = Wishlist.get_link_share(share_guid)
+    
+    if wishlist is None:
+        return "Not found", 404
+    
+    wishlist_items = WishlistItem.get_all_for_wishlist(wishlist_id=wishlist.id)
+    
+    wishlist_merged = { **wishlist.as_dict(), **{ "wishlist_items": list(map(lambda wi: wi.as_dict(), wishlist_items)) } }
+    
+    return jsonify(wishlist_merged)
+
 @login_required
 @wishlists.route('/get_all_for_user')
 def get_all_for_user():
@@ -121,7 +137,7 @@ def share_wishlist():
     target_user = User.get_by_email(request_json['email'])
 
     if not wishlist or not target_user:
-        return "Not found", 404
+        return jsonify({}) # don't expose if a user doesn't exist
     
     UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
     Wishlist.set_shared(wishlist_id=wishlist.id)

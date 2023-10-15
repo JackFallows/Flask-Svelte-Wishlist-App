@@ -92,6 +92,23 @@ class WishlistItem():
             return True
         
     @staticmethod
+    def get_is_available_to_link_share(wishlist_item_id, share_guid):
+        with get_db_connection() as db:
+            wishlist_item = db.execute(
+                """
+                SELECT wishlist_item.rowid
+                FROM wishlist_item
+                INNER JOIN wishlist ON wishlist.rowid = wishlist_item.wishlist_id
+                WHERE wishlist.share_guid = ?
+                """, (share_guid,)
+            ).fetchone()
+            
+            if not wishlist_item:
+                return False
+            
+            return True
+        
+    @staticmethod
     def create(wishlist_id, link, notes, order_number):
         with get_db_connection() as db:
             db.execute(

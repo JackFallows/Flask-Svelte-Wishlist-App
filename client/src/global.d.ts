@@ -35,6 +35,15 @@ interface IWishlist {
     name: string;
     shared: boolean;
     deleted: boolean;
+    share_guid: string;
+
+    wishlist_items: IWishlistItem[];
+}
+
+interface IWishlistLinkShare {
+    id: number;
+    name: string;
+    share_guid: string;
 
     wishlist_items: IWishlistItem[];
 }

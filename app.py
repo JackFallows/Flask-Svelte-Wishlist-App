@@ -29,6 +29,7 @@ from views.auth import auth
 from views.external_auth import external_auth
 from views.wishlist import wishlist
 from views.profile import profile
+from views.share import share
 
 from api.users import users
 from api.wishlists import wishlists
@@ -39,6 +40,7 @@ app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(external_auth, url_prefix='/auth/external')
 app.register_blueprint(wishlist, url_prefix='/wishlist')
 app.register_blueprint(profile, url_prefix='/profile')
+app.register_blueprint(share, url_prefix='/share')
 
 app.register_blueprint(users, url_prefix='/api/users')
 app.register_blueprint(wishlists, url_prefix='/api/wishlists')

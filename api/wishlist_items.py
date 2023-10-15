@@ -30,6 +30,15 @@ def mark_as_bought(wishlist_item_id):
     
     return jsonify({})
 
+@wishlist_items.route('/link_share_mark_bought/<share_guid>/<wishlist_item_id>', methods=["PATCH"])
+def link_share_mark_bought(share_guid, wishlist_item_id):
+    if not WishlistItem.get_is_available_to_link_share(wishlist_item_id, share_guid):
+        return "Not found", 404
+    
+    WishlistItem.set_as_bought(wishlist_item_id=wishlist_item_id)
+    
+    return jsonify({})
+
 # @login_required
 # @wishlist_items.route('/post', methods=["POST"])
 # def post_wishlist_item():

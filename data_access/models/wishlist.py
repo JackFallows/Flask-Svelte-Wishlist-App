@@ -1,6 +1,7 @@
 import string
 import random
 from data_access.db_connect import get_db_connection
+from api.models.wishlist_link_share import WishlistLinkShare
 
 class Wishlist():
     def __init__(self, id, user_id, name, shared, deleted, share_guid):
@@ -64,6 +65,24 @@ class Wishlist():
             )
             
             return wishlist
+        
+    @staticmethod
+    def get_link_share(share_guid):
+        with get_db_connection() as db:
+            wishlist = db.execute(
+                "SELECT rowid, name, share_guid FROM wishlist WHERE share_guid = ?", (share_guid,)
+            ).fetchone()
+            
+            if not wishlist:
+                return None
+            
+            wishlist = WishlistLinkShare(
+                id = wishlist[0],
+                name = wishlist[1],
+                share_guid = wishlist[2]
+            )
+            
+            return wishlist
     
     @staticmethod
     def get_all_for_user(user_id):
@@ -113,8 +132,17 @@ class Wishlist():
     @staticmethod
     def set_share_guid(wishlist_id) -> str:
         with get_db_connection() as db:
-            alphabet = string.ascii_lowercase + string.digits
-            share_guid = ''.join(random.choices(alphabet, k=8))
+            existing = db.execute("SELECT share_guid FROM wishlist WHERE share_guid IS NOT NULL AND rowid != ?", (wishlist_id,)).fetchall()
+            unavailable_guids = list(map(lambda x: x[0], existing))
+            
+            def generate_guid():
+                alphabet = string.ascii_lowercase + string.digits
+                return ''.join(random.choices(alphabet, k=8))    
+            
+            share_guid = generate_guid()
+                        
+            while share_guid in unavailable_guids:
+                share_guid = generate_guid()
             
             db.execute(
                 "UPDATE wishlist SET share_guid = ? WHERE rowid = ?",
