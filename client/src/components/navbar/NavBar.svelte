@@ -71,7 +71,7 @@
         <span>{page}</span>
         {/if}
     </div>
-<div class="flex space-x-3 items-center">
+    <div class="flex space-x-3 items-center">
         {#if user_is_authenticated}
             <a class="button" href="{ Views.Wishlist.Create.to_string() }">Create wishlist</a>
             <div class="relative">

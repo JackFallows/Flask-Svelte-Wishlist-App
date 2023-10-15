@@ -56,7 +56,7 @@ class UserSharedWishlist():
                 SELECT id, name, email, profile_pic, internal_password, email_on_share, email_on_update
                 FROM user AS u
                 INNER JOIN user_shared_wishlist AS usw ON u.id = usw.user_id
-                WHERE usw.wishlist_id = ?
+                WHERE usw.wishlist_id = ? and usw.accepted = 1
                 """,
                 (wishlist_id,)
             ).fetchall()
