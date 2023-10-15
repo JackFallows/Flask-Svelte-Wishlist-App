@@ -54,14 +54,25 @@ Loading...
     <hr />
 
     <div class="my-8">
+        <h2 class="text-xl">Email notifications</h2>
+
+        {#if window.email_is_configured}
         <label for="email-on-share-checkbox">Receive an email notification when a wishlist is shared with you?</label>
         <input id="email-on-share-checkbox" type="checkbox" name="email_on_share" bind:checked={email_on_share} />
         <br />
 
         <label for="email-on-update-checkbox">Receive an email notification when a wishlist that has already been shared with you is updated?</label>
         <input id="email-on-update-checkbox" type="checkbox" name="email_on_update" bind:checked={email_on_update} />
-    </div>
 
-    <button class="success-button" id="save-button" on:click={() => loading_promise = save_user()}>Save</button>
+        <div>
+            <button class="success-button mt-8" id="save-button" on:click={() => loading_promise = save_user()}>Save</button>
+        </div>
+    {:else}
+        <div class="bg-yellow-300 p-6 my-2 rounded flex space-x-4">
+            <span class="fa-solid fa-circle-info text-2xl"></span>
+            <p>Email notifications are unavailable due to system configuration.</p>
+        </div>
+        {/if}
+    </div>
 </main>
 {/await}

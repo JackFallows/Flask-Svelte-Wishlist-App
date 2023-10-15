@@ -10,8 +10,11 @@ SMTP_SERVER = os.environ.get("SMTP_SERVER") # the URL of the SMTP server
 SMTP_PORT = os.environ.get("SMTP_PORT") # the port of the SMTP server
 SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD") # the password for the email account from which emails will be sent
 
+def is_email_configured():
+    return SMTP_EMAIL is not None and SMTP_SERVER is not None and SMTP_PORT is not None and SMTP_PASSWORD is not None
+
 def send_share_email(receiver_email: str, sender_name: str, sender_email: str, sender_wishlist: str):
-    if SMTP_EMAIL is None or SMTP_SERVER is None or SMTP_PORT is None or SMTP_PASSWORD is None:
+    if not is_email_configured():
         return
     
     message = MIMEMultipart("alternative")
@@ -48,7 +51,7 @@ def send_share_email(receiver_email: str, sender_name: str, sender_email: str, s
         server.sendmail(SMTP_EMAIL, receiver_email, message.as_string())
         
 def send_update_email(receiver_emails: List[str], sender_name: str, sender_email: str, sender_wishlist: str):
-    if SMTP_EMAIL is None or SMTP_SERVER is None or SMTP_PORT is None or SMTP_PASSWORD is None:
+    if not is_email_configured():
         return
     
     email = EmailMessage()

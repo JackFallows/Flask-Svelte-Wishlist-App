@@ -7,6 +7,7 @@ interface Window {
     profile_pic?: string;
     wishlist_id?: number;
     base_path: string;
+    email_is_configured: boolean;
 }
 
 interface IValidationState {

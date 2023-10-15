@@ -100,7 +100,7 @@
                                 </div>
                                 {:else}
                                 <button class="button" on:click={() => read_notification(notification.id)}>
-                                    <span class="fa-solid fa-x"></span>
+                                    <span class="fa-solid fa-xmark"></span>
                                 </button>
                                 {/if}
                             </div>
