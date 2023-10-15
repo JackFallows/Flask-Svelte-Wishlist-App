@@ -88,7 +88,9 @@ def callback():
         name = users_name,
         email=users_email,
         profile_pic=picture,
-        internal_password=None
+        internal_password=None,
+        email_on_share=None,
+        email_on_update=None
     )
 
     # Add to the db if it doesn't exist

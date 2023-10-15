@@ -1,4 +1,6 @@
+from typing import List
 from data_access.db_connect import get_db_connection
+from data_access.models.user import User
 
 class UserSharedWishlist():
     def __init__(self, id, user_id, wishlist_id, accepted):
@@ -8,27 +10,23 @@ class UserSharedWishlist():
         self.accepted = accepted
         
     @staticmethod
-    def get_pending_shares(user_id):
+    def get(share_id):
         with get_db_connection() as db:
-            pending = db.execute(
-                "SELECT u.name AS user_name, u.email, usw.wishlist_id, w.name AS wishlist_name "
-                "FROM user_shared_wishlist AS usw "
-                "INNER JOIN wishlist AS w ON w.rowid = usw.wishlist_id "
-                "INNER JOIN user AS u ON u.id = w.user_id "
-                "WHERE usw.accepted IS NULL AND usw.user_id = ?",
-                (user_id,)
-            ).fetchall()
+            usw = db.execute(
+                "SELECT rowid, user_id, wishlist_id, accepted "
+                "FROM user_shared_wishlist "
+                "WHERE rowid = ?",
+                (share_id,)
+            ).fetchone()
             
-            return list(
-                map(
-                    lambda usw: {
-                        "user_name": usw[0],
-                        "email": usw[1],
-                        "wishlist_id": usw[2],
-                        "wishlist_name": usw[3]
-                    },
-                    pending
-                )
+            if not usw:
+                return None
+            
+            return UserSharedWishlist(
+                id=usw[0],
+                user_id=usw[1],
+                wishlist_id=usw[2],
+                accepted=usw[3]
             )
         
     @staticmethod
@@ -50,3 +48,25 @@ class UserSharedWishlist():
             )
             
             db.commit()
+        
+    @staticmethod
+    def get_users_with_share(wishlist_id: int) -> List[User]:
+        with get_db_connection() as db:
+            users = db.execute("""
+                SELECT id, name, email, profile_pic, internal_password, email_on_share, email_on_update
+                FROM user AS u
+                INNER JOIN user_shared_wishlist AS usw ON u.id = usw.user_id
+                WHERE usw.wishlist_id = ? and usw.accepted = 1
+                """,
+                (wishlist_id,)
+            ).fetchall()
+            
+            return list(map(lambda user: User(
+                id_ = user[0],
+                name=user[1],
+                email=user[2],
+                profile_pic=user[3],
+                internal_password=user[4],
+                email_on_share=user[5],
+                email_on_update=user[6]
+            ), users))

@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block global_script %}
+<script>
+    window.page_title = "Profile"
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" defer src='{{ auto_bundles["profile"] }}'></script>
+{% endblock %}

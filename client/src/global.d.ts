@@ -7,6 +7,7 @@ interface Window {
     profile_pic?: string;
     wishlist_id?: number;
     base_path: string;
+    email_is_configured: boolean;
 }
 
 interface IValidationState {
@@ -41,4 +42,12 @@ interface IWishlist {
 interface IWishlistShare extends IWishlist {
     owner_name: string;
     owner_email: string;
+}
+
+interface IUser {
+    name: string;
+    email: string;
+    profile_pic: string;
+    email_on_share: boolean;
+    email_on_update: boolean;
 }

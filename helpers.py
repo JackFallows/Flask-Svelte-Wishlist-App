@@ -8,6 +8,8 @@ from flask_login import current_user
 
 from decorators.auth import ENABLE_INTERNAL_AUTH
 
+from services.email_service import is_email_configured
+
 def get_base_path():
     env = environ.get("BASE_PATH")
     if (env is None):
@@ -68,5 +70,6 @@ def custom_render_template(template_name, **context):
         auto_bundles=get_js(),
         module_css=get_css(),
         base_path=BASE_PATH,
+        email_is_configured=is_email_configured(),
         **context
     )

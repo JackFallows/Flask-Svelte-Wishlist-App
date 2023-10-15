@@ -40,6 +40,13 @@
             {% endif %};
 
         window.base_path = "{{ base_path }}".slice(0, "{{ base_path }}".length - 1);
+
+        window.email_is_configured =
+            {% if email_is_configured %}
+            true
+            {% else %}
+            false
+            {% endif %};
     </script>
 
     {% block global_script %}

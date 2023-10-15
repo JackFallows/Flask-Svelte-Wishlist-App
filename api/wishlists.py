@@ -8,6 +8,8 @@ from data_access.models.wishlist_share import WishlistShare
 from data_access.models.wishlist_item import WishlistItem
 from data_access.models.user_shared_wishlist import UserSharedWishlist
 
+from services.notification_service import notify_wishlist_shared, notify_wishlist_updated
+
 wishlists = Blueprint('wishlists', __name__)
 
 @login_required
@@ -43,12 +45,6 @@ def get_all_for_user():
 def get_shared_with_user():
     wishlists = WishlistShare.get_shared_with_user(current_user.id)
     return jsonify(list(map(lambda w: w.as_dict(), wishlists)))
-    
-@login_required
-@wishlists.route('/get_pending_shares_for_user')
-def get_pending_shares_for_user():
-    pending = UserSharedWishlist.get_pending_shares(current_user.id)
-    return jsonify(pending)
 
 @login_required
 @wishlists.route('/post', methods=["POST"])
@@ -109,6 +105,11 @@ def put_wishlist():
         else:
             wishlist_item.apply_changes()
             
+    if db_wishlist.shared:
+        user = User.get(current_user.id)
+        target_users = UserSharedWishlist.get_users_with_share(wishlist.id)
+        notify_wishlist_updated(user, target_users, wishlist)
+            
     return jsonify({})
 
 @login_required
@@ -125,18 +126,10 @@ def share_wishlist():
     UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
     Wishlist.set_shared(wishlist_id=wishlist.id)
     
-    return jsonify({})
-
-@login_required
-@wishlists.route('/accept_share/<wishlist_id>', methods=["PATCH"])
-def accept_share(wishlist_id):
-    UserSharedWishlist.set_accepted(user_id=current_user.id, wishlist_id=wishlist_id, accepted=True)
-    return jsonify({})
+    user = User.get(current_user.id)
     
-@login_required
-@wishlists.route('/reject_share/<wishlist_id>', methods=["PATCH"])
-def reject_share(wishlist_id):
-    UserSharedWishlist.set_accepted(user_id=current_user.id, wishlist_id=wishlist_id, accepted=False)
+    notify_wishlist_shared(user, target_user, wishlist)
+    
     return jsonify({})
 
 @login_required
