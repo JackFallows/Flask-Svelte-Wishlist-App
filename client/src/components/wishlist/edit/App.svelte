@@ -1,7 +1,7 @@
 <script lang="ts">
     import '../../../tailwind.css';
 
-    import { Get, Post, Put } from "../../../http"
+    import { Get, Patch, Post, Put } from "../../../http"
     import { makeRoutes } from "../../../routes";
     import WishlistItem from "../../WishlistItem.svelte";
     import Modal from "../../Modal.svelte";
@@ -99,6 +99,22 @@
     async function move_item_to_list(event: CustomEvent<IWishlistItem>) {
         get_all_wishlists_promise = get_all_wishlists();
         const confirmed = await move_item_modal.show();
+
+        if (!confirmed) {
+            return;
+        }
+
+        const item = event.detail;
+
+        await Patch(Api.WishlistItems.PatchReparent.append(item.id).append(target_wishlist.id), {});
+
+        const item_index = wishlist_items.indexOf(item);
+        if (item_index === -1) {
+            return;
+        }
+
+        wishlist_items.splice(item_index, 1);
+        wishlist_items = wishlist_items; // trigger reactivity
     }
 
     async function remove_item(event: CustomEvent<IWishlistItem>) {
