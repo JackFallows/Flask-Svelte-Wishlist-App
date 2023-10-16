@@ -8,6 +8,7 @@
     export let wishlist_item: IWishlistItem;
     export let is_edit: boolean = false;
     export let share_guid: string = null;
+    export let has_other_wishlists: boolean = false;
 
     const { Api } = makeRoutes(window.base_path);
     
@@ -46,12 +47,17 @@
             </div>
         </div>
         <div class="">
+            {#if has_other_wishlists}
+            <button class="icon-button" on:click={() => dispatch('move', wishlist_item)}>
+                <span class="fa-solid fa-arrow-right-from-bracket"></span>
+            </button>
+            {/if}
             <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
                 <span class="fa-solid fa-trash pointer-events-none"></span>
             </button>
         </div>
     </div>
-{:else}
+    {:else}
     <div class="flex items-center space-x-3">
         <div class="grow">
             <a class="text-lg text-black" href="{link}">{link}</a>
@@ -65,7 +71,7 @@
             </button>
         </div>
     </div>
-{/if}
+    {/if}
 </div>
 
 <style lang="less">

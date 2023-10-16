@@ -57,6 +57,13 @@ def get_all_for_user():
     return jsonify(list(map(lambda w: w.as_dict(), wishlists)))
 
 @login_required
+@wishlists.route('/get_count_for_user')
+def get_count_for_user():
+    count = Wishlist.get_count_for_user(current_user.id)
+    
+    return jsonify({ "total_wishlists": count })
+
+@login_required
 @wishlists.route('/get_shared_with_user')
 def get_shared_with_user():
     wishlists = WishlistShare.get_shared_with_user(current_user.id)

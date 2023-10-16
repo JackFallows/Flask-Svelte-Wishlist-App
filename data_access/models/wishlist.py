@@ -102,6 +102,15 @@ class Wishlist():
                         share_guid=w[5]),
                     wishlists)
                 )
+            
+    @staticmethod
+    def get_count_for_user(user_id) -> int:
+        with get_db_connection() as db:
+            wishlist_count = db.execute(
+                "SELECT COUNT(*) FROM wishlist WHERE user_id = ?", (user_id,)
+            ).fetchone()
+            
+            return int(wishlist_count[0])
         
     @staticmethod
     def create(name, user_id):

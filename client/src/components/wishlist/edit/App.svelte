@@ -11,23 +11,42 @@
     const { Api, Views } = makeRoutes(window.base_path);
 
     let loading_promise = load_wishlist();
+    let get_all_wishlists_promise: Promise<IWishlist[]>;
 
-    let confirm_modal: Modal;
+    let confirm_delete_modal: Modal;
+    let move_item_modal: Modal;
 
     let wishlist_name: string;
     let wishlist_items: IWishlistItem[] = [];
+    let total_wishlists: number;
+    let has_other_wishlists: boolean;
+
+    $: has_other_wishlists = wishlist_id == null ? total_wishlists > 0 : total_wishlists > 1;
 
     async function load_wishlist() {
         if (wishlist_id == null) {
             return;
         }
 
-
         const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
+        const countPayload = await Get<{ total_wishlists: number }>(Api.Wishlists.GetCountForUser);
 
         const wishlist = wishlistPayload.get_json();
         wishlist_name = wishlist.name;
         wishlist_items = wishlist.wishlist_items;
+        total_wishlists = countPayload.get_json().total_wishlists;
+    }
+
+    async function get_all_wishlists(): Promise<IWishlist[]> {
+        const payload = await Get<IWishlist[]>(Api.Wishlists.GetAllForUser);
+
+        let wishlists = payload.get_json();
+
+        if (wishlist_id != null) {
+            wishlists = wishlists.filter(w => w.id != wishlist_id);
+        }
+
+        return wishlists;
     }
 
     async function save_wishlist() {
@@ -75,8 +94,13 @@
         })];
     }
 
+    async function move_item_to_list(event: CustomEvent<IWishlistItem>) {
+        get_all_wishlists_promise = get_all_wishlists();
+        const confirmed = await move_item_modal.show();
+    }
+
     async function remove_item(event: CustomEvent<IWishlistItem>) {
-        const confirmed = await confirm_modal.show();
+        const confirmed = await confirm_delete_modal.show();
         
         if (!confirmed) {
             return;
@@ -107,7 +131,7 @@
         <button class="button my-2.5" id="add-item-button" on:click={() => add_item()}>Add item</button>
         <div class="flex flex-col space-y-3">
             {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={remove_item} />
+                <WishlistItem wishlist_item={wishlist_item} is_edit={true}  has_other_wishlists={has_other_wishlists} on:delete={remove_item} on:move={move_item_to_list} />
             {/each}
         </div>
     </div>
@@ -117,7 +141,29 @@
 </div>
 {/await}
 
-<Modal bind:this={confirm_modal} is_danger={true} id="delete">
+<Modal bind:this={move_item_modal} id="move">
+    <span slot="header">
+        Move item
+    </span>
+    <span slot="body">
+        {#if get_all_wishlists_promise}
+            {#await get_all_wishlists_promise}
+                Loading...
+            {:then wishlists} 
+                <p>Choose the wishlist to move this item to:</p>
+                {#each wishlists as wishlist}
+                    <p>{wishlist.name}</p>
+                {/each}
+            {/await}
+        {/if}
+    </span>
+    <span slot="buttons" let:close_modal={close}>
+        <button class="button" on:click={() => close()}>Cancel</button>
+        <button class="button" on:click={() => close("true")}>Move item</button>
+    </span>
+</Modal>
+
+<Modal bind:this={confirm_delete_modal} is_danger={true} id="delete">
     <span slot="header">
         Are you sure?
     </span>
