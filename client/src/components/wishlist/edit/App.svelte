@@ -5,6 +5,7 @@
     import { makeRoutes } from "../../../routes";
     import WishlistItem from "../../WishlistItem.svelte";
     import Modal from "../../Modal.svelte";
+    import RadioList from '../../RadioList.svelte';
 
     export let wishlist_id: number;
 
@@ -20,6 +21,7 @@
     let wishlist_items: IWishlistItem[] = [];
     let total_wishlists: number;
     let has_other_wishlists: boolean;
+    let target_wishlist: IWishlist = null;
 
     $: has_other_wishlists = wishlist_id == null ? total_wishlists > 0 : total_wishlists > 1;
 
@@ -151,9 +153,7 @@
                 Loading...
             {:then wishlists} 
                 <p>Choose the wishlist to move this item to:</p>
-                {#each wishlists as wishlist}
-                    <p>{wishlist.name}</p>
-                {/each}
+                <RadioList group_id="wishlists_group" items={wishlists} bind:selected_item={target_wishlist}></RadioList>
             {/await}
         {/if}
     </span>
