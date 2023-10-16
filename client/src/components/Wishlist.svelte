@@ -15,7 +15,6 @@
 
     let delete_modal: Modal;
     let share_modal: Modal;
-    let share_accordion: Accordion;
     let is_sharing_to_user: boolean = true;
     let share_link: string = null;
 
@@ -97,8 +96,8 @@
         Share wishlist '{wishlist.name}'
     </span>
     <span slot="body">
-        <Accordion bind:this={share_accordion}>
-            <Collapse heading="Share to existing user" bind:accordion={share_accordion} on:collapse_change={sharing_to_user_change}>
+        <Accordion>
+            <Collapse heading="Share to existing user" on:collapse_change={sharing_to_user_change}>
                 <p>
                     Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
                     <input type="email" class="text-input" style="width: 100%" bind:value={share_email} />
@@ -108,7 +107,7 @@
                     Only share wishlists with those you trust with this information.
                 </p>
             </Collapse>
-            <Collapse heading="Share with link" collapsed={true} bind:accordion={share_accordion}>
+            <Collapse heading="Share with link" collapsed={true}>
                 <p>Click the button below to generate a unique link to your wishlist which you can share with people who do not have an account on this website.</p>
                 {#if !share_link}
                 <button class="button" on:click={get_share_link}>Get link</button>

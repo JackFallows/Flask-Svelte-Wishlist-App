@@ -1,28 +1,27 @@
 <script lang="ts">
     import '../tailwind.css';
-    import { createEventDispatcher } from 'svelte';
-    import Accordion from './Accordion.svelte';
+    import { createEventDispatcher, getContext } from 'svelte';
     
 	const dispatch = createEventDispatcher();
 
+    let accordion_register_collapse: (collapse_func: () => void) => void = getContext('register_collapse');
+    let accordion_collapse_all: () => void = getContext('collapse_all');
+
     export let heading: string;
     export let collapsed: boolean = false;
-    export let accordion: Accordion = null;
 
     function collapse() {
         collapsed = true;
         dispatch('collapse_change', { collapsed });
     }
 
-    $: {
-        if (accordion) {
-            accordion.register_collapse(collapse);
-        }
+    if (accordion_register_collapse) {
+        accordion_register_collapse(collapse);
     }
 
     function toggle() {
-        if (accordion && collapsed) {
-            accordion.collapse_all();
+        if (accordion_collapse_all && collapsed) {
+            accordion_collapse_all();
             collapsed = false;
         } else {
             collapsed = !collapsed;
