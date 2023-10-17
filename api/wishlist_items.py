@@ -39,18 +39,17 @@ def link_share_mark_bought(share_guid, wishlist_item_id):
     
     return jsonify({})
 
-# @login_required
-# @wishlist_items.route('/post', methods=["POST"])
-# def post_wishlist_item():
-#     wishlist_item = json.loads(request.data)
+@login_required
+@wishlist_items.route('/reparent/<wishlist_item_id>/<target_wishlist_id>', methods=["PATCH"])
+def reparent(wishlist_item_id, target_wishlist_id):
+    if not WishlistItem.get_is_owned_by_user(wishlist_item_id, user_id=current_user.id):
+        return "Not found", 404
     
-#     wishlist = Wishlist.get(wishlist_item['wishlist_id'], current_user.id)
+    target_wishlist = Wishlist.get(target_wishlist_id, user_id=current_user.id)
     
-#     if (wishlist is None):
-#         return "Not found", 404
+    if not target_wishlist:
+        return "Not found", 404
     
-#     # TODO validation
+    WishlistItem.reparent(wishlist_item_id, target_wishlist_id)
     
-#     wishlist_item_id = WishlistItem.create(wishlist_id=wishlist.id, link=wishlist_item['link'], notes=wishlist_item['notes'])
-    
-#     return jsonify(id=wishlist_item_id)
+    return jsonify({})

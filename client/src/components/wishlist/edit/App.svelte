@@ -12,16 +12,16 @@
 
     let loading_promise = load_wishlist();
 
-    let confirm_modal: Modal;
+    let confirm_delete_modal: Modal;
 
     let wishlist_name: string;
     let wishlist_items: IWishlistItem[] = [];
+
 
     async function load_wishlist() {
         if (wishlist_id == null) {
             return;
         }
-
 
         const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
 
@@ -75,8 +75,8 @@
         })];
     }
 
-    async function remove_item(event: CustomEvent<IWishlistItem>) {
-        const confirmed = await confirm_modal.show();
+    async function delete_item(event: CustomEvent<IWishlistItem>) {
+        const confirmed = await confirm_delete_modal.show();
         
         if (!confirmed) {
             return;
@@ -84,6 +84,10 @@
 
         const item = event.detail;
 
+        remove_item(item);
+    }
+
+    function remove_item(item: IWishlistItem) {
         const item_index = wishlist_items.indexOf(item);
         if (item_index === -1) {
             return;
@@ -107,7 +111,7 @@
         <button class="button my-2.5" id="add-item-button" on:click={() => add_item()}>Add item</button>
         <div class="flex flex-col space-y-3">
             {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={remove_item} />
+                <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={delete_item} />
             {/each}
         </div>
     </div>
@@ -117,7 +121,7 @@
 </div>
 {/await}
 
-<Modal bind:this={confirm_modal} is_danger={true} id="delete">
+<Modal bind:this={confirm_delete_modal} is_danger={true} id="delete">
     <span slot="header">
         Are you sure?
     </span>

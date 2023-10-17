@@ -92,6 +92,23 @@ class WishlistItem():
             return True
         
     @staticmethod
+    def get_is_owned_by_user(wishlist_item_id, user_id):
+        with get_db_connection() as db:
+            wishlist_item = db.execute(
+                """
+                SELECT wi.rowid
+                FROM wishlist_item wi
+                INNER JOIN wishlist w ON w.rowid = wi.wishlist_id
+                WHERE wi.rowid = ? AND w.user_id = ?
+                """, (wishlist_item_id, user_id,)
+            ).fetchone()
+            
+            if not wishlist_item:
+                return False
+            
+            return True
+        
+    @staticmethod
     def get_is_available_to_link_share(wishlist_item_id, share_guid):
         with get_db_connection() as db:
             wishlist_item = db.execute(
@@ -132,6 +149,17 @@ class WishlistItem():
                 "UPDATE wishlist_item SET bought = 1 WHERE rowid = ?",
                 (wishlist_item_id,)
             )
+            db.commit()
+            
+    @staticmethod
+    def reparent(wishlist_item_id: int, wishlist_id: int):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                UPDATE wishlist_item SET wishlist_id = ? WHERE rowid = ?
+                """, (wishlist_id, wishlist_item_id,)
+            )
+            
             db.commit()
             
     @staticmethod
