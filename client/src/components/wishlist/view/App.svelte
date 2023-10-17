@@ -13,8 +13,13 @@
 
     let wishlist: IWishlist;
     let wishlist_as_share: IWishlistShare;
+    let is_owned: boolean;
+    let total_wishlists: number;
+    let has_other_wishlists: boolean;
 
     $: wishlist_as_share = (<IWishlistShare>wishlist)?.owner_name != null ? (<IWishlistShare>wishlist) : null;
+    $: is_owned = wishlist_as_share == null;
+    $: has_other_wishlists = wishlist_id == null ? total_wishlists > 0 : total_wishlists > 1;
 
     let wishlist_items: IWishlistItem[];
 
@@ -24,9 +29,21 @@
         }
         
         const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
+        const countPayload = await Get<{ total_wishlists: number }>(Api.Wishlists.GetCountForUser);
 
         wishlist = wishlistPayload.get_json();
         wishlist_items = wishlist.wishlist_items;
+        total_wishlists = countPayload.get_json().total_wishlists;
+    }
+
+    function remove_item(item: IWishlistItem) {
+        const item_index = wishlist_items.indexOf(item);
+        if (item_index === -1) {
+            return;
+        }
+
+        wishlist_items.splice(item_index, 1);
+        wishlist_items = wishlist_items; // trigger reactivity
     }
 </script>
 
@@ -46,12 +63,12 @@
         <h2 class="text-lg">Items</h2>
         <div class="flex space-y-3 flex-col">
             {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} on:bought={() => loading_promise = load_wishlist()} />
+                <WishlistItem wishlist_item={wishlist_item} is_owned={is_owned} has_other_wishlists={has_other_wishlists} on:bought={() => loading_promise = load_wishlist()} on:moved={(e) => remove_item(e.detail)} />
             {/each}
         </div>
     </div>
 
-    {#if wishlist_as_share == null}
+    {#if is_owned}
     <aside class="">
         <a class="button" href="{ Views.Wishlist.Edit.append(wishlist_id).to_string() }">
             Edit wishlist
