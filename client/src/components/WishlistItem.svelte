@@ -24,6 +24,7 @@
     let bought: boolean = wishlist_item.bought;
     let move_item_modal: Modal;
     let target_wishlist: IWishlist = null;
+    let bought_confirmation_modal: Modal;
 
     $: {
         wishlist_item.link = link;
@@ -44,13 +45,19 @@
     }
 
     async function mark_as_bought() {
+        const confirmed = await bought_confirmation_modal.show();
+
+        if (!confirmed) {
+            return;
+        }
+
         if (share_guid != null) {
             await Patch(Api.WishlistItems.PatchLinkShareMarkBought.append(share_guid).append(wishlist_item.id), null);
         } else {
             await Patch(Api.WishlistItems.PatchMarkAsBought.append(wishlist_item.id), null);
         }
 
-        dispatch('bought');
+        dispatch('bought', wishlist_item);
     }
 
     async function move_item_to_list() {
@@ -119,6 +126,19 @@
     <span slot="buttons" let:close_modal={close}>
         <button class="button" on:click={() => close()}>Cancel</button>
         <button class="button" on:click={() => close("true")}>Move item</button>
+    </span>
+</Modal>
+
+<Modal bind:this={bought_confirmation_modal} id="bought-modal">
+    <span slot="header">
+        Have you bought this item?
+    </span>
+    <span slot="body">
+        If you have bought this item, click Yes below and it will be removed from the list.
+    </span>
+    <span slot="buttons" let:close_modal={close}>
+        <button class="button" on:click={() => close()}>Cancel</button>
+        <button class="button" on:click={() => close("true")}>Yes</button>
     </span>
 </Modal>
 

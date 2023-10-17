@@ -63,7 +63,7 @@
         <h2 class="text-lg">Items</h2>
         <div class="flex space-y-3 flex-col">
             {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} is_owned={is_owned} has_other_wishlists={has_other_wishlists} on:bought={() => loading_promise = load_wishlist()} on:moved={(e) => remove_item(e.detail)} />
+                <WishlistItem wishlist_item={wishlist_item} is_owned={is_owned} has_other_wishlists={has_other_wishlists} on:bought={(e) => remove_item(e.detail)} on:moved={(e) => remove_item(e.detail)} />
             {/each}
         </div>
     </div>
