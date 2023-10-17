@@ -96,6 +96,31 @@
         wishlist_items.splice(item_index, 1);
         wishlist_items = wishlist_items; // trigger reactivity
     }
+
+    function sort_item(event: CustomEvent<{ direction: string, wishlist_item: IWishlistItem }>) {
+        const { direction, wishlist_item } = event.detail;
+
+        const current_index = wishlist_items.indexOf(wishlist_item);
+
+        if (current_index <= 0 && direction === 'up') {
+            return;
+        }
+
+        if (current_index === (wishlist_items.length - 1) && direction === 'down') {
+            return;
+        }
+
+        const target_index = direction === 'up' ? current_index - 1 : current_index + 1;
+
+        wishlist_items.splice(current_index, 1);
+
+        wishlist_items.splice(target_index, 0, wishlist_item);
+
+        wishlist_items = wishlist_items.map((wi, i) => {
+            wi.order_number = i;
+            return wi;
+        });
+    }
 </script>
 
 {#await loading_promise}
@@ -111,7 +136,7 @@
         <button class="button my-2.5" id="add-item-button" on:click={() => add_item()}>Add item</button>
         <div class="flex flex-col space-y-3">
             {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={delete_item} />
+                <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={delete_item} on:sort={sort_item} />
             {/each}
         </div>
     </div>

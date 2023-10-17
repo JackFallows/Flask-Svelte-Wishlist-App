@@ -71,6 +71,20 @@
 
         dispatch('moved', wishlist_item);
     }
+
+    function move_up() {
+        dispatch('sort', {
+            direction: 'up',
+            wishlist_item
+        });
+    }
+
+    function move_down() {
+        dispatch('sort', {
+            direction: 'down',
+            wishlist_item
+        })
+    }
 </script>
 
 <div class="rounded-md bg-slate-200 p-2" id="{html_id}">
@@ -82,11 +96,14 @@
                 <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Notes"></textarea>
             </div>
         </div>
-        <div class="">
-
+        <div class="flex items-center">
             <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
                 <span class="fa-solid fa-trash pointer-events-none"></span>
             </button>
+            <div class="flex flex-col">
+                <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
+                <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
+            </div>
         </div>
     </div>
     {:else}
