@@ -1,5 +1,6 @@
 <script lang="ts">
     import '../../../tailwind.css';
+    import { flip } from 'svelte/animate';
 
     import { Get, Post, Put } from "../../../http"
     import { makeRoutes } from "../../../routes";
@@ -136,7 +137,14 @@
         <button class="button my-2.5" id="add-item-button" on:click={() => add_item()}>Add item</button>
         <div class="flex flex-col space-y-3">
             {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={delete_item} on:sort={sort_item} />
+                <div animate:flip={{ duration: 200 }}>
+                    <WishlistItem
+                        wishlist_item={wishlist_item}
+                        is_edit={true}
+                        on:delete={delete_item}
+                        on:sort={sort_item}
+                    />
+                </div>
             {/each}
         </div>
     </div>
