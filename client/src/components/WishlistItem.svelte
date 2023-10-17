@@ -63,14 +63,6 @@
         await Patch(Api.WishlistItems.PatchReparent.append(wishlist_item.id).append(target_wishlist.id), {});
 
         dispatch('moved', wishlist_item);
-
-        // const item_index = wishlist_items.indexOf(item);
-        // if (item_index === -1) {
-        //     return;
-        // }
-
-        // wishlist_items.splice(item_index, 1);
-        // wishlist_items = wishlist_items; // trigger reactivity
     }
 </script>
 
