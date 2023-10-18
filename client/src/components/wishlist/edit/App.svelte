@@ -131,7 +131,7 @@
     <div class="grow">
         <div class="">
             <label class="" for="wishlist-name">Wishlist name</label><br />
-            <input class="text-input" id="wishlist-name" placeholder="My wishlist" bind:value={wishlist_name} />
+            <input class="text-input md:w-96" id="wishlist-name" placeholder="My wishlist" bind:value={wishlist_name} />
         </div>
         <h2 class="mt-2.5 text-lg">Items</h2>
         <button class="button my-2.5" id="add-item-button" on:click={() => add_item()}>Add item</button>

@@ -6,6 +6,7 @@
     import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
     import RadioList from './RadioList.svelte';
+    import Collapse from './Collapse.svelte';
 
     export let wishlist_item: IWishlistItem;
     export let is_edit: boolean = false;
@@ -91,28 +92,36 @@
     {#if is_edit}
     <div class="flex items-center space-x-3">
         <div class="grow">
-            <div class="flex items-start space-y-3 flex-col lg:flex-row lg:space-y-0 lg:space-x-3">
+            <div class="flex items-start space-y-3 flex-col">
                 <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
-                <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Notes"></textarea>
+                <Collapse heading="Description" subtle collapsed>
+                    <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Enter additional information about this item here..."></textarea>
+                </Collapse>
             </div>
         </div>
         <div class="flex items-center">
-            <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
-                <span class="fa-solid fa-trash pointer-events-none"></span>
-            </button>
             <div class="flex flex-col">
                 <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
                 <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
             </div>
+            <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
+                <span class="fa-solid fa-trash pointer-events-none"></span>
+            </button>
         </div>
     </div>
     {:else}
     <div class="flex items-center space-x-3">
         <div class="grow">
             <a class="text-lg text-black" href="{link}">{link}</a>
-            <div>
-                {notes}
+            {#if notes?.trim().length > 0}
+            <div class="mt-2">
+                <Collapse heading="Description" subtle collapsed>
+                    <div class="text-sm">
+                        {notes}
+                    </div>
+                </Collapse>
             </div>
+            {/if}
         </div>
         <div class="text-base text-slate-600">
             {#if has_other_wishlists && is_owned}

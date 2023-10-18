@@ -43,22 +43,22 @@ Loading...
         <h1 class="text-2xl">Sign up</h1>
         <div class="mb-2">
             <label for="email" class="">Email address</label><br />
-            <input type="email" class="text-input" id="email" bind:value={email} />
+            <input type="email" class="text-input md:w-96" id="email" bind:value={email} />
         </div>
 
         <div class="mb-2">
             <label for="name" class="">Name</label><br />
-            <input type="text" class="text-input" id="name" bind:value={name} />
+            <input type="text" class="text-input md:w-96" id="name" bind:value={name} />
         </div>
 
         <div class="mb-2">
             <label for="password1" class="">Password</label><br />
-            <input type="password" class="text-input" id="password1" bind:value={password1} />
+            <input type="password" class="text-input md:w-96" id="password1" bind:value={password1} />
         </div>
 
         <div class="mb-2">
             <label for="password2" class="">Confirm password</label><br />
-            <input type="password" class="text-input" id="password2" bind:value={password2} />
+            <input type="password" class="text-input md:w-96" id="password2" bind:value={password2} />
         </div>
 
         <button class="success-button" id="sign-up" on:click={() => loading_promise = sign_up()}>Sign up</button>

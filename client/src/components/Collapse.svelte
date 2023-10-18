@@ -9,6 +9,7 @@
 
     export let heading: string;
     export let collapsed: boolean = false;
+    export let subtle: boolean = false;
 
     function collapse() {
         collapsed = true;
@@ -31,13 +32,13 @@
     }
 </script>
 
-<div>
-    <button class="bg-slate-200 p-2 w-full flex justify-between" on:click={() => toggle()}>
-        <span class="text-xl">{heading}</span>
-        <span class="text-2xl fa-solid {collapsed ? 'fa-chevron-down' : 'fa-chevron-up'}"></span>
+<div class="w-full">
+    <button class="{subtle ? 'clear-button' : 'bg-slate-200 p-2'} w-full flex justify-between" on:click={() => toggle()}>
+        <span class="{subtle ? 'text-sm' : 'text-xl'}">{heading}</span>
+        <span class="{subtle ? 'text-base' : 'text-2xl'} fa-solid {collapsed ? 'fa-chevron-down' : 'fa-chevron-up'}"></span>
     </button>
     <div class="overflow-y-hidden transition-all duration-300 {collapsed ? 'max-h-0' : 'max-h-96'}">
-        <div class="p-1 border-r-2 border-b-2 border-l-2 border-slate-200">
+        <div class="{subtle ? 'pt-1' : 'p-1 border-r-2 border-b-2 border-l-2 border-slate-200'}">
             <slot></slot>
         </div>
     </div>
