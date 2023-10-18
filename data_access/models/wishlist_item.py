@@ -116,8 +116,8 @@ class WishlistItem():
                 SELECT wishlist_item.rowid
                 FROM wishlist_item
                 INNER JOIN wishlist ON wishlist.rowid = wishlist_item.wishlist_id
-                WHERE wishlist.share_guid = ?
-                """, (share_guid,)
+                WHERE wishlist.share_guid = ? AND wishlist_item.rowid = ?
+                """, (share_guid, wishlist_item_id,)
             ).fetchone()
             
             if not wishlist_item:
