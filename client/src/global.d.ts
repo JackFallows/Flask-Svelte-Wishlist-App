@@ -27,6 +27,7 @@ interface IWishlistItem {
     notes: string;
     bought: boolean;
     order_number: number;
+    is_header: boolean;
 }
 
 interface IWishlist {

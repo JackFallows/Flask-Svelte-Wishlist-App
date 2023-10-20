@@ -1,5 +1,6 @@
 <script lang="ts">
     import '../../../tailwind.css';
+    import { flip } from 'svelte/animate';
 
     import { Get, Post, Put } from "../../../http"
     import { makeRoutes } from "../../../routes";
@@ -16,7 +17,6 @@
 
     let wishlist_name: string;
     let wishlist_items: IWishlistItem[] = [];
-
 
     async function load_wishlist() {
         if (wishlist_id == null) {
@@ -59,14 +59,15 @@
         });
     }
 
-    function add_item() {
+    function add_item(is_header: boolean = false) {
         const new_item: IWishlistItem = {
             id: null,
-            wishlist_id: wishlist_id,
+            wishlist_id,
             link: "",
             notes: "",
             bought: false,
-            order_number: 0
+            order_number: 0,
+            is_header
         };
 
         wishlist_items = [new_item, ...wishlist_items.map((wi, i) => {
@@ -96,6 +97,39 @@
         wishlist_items.splice(item_index, 1);
         wishlist_items = wishlist_items; // trigger reactivity
     }
+
+    function sort_up(event: CustomEvent<{ item: IWishlistItem }>) {
+        const current_index = wishlist_items.indexOf(event.detail.item);
+        if (current_index <= 0) {
+            return;
+        }
+
+        const target_index = current_index - 1;
+
+        sort(event.detail.item, current_index, target_index);
+    }
+
+    function sort_down(event: CustomEvent<{ item: IWishlistItem }>) {
+        const current_index = wishlist_items.indexOf(event.detail.item);
+        if (current_index === (wishlist_items.length - 1)) {
+            return;
+        }
+
+        const target_index = current_index + 1;
+
+        sort(event.detail.item, current_index, target_index);
+    }
+
+    function sort(item: IWishlistItem, current_index: number, target_index: number) {
+        wishlist_items.splice(current_index, 1);
+
+        wishlist_items.splice(target_index, 0, item);
+
+        wishlist_items = wishlist_items.map((wi, i) => {
+            wi.order_number = i;
+            return wi;
+        });
+    }
 </script>
 
 {#await loading_promise}
@@ -105,13 +139,22 @@
     <div class="grow">
         <div class="">
             <label class="" for="wishlist-name">Wishlist name</label><br />
-            <input class="text-input" id="wishlist-name" placeholder="My wishlist" bind:value={wishlist_name} />
+            <input class="text-input md:w-96" id="wishlist-name" placeholder="My wishlist" bind:value={wishlist_name} />
         </div>
         <h2 class="mt-2.5 text-lg">Items</h2>
         <button class="button my-2.5" id="add-item-button" on:click={() => add_item()}>Add item</button>
+        <button class="button my-2.5" id="add-header-button" on:click={() => add_item(true)}>Add heading</button>
         <div class="flex flex-col space-y-3">
-            {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} is_edit={true} on:delete={delete_item} />
+            {#each wishlist_items as item(item)}
+                <div animate:flip={{ duration: 200 }}>
+                    <WishlistItem
+                        wishlist_item={item}
+                        is_edit={true}
+                        on:delete={delete_item}
+                        on:move_up={sort_up}
+                        on:move_down={sort_down}
+                    />
+                </div>
             {/each}
         </div>
     </div>

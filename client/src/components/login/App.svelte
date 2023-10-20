@@ -42,12 +42,12 @@ Loading...
 
         <div class="mb-2">
             <label class="" for="email">Email address</label><br />
-            <input class="text-input" id="email" type="email" bind:value={email} />
+            <input class="text-input md:w-96" id="email" type="email" bind:value={email} />
         </div>
         
         <div class="mb-2">
             <label class="" for="password">Password</label><br />
-            <input class="text-input" id="password" type="password" bind:value={password} />
+            <input class="text-input md:w-96" id="password" type="password" bind:value={password} />
         </div>
         
         <button class="button" on:click={internal_login}>Log in</button>

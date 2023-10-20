@@ -100,7 +100,7 @@
             <Collapse heading="Share to existing user" on:collapse_change={sharing_to_user_change}>
                 <p>
                     Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
-                    <input type="email" class="text-input" style="width: 100%" bind:value={share_email} />
+                    <input type="email" class="text-input" bind:value={share_email} />
                 </p>
                 <p>
                     Please be aware that <b>the recipient will gain visibility of the name and email address of the sender</b> (that's you!).<br />
@@ -112,7 +112,7 @@
                 {#if !share_link}
                 <button class="button" on:click={get_share_link}>Get link</button>
                 {:else}
-                <input type="text" class="text-input" style="width: 100%" readonly bind:value={share_link} />
+                <input type="text" class="text-input" readonly bind:value={share_link} />
                 <button class="button mt-1" on:click={() => navigator.clipboard.writeText(share_link)}>Copy to clipboard</button>
                 {/if}
             </Collapse>
