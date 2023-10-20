@@ -74,32 +74,27 @@
     }
 
     function move_up() {
-        dispatch('sort', {
-            direction: 'up',
-            wishlist_item
+        dispatch('move_up', {
+            item: wishlist_item
         });
     }
 
     function move_down() {
-        dispatch('sort', {
-            direction: 'down',
-            wishlist_item
+        dispatch('move_down', {
+            item: wishlist_item
         })
     }
 </script>
 
-<div class="rounded-md bg-slate-200 p-2" id="{html_id}">
-    {#if is_edit}
-    <div class="flex items-center space-x-3">
-        <div class="grow">
-            <div class="flex items-start space-y-3 flex-col">
-                <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
-                <Collapse heading="Description" subtle collapsed>
-                    <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Enter additional information about this item here..."></textarea>
-                </Collapse>
-            </div>
-        </div>
+{#if wishlist_item.is_header}
+    <div class="flex items-center space-x-3 p-2">
+        {#if is_edit}
+            <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Section name" />
+        {:else}
+            <h2 class="text-xl">{wishlist_item.link}</h2>
+        {/if}
         <div class="flex items-center">
+            {#if is_edit}
             <div class="flex flex-col">
                 <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
                 <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
@@ -107,35 +102,59 @@
             <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
                 <span class="fa-solid fa-trash pointer-events-none"></span>
             </button>
+            {/if}
         </div>
     </div>
-    {:else}
-    <div class="flex items-center space-x-3">
-        <div class="grow">
-            <a class="text-lg text-black" href="{link}">{link}</a>
-            {#if notes?.trim().length > 0}
-            <div class="mt-2">
-                <Collapse heading="Description" subtle collapsed>
-                    <div class="text-sm">
-                        {notes}
-                    </div>
-                </Collapse>
+{:else}
+    <div class="rounded-md bg-slate-200 p-2" id="{html_id}">
+        {#if is_edit}
+        <div class="flex items-center space-x-3">
+            <div class="grow">
+                <div class="flex items-start space-y-3 flex-col">
+                    <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
+                    <Collapse heading="Description" subtle collapsed>
+                        <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Enter additional information about this item here..."></textarea>
+                    </Collapse>
+                </div>
             </div>
-            {/if}
+            <div class="flex items-center">
+                <div class="flex flex-col">
+                    <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
+                    <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
+                </div>
+                <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
+                    <span class="fa-solid fa-trash pointer-events-none"></span>
+                </button>
+            </div>
         </div>
-        <div class="text-base text-slate-600">
-            {#if has_other_wishlists && is_owned}
-            <button class="icon-button" on:click={() => move_item_to_list()}>
-                <span class="fa-solid fa-arrow-right-from-bracket"></span>
-            </button>
-            {/if}
-            <button class="icon-button" on:click={mark_as_bought}>
-                <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
-            </button>
+        {:else}
+        <div class="flex items-center space-x-3">
+            <div class="grow">
+                <a class="text-lg text-black" href="{link}">{link}</a>
+                {#if notes?.trim().length > 0}
+                <div class="mt-2">
+                    <Collapse heading="Description" subtle collapsed>
+                        <div class="text-sm">
+                            {notes}
+                        </div>
+                    </Collapse>
+                </div>
+                {/if}
+            </div>
+            <div class="text-base text-slate-600">
+                {#if has_other_wishlists && is_owned}
+                <button class="icon-button" on:click={() => move_item_to_list()}>
+                    <span class="fa-solid fa-arrow-right-from-bracket"></span>
+                </button>
+                {/if}
+                <button class="icon-button" on:click={mark_as_bought}>
+                    <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
+                </button>
+            </div>
         </div>
+        {/if}
     </div>
-    {/if}
-</div>
+{/if}
 
 <Modal bind:this={move_item_modal} id="move">
     <span slot="header">

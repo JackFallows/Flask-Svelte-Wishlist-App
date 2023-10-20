@@ -85,7 +85,8 @@ def post_wishlist():
             wishlist_id=wishlist_id,
             link=wishlist_item.link,
             notes=wishlist_item.notes,
-            order_number=wishlist_item.order_number)
+            order_number=wishlist_item.order_number,
+            is_header=wishlist_item.is_header)
     
     return jsonify(id=wishlist_id)
 
@@ -124,7 +125,8 @@ def put_wishlist():
                 wishlist_id=wishlist.id,
                 link=wishlist_item.link,
                 notes=wishlist_item.notes,
-                order_number=wishlist_item.order_number)
+                order_number=wishlist_item.order_number,
+                is_header=wishlist_item.is_header)
         else:
             wishlist_item.apply_changes()
             

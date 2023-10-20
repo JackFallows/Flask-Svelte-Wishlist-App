@@ -1,13 +1,14 @@
 from data_access.db_connect import get_db_connection
 
 class WishlistItem():
-    def __init__(self, id, wishlist_id, link, notes, bought, order_number):
+    def __init__(self, id, wishlist_id, link, notes, bought, order_number, is_header):
         self.id = id
         self.wishlist_id = wishlist_id
         self.link = link
         self.notes = notes
         self.bought = bought
         self.order_number = order_number
+        self.is_header = is_header
         
     def as_dict(self):
         return {
@@ -16,7 +17,8 @@ class WishlistItem():
             "link": self.link,
             "notes": self.notes,
             "bought": self.bought,
-            "order_number": self.order_number
+            "order_number": self.order_number,
+            "is_header": self.is_header
         }
         
     def apply_changes(self):
@@ -25,8 +27,8 @@ class WishlistItem():
         
         with get_db_connection() as db:
             db.execute(
-                "UPDATE wishlist_item SET link = ?, notes = ?, bought = ?, order_number = ? WHERE rowid = ?",
-                (self.link, self.notes, self.bought, self.order_number, self.id,)
+                "UPDATE wishlist_item SET link = ?, notes = ?, bought = ?, order_number = ?, is_header = ? WHERE rowid = ?",
+                (self.link, self.notes, self.bought, self.order_number, self.is_header, self.id,)
             )
             
             db.commit()
@@ -39,14 +41,15 @@ class WishlistItem():
             link=json['link'],
             notes=json['notes'],
             bought=json['bought'],
-            order_number=json['order_number']
+            order_number=json['order_number'],
+            is_header=json['is_header']
         )
         
     @staticmethod
     def get_all_for_wishlist(wishlist_id):
         with get_db_connection() as db:
             wishlist_items = db.execute(
-                "SELECT rowid, wishlist_id, link, notes, bought, order_number "
+                "SELECT rowid, wishlist_id, link, notes, bought, order_number, is_header "
                 "FROM wishlist_item "
                 "WHERE wishlist_id = ? AND bought = 0 "
                 "ORDER BY order_number", (wishlist_id,)
@@ -60,7 +63,8 @@ class WishlistItem():
                         link=w[2],
                         notes=w[3],
                         bought=w[4],
-                        order_number=w[5]),
+                        order_number=w[5],
+                        is_header=w[6]),
                     wishlist_items)
                 )
     @staticmethod
@@ -126,12 +130,12 @@ class WishlistItem():
             return True
         
     @staticmethod
-    def create(wishlist_id, link, notes, order_number):
+    def create(wishlist_id, link, notes, order_number, is_header):
         with get_db_connection() as db:
             db.execute(
-                "INSERT INTO wishlist_item (wishlist_id, link, notes, bought, order_number) "
-                "VALUES (?, ?, ?, 0, ?)",
-                (wishlist_id, link, notes, order_number,),
+                "INSERT INTO wishlist_item (wishlist_id, link, notes, bought, order_number, is_header) "
+                "VALUES (?, ?, ?, 0, ?, ?)",
+                (wishlist_id, link, notes, order_number, is_header,),
             )
             
             db.commit()
