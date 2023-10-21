@@ -2,34 +2,23 @@
     import '../../tailwind.css';
 
     import { makeRoutes } from '../../routes';
-    import { Get, Patch } from '../../http';
-    import { NotificationType } from '../../enums';
+    import { Get } from '../../http';
 
-    import DropDownMenu from '../DropDownMenu.svelte';
+    import Notification from '../Notification.svelte';
+    import SlidePanel from '../SlidePanel.svelte';
 
     export let page: string = "";
     export let internal_login_enabled: boolean;
     export let name: string;
     export let profile_pic: string;
 
-    interface INotificationDto {
-        id: number;
-        message: string;
-        created_at: Date;
-        shared_wishlist_id: number;
-        type: NotificationType;
-    }
-
     const { Views, Api } = makeRoutes(window.base_path);
 
     const user_is_authenticated = name != null;
     const external_login_page = internal_login_enabled ? Views.Auth.Login : Views.Auth.External.Login;
 
-    let user_dropdown_button: HTMLElement;
-    let user_dropdown: DropDownMenu;
-
-    let notifications_dropdown_button: HTMLElement;
-    let notifications_dropdown: DropDownMenu;
+    let notifications_panel_visible: boolean = false;
+    let user_panel_visible: boolean = false;
 
     let notifications: INotificationDto[];
 
@@ -49,19 +38,18 @@
         return notifications;
     }
 
-    async function read_notification(notification_id: number): Promise<void> {
-        await Patch(Api.Notifications.PatchRead.append(notification_id), null);
+    function on_notification_changed() {
         notifications_loading_promise = load_notifications();
     }
 
-    async function accept_share(notification_id: number): Promise<void> {
-        await Patch(Api.Notifications.PatchAcceptShare.append(notification_id), null);
-        notifications_loading_promise = load_notifications();
+    function toggle_notifications_panel() {
+        user_panel_visible = false;
+        notifications_panel_visible = !notifications_panel_visible;
     }
 
-    async function reject_share(notification_id: number): Promise<void> {
-        await Patch(Api.Notifications.PatchRejectShare.append(notification_id), null);
-        notifications_loading_promise = load_notifications();
+    function toggle_user_panel() {
+        notifications_panel_visible = false;
+        user_panel_visible = !user_panel_visible;
     }
 </script>
 
@@ -73,67 +61,60 @@
         <span>{page}</span>
         {/if}
     </div>
-    <div class="flex space-x-3 items-center">
+    <div class="flex space-x-4 items-center">
         {#if user_is_authenticated}
             <a class="button" href="{ Views.Wishlist.Create.to_string() }">Create wishlist</a>
-            <div class="relative">
-                <button class="icon-button relative" type="button" aria-label="Notifications button" bind:this={notifications_dropdown_button} on:click={() => notifications_dropdown.toggle()}>
-                    <span class="fa-solid fa-bell pointer-events-none {notifications?.length > 0 ? 'text-orange-600' : ''}"></span>
-                    {#if notifications?.length > 0}
-                    <span class="absolute text-white text-xl w-full left-0 top-1 text-center pointer-events-none">{notifications.length < 10 ? notifications.length : '*'}</span>
-                    {/if}
-                </button>
-                <DropDownMenu bind:this={notifications_dropdown} button={notifications_dropdown_button} classes="right-0 w-80">
-                    {#await notifications_loading_promise}
-                        Loading...
-                    {:then}
-                        {#if notifications.length === 0}
-                            <p>
-                                No notifications
-                            </p>
+            <div class="flex items-center">
+                <div class="p-3 {notifications_panel_visible ? 'bg-white rounded-t-xl' : ''}">
+                    <button class="icon-button relative" type="button" aria-label="Notifications button" on:click={toggle_notifications_panel}>
+                        <span class="fa-solid fa-bell pointer-events-none {notifications?.length > 0 ? 'text-orange-600' : ''}"></span>
+                        {#if notifications?.length > 0}
+                        <span class="absolute text-white text-xl w-full left-0 top-1 text-center pointer-events-none">{notifications.length < 10 ? notifications.length : '*'}</span>
                         {/if}
-                        {#each notifications as notification}
-                            <div>
-                                <p>{notification.message}</p>
-                                <p class="text-slate-600">{notification.created_at.toLocaleString()}</p>
-                                {#if notification.type === NotificationType.SHARE && notification.shared_wishlist_id != null}
-                                <p>Accept?</p>
-                                <div class="inline-block">
-                                    <div class="button-group">
-                                        <button class="button" on:click={() => accept_share(notification.id)}>
-                                            <span class="fa-solid fa-check"></span> Yes
-                                        </button>
-                                        <button class="button" on:click={() => reject_share(notification.id)}>
-                                            <span class="fa-solid fa-xmark"></span> No
-                                        </button>
-                                    </div>
-                                </div>
-                                {:else}
-                                <button class="button" on:click={() => read_notification(notification.id)}>
-                                    <span class="fa-solid fa-xmark"></span>
-                                </button>
-                                {/if}
+                    </button>
+                    <SlidePanel bind:visible={notifications_panel_visible}>
+                        {#await notifications_loading_promise}
+                            Loading...
+                        {:then}
+                            {#if notifications.length === 0}
+                                <p>
+                                    No notifications
+                                </p>
+                            {/if}
+                            <div class="flex flex-col space-y-3">
+                                {#each notifications as notification}
+                                    <Notification notification={notification} on:notification_changed={on_notification_changed} />
+                                {/each}
                             </div>
-                        {/each}
-                    {/await}
-                </DropDownMenu>
+                        {/await}
+                    </SlidePanel>
+                </div>
+                <div class="p-3 {user_panel_visible ? 'bg-white rounded-t-xl' : ''}">
+                    {#if profile_pic != null}
+                    <button class="rounded-full h-10 w-10 hover:bg-purple-600 transition-all" type="button" on:click={toggle_user_panel}>
+                        <img src="{ profile_pic }" alt="Hi, {name}" width="30" height="30" class="rounded-full mx-auto pointer-events-none">
+                    </button>
+                    {:else}
+                    <button class="icon-button" aria-label="Hi, {name}" on:click={toggle_user_panel}>
+                        <span class="fa-solid fa-user pointer-events-none"></span>
+                    </button>
+                    {/if}
+                    <SlidePanel bind:visible={user_panel_visible}>
+                        <div class="flex flex-col space-y-3">
+                            <a class="w-full block bg-white hover:bg-slate-100 p-1" href="{ Views.Profile }">
+                                <span class="fa-fw fa-regular fa-user"></span>
+                                Profile
+                            </a>
+                            <hr />
+                            <a class="w-full block bg-white hover:bg-slate-100 p-1" href="{ Views.Auth.Logout.to_string() }">
+                                <span class="fa-fw fa-solid fa-person-walking-arrow-right"></span>
+                                Logout
+                            </a>
+                        </div>
+                </SlidePanel>
+                </div>
             </div>
-            <div class="relative h-10">
-                {#if profile_pic != null}
-                <button class="rounded-full h-10 w-10 hover:bg-purple-600 transition-all" type="button" bind:this={user_dropdown_button} on:click={() => user_dropdown.toggle()}>
-                    <img src="{ profile_pic }" alt="Hi, {name}" width="30" height="30" class="rounded-full mx-auto pointer-events-none">
-                </button>
-                {:else}
-                <button class="icon-button" aria-label="Hi, {name}" bind:this={user_dropdown_button} on:click={() => user_dropdown.toggle()}>
-                    <span class="fa-solid fa-user pointer-events-none"></span>
-                </button>
-                {/if}
-                <DropDownMenu bind:this={user_dropdown} button={user_dropdown_button} classes="right-0 w-48">
-                    <a class="button w-full block" href="{ Views.Profile }">Profile</a>
-                    <a class="button w-full block" href="{ Views.Auth.Logout.to_string() }">Logout</a>
-                </DropDownMenu>
-            </div>
-        {:else}
+            {:else}
             <div class="button-group">
                 {#if internal_login_enabled}
                     <a class="button" href="{ Views.Auth.SignUp.to_string() }">Sign up</a>
