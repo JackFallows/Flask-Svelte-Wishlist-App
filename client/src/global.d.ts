@@ -61,3 +61,11 @@ interface IUser {
     email_on_share: boolean;
     email_on_update: boolean;
 }
+
+interface INotificationDto {
+    id: number;
+    message: string;
+    created_at: Date;
+    shared_wishlist_id: number;
+    type: NotificationType;
+}

@@ -6,19 +6,12 @@
     import { NotificationType } from '../../enums';
 
     import DropDownMenu from '../DropDownMenu.svelte';
+    import Notification from '../Notification.svelte';
 
     export let page: string = "";
     export let internal_login_enabled: boolean;
     export let name: string;
     export let profile_pic: string;
-
-    interface INotificationDto {
-        id: number;
-        message: string;
-        created_at: Date;
-        shared_wishlist_id: number;
-        type: NotificationType;
-    }
 
     const { Views, Api } = makeRoutes(window.base_path);
 
@@ -49,18 +42,7 @@
         return notifications;
     }
 
-    async function read_notification(notification_id: number): Promise<void> {
-        await Patch(Api.Notifications.PatchRead.append(notification_id), null);
-        notifications_loading_promise = load_notifications();
-    }
-
-    async function accept_share(notification_id: number): Promise<void> {
-        await Patch(Api.Notifications.PatchAcceptShare.append(notification_id), null);
-        notifications_loading_promise = load_notifications();
-    }
-
-    async function reject_share(notification_id: number): Promise<void> {
-        await Patch(Api.Notifications.PatchRejectShare.append(notification_id), null);
+    function on_notification_changed() {
         notifications_loading_promise = load_notifications();
     }
 </script>
@@ -92,29 +74,11 @@
                                 No notifications
                             </p>
                         {/if}
-                        {#each notifications as notification}
-                            <div>
-                                <p>{notification.message}</p>
-                                <p class="text-slate-600">{notification.created_at.toLocaleString()}</p>
-                                {#if notification.type === NotificationType.SHARE && notification.shared_wishlist_id != null}
-                                <p>Accept?</p>
-                                <div class="inline-block">
-                                    <div class="button-group">
-                                        <button class="button" on:click={() => accept_share(notification.id)}>
-                                            <span class="fa-solid fa-check"></span> Yes
-                                        </button>
-                                        <button class="button" on:click={() => reject_share(notification.id)}>
-                                            <span class="fa-solid fa-xmark"></span> No
-                                        </button>
-                                    </div>
-                                </div>
-                                {:else}
-                                <button class="button" on:click={() => read_notification(notification.id)}>
-                                    <span class="fa-solid fa-xmark"></span>
-                                </button>
-                                {/if}
-                            </div>
-                        {/each}
+                        <div class="flex flex-col space-y-3">
+                            {#each notifications as notification}
+                                <Notification notification={notification} on:notification_changed={on_notification_changed} />
+                            {/each}
+                        </div>
                     {/await}
                 </DropDownMenu>
             </div>
