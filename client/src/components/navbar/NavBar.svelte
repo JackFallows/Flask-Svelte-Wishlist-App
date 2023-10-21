@@ -2,11 +2,11 @@
     import '../../tailwind.css';
 
     import { makeRoutes } from '../../routes';
-    import { Get, Patch } from '../../http';
-    import { NotificationType } from '../../enums';
+    import { Get } from '../../http';
 
     import DropDownMenu from '../DropDownMenu.svelte';
     import Notification from '../Notification.svelte';
+    import SlidePanel from '../SlidePanel.svelte';
 
     export let page: string = "";
     export let internal_login_enabled: boolean;
@@ -21,8 +21,7 @@
     let user_dropdown_button: HTMLElement;
     let user_dropdown: DropDownMenu;
 
-    let notifications_dropdown_button: HTMLElement;
-    let notifications_dropdown: DropDownMenu;
+    let notifications_panel_visible: boolean = false;
 
     let notifications: INotificationDto[];
 
@@ -58,14 +57,14 @@
     <div class="flex space-x-3 items-center">
         {#if user_is_authenticated}
             <a class="button" href="{ Views.Wishlist.Create.to_string() }">Create wishlist</a>
-            <div class="relative">
-                <button class="icon-button relative" type="button" aria-label="Notifications button" bind:this={notifications_dropdown_button} on:click={() => notifications_dropdown.toggle()}>
+            <div class="p-3 {notifications_panel_visible ? 'bg-white rounded-t-xl' : ''}">
+                <button class="icon-button relative" type="button" aria-label="Notifications button" on:click={() => notifications_panel_visible = !notifications_panel_visible}>
                     <span class="fa-solid fa-bell pointer-events-none {notifications?.length > 0 ? 'text-orange-600' : ''}"></span>
                     {#if notifications?.length > 0}
                     <span class="absolute text-white text-xl w-full left-0 top-1 text-center pointer-events-none">{notifications.length < 10 ? notifications.length : '*'}</span>
                     {/if}
                 </button>
-                <DropDownMenu bind:this={notifications_dropdown} button={notifications_dropdown_button} classes="right-0 w-80">
+                <SlidePanel bind:visible={notifications_panel_visible}>
                     {#await notifications_loading_promise}
                         Loading...
                     {:then}
@@ -80,7 +79,7 @@
                             {/each}
                         </div>
                     {/await}
-                </DropDownMenu>
+                </SlidePanel>
             </div>
             <div class="relative h-10">
                 {#if profile_pic != null}
