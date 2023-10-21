@@ -19,7 +19,8 @@ def get():
             notification.id,
             notification.message,
             notification.created_at,
-            notification.shared_wishlist_id
+            notification.shared_wishlist_id,
+            notification.type
         ))
     
     return jsonify(list(map(lambda x: x.as_dict(), notification_dtos)))
