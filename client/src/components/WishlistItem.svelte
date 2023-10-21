@@ -84,6 +84,10 @@
             item: wishlist_item
         })
     }
+
+    function is_link(link: string): boolean {
+        return link.startsWith("http://") || link.startsWith("https://");
+    }
 </script>
 
 {#if wishlist_item.is_header}
@@ -130,7 +134,14 @@
         {:else}
         <div class="flex items-center space-x-3">
             <div class="grow">
-                <a class="text-lg text-black" href="{link}">{link}</a>
+                {#if is_link(link)}
+                <span class="text-lg">
+                    <a class="text-purple-600 hover:underline" target="_blank" href="{link}">{link}</a>
+                    <span class="fa-solid fa-arrow-up-right-from-square"></span>
+                </span>
+                {:else}
+                <span class="text-lg text-black">{link}</span>
+                {/if}
                 {#if notes?.trim().length > 0}
                 <div class="mt-2">
                     <Collapse heading="Description" subtle collapsed>
