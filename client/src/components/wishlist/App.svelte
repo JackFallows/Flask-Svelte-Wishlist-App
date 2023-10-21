@@ -1,13 +1,16 @@
 <script lang="ts">
-    import '../../../tailwind.css';
-
-    import { Get } from '../../../http';
-    import { makeRoutes } from '../../../routes';
-    import WishlistItem from '../../WishlistItem.svelte';
+    import { ToastType } from '../../enums';
+    import { Get, Patch } from '../../http';
+    import { makeRoutes } from '../../routes';
+    import EditableHeading from '../EditableHeading.svelte';
+    import Toast from '../Toast.svelte';
+    import WishlistItem from '../WishlistItem.svelte';
 
     export let wishlist_id: number;
 
-    const { Api, Views } = makeRoutes(window.base_path);
+    const { Api } = makeRoutes(window.base_path);
+
+    let toast: Toast;
 
     let loading_promise: Promise<any> = load_wishlist();
 
@@ -45,35 +48,39 @@
         wishlist_items.splice(item_index, 1);
         wishlist_items = wishlist_items; // trigger reactivity
     }
+
+    async function save_wishlist_name() {
+        toast.show("Saving...", ToastType.INFO);
+        await Patch(Api.Wishlists.PatchUpdateName.append(wishlist_id), { name: wishlist.name });
+        toast.show("Saved!", ToastType.SUCCESS);
+    }
 </script>
 
+<Toast bind:this={toast} />
 {#await loading_promise}
     Loading...
 {:then}
-<div class="flex space-x-3">
-    <div class="grow">
-        <h1 class="text-2xl">{wishlist.name}</h1>
-        {#if wishlist_as_share != null}
-        <div>
-            <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
-            <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
-        </div>
-        {/if}
-
-        <h2 class="text-lg">Items</h2>
-        <div class="flex space-y-3 flex-col">
-            {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} is_owned={is_owned} has_other_wishlists={has_other_wishlists} on:bought={(e) => remove_item(e.detail)} on:moved={(e) => remove_item(e.detail)} />
-            {/each}
-        </div>
-    </div>
-
     {#if is_owned}
-    <aside class="">
-        <a class="button" href="{ Views.Wishlist.Edit.append(wishlist_id).to_string() }">
-            Edit wishlist
-        </a>
-    </aside>
+        <EditableHeading tag="h1" classes="text-2xl" bind:value={wishlist.name} on:save={save_wishlist_name} />
+    {:else}
+        <h1 class="text-2xl">{wishlist.name}</h1>
     {/if}
-</div>
+    {#if wishlist_as_share != null}
+    <div>
+        <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
+        <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
+    </div>
+    {/if}
+
+    <div class="mt-4 flex space-y-3 flex-col">
+        {#each wishlist_items as wishlist_item(wishlist_item)}
+            <WishlistItem
+                wishlist_item={wishlist_item}
+                is_owned={is_owned}
+                has_other_wishlists={has_other_wishlists}
+                on:bought={(e) => remove_item(e.detail)}
+                on:moved={(e) => remove_item(e.detail)}
+            />
+        {/each}
+    </div>
 {/await}

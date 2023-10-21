@@ -138,6 +138,21 @@ def put_wishlist():
     return jsonify({})
 
 @login_required
+@wishlists.route('/update-name/<wishlist_id>', methods=["PATCH"])
+def update_name(wishlist_id):
+    request_json = json.loads(request.data)
+    new_name = request_json['name']
+    wishlist = Wishlist.get(wishlist_id, current_user.id)
+    
+    if wishlist is None:
+        return "Not found", 404
+    
+    wishlist.name = new_name
+    wishlist.apply_changes()
+    
+    return jsonify({})
+
+@login_required
 @wishlists.route('/share', methods=["PATCH"])
 def share_wishlist():
     request_json = json.loads(request.data)

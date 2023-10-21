@@ -63,7 +63,7 @@
     </div>
     <div class="flex space-x-4 items-center">
         {#if user_is_authenticated}
-            <a class="button" href="{ Views.Wishlist.Create.to_string() }">Create wishlist</a>
+            <a class="button" href="{ Views.Wishlist.to_string() }">Create wishlist</a>
             <div class="flex items-center">
                 <div class="p-3 {notifications_panel_visible ? 'bg-white rounded-t-xl' : ''}">
                     <button class="icon-button relative" type="button" aria-label="Notifications button" on:click={toggle_notifications_panel}>

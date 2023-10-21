@@ -137,11 +137,7 @@ function makeRoutes(base_path: string) {
                 Login: ExternalAuthRoot.append("login")
             }
         },
-        Wishlist: {
-            Create: WishlistViewRoot.append("create"),
-            Edit: WishlistViewRoot.append("edit"),
-            View: WishlistViewRoot.append("view")
-        },
+        Wishlist: WishlistViewRoot,
         Profile: ProfileViewRoot.to_string() + "/",
         Home: ViewsRoot.to_string() + "/"
     }
@@ -161,6 +157,7 @@ function makeRoutes(base_path: string) {
             GetSharedWithUser: WishlistsApiRoot.append("get_shared_with_user").as_get(),
             Post: WishlistsApiRoot.append("post").as_post(),
             Put: WishlistsApiRoot.append("put").as_put(),
+            PatchUpdateName: WishlistsApiRoot.append("update-name").as_patch(),
             PatchShare: WishlistsApiRoot.append("share").as_patch(),
             PatchShareLink: WishlistsApiRoot.append("share-link").as_patch(),
             Delete: WishlistsApiRoot.append("delete").as_delete()
