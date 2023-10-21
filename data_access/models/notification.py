@@ -95,3 +95,26 @@ class Notification():
                         type=NotificationType(n[6])),
                     notifications)
                 )
+            
+    @staticmethod
+    def get_last_wishlist_notification(user_id: str, wishlist_id: int):
+        with get_db_connection() as db:
+            notification = db.execute("""
+                SELECT rowid, user_id, message, created_at, shared_wishlist_id, is_read, type
+                FROM notification
+                WHERE user_id = ? AND shared_wishlist_id = ?
+                ORDER BY created_at DESC
+            """, (user_id, wishlist_id,)
+            ).fetchone()
+            
+            if not notification:
+                return None
+            
+            return Notification(
+                id=notification[0],
+                user_id=notification[1],
+                message=notification[2],
+                created_at=notification[3],
+                shared_wishlist_id=notification[4],
+                is_read=notification[5],
+                type=NotificationType(notification[6]))
