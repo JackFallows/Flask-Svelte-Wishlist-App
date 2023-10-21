@@ -3,6 +3,7 @@
 
     import { makeRoutes } from '../../routes';
     import { Get, Patch } from '../../http';
+    import { NotificationType } from '../../enums';
 
     import DropDownMenu from '../DropDownMenu.svelte';
 
@@ -16,6 +17,7 @@
         message: string;
         created_at: Date;
         shared_wishlist_id: number;
+        type: NotificationType;
     }
 
     const { Views, Api } = makeRoutes(window.base_path);
@@ -94,7 +96,7 @@
                             <div>
                                 <p>{notification.message}</p>
                                 <p class="text-slate-600">{notification.created_at.toLocaleString()}</p>
-                                {#if notification.shared_wishlist_id != null}
+                                {#if notification.type === NotificationType.SHARE && notification.shared_wishlist_id != null}
                                 <p>Accept?</p>
                                 <div class="inline-block">
                                     <div class="button-group">
