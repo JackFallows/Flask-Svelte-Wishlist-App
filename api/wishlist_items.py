@@ -98,9 +98,9 @@ def reorder(wishlist_item_id, order_number):
     else:
         # moved down, affected_item needs its order_number decrementing
         affected_item.order_number = affected_item.order_number - 1
-        
-    item_to_move.apply_changes()
-    affected_item.apply_changes()
+    
+    WishlistItem.set_order_number(item_to_move.id, item_to_move.order_number)    
+    WishlistItem.set_order_number(affected_item.id, affected_item.order_number)    
     
     return jsonify({})
 

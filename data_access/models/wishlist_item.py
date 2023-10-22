@@ -169,6 +169,17 @@ class WishlistItem():
             db.commit()
             
     @staticmethod
+    def set_order_number(wishlist_item_id, order_number):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                UPDATE wishlist_item SET order_number = ? WHERE rowid = ?
+                """,
+                (order_number, wishlist_item_id,)
+            )
+            db.commit()
+            
+    @staticmethod
     def reparent(wishlist_item_id: int, wishlist_id: int):
         with get_db_connection() as db:
             db.execute(
