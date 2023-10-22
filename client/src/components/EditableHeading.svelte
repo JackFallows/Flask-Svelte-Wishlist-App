@@ -3,13 +3,17 @@
 
     export let tag: string;
     export let value: string;
+    export let placeholder: string = "";
     export let classes: string = "";
+    export let is_editing: boolean = false;
 
     let dispatch = createEventDispatcher();
 
-    let is_editing: boolean = false;
-
     function save() {
+        if (value == null || value.trim() == "") {
+            return;
+        }
+
         dispatch("save");
         is_editing = false;
     }
@@ -22,7 +26,7 @@
     </svelte:element>
 {:else}
     <div class="flex items-center">
-        <input class="text-input grow" type="text" bind:value={value} />
+        <input class="text-input grow" type="text" bind:value={value} placeholder="{placeholder}" />
         <button class="icon-button" on:click={save}><span class="fa-solid fa-floppy-disk"></span></button>
     </div>
 {/if}

@@ -193,10 +193,20 @@ class WishlistItem():
     @staticmethod
     def reparent(wishlist_item_id: int, wishlist_id: int):
         with get_db_connection() as db:
+            order_number_result = db.execute(
+                """
+                SELECT MAX(order_number) FROM wishlist_item WHERE wishlist_id = ?
+                """,
+                (wishlist_id,)
+            ).fetchone()
+            
+            order_number = order_number_result[0]
+            target_order_number = order_number + 1
+            
             db.execute(
                 """
-                UPDATE wishlist_item SET wishlist_id = ? WHERE rowid = ?
-                """, (wishlist_id, wishlist_item_id,)
+                UPDATE wishlist_item SET wishlist_id = ?, order_number = ? WHERE rowid = ?
+                """, (wishlist_id, target_order_number, wishlist_item_id,)
             )
             
             db.commit()

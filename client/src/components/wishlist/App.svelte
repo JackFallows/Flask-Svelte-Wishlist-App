@@ -9,26 +9,29 @@
 
     export let wishlist_id: number;
 
-    const { Api } = makeRoutes(window.base_path);
+    const { Api, Views } = makeRoutes(window.base_path);
 
     let toast: Toast;
 
-    let loading_promise: Promise<any> = load_wishlist();
-
     let wishlist: IWishlist;
+    let wishlist_items: IWishlistItem[];
     let wishlist_as_share: IWishlistShare;
     let is_owned: boolean;
     let total_wishlists: number;
     let has_other_wishlists: boolean;
 
+    let loading_promise: Promise<any> = load_wishlist();
+
     $: wishlist_as_share = (<IWishlistShare>wishlist)?.owner_name != null ? (<IWishlistShare>wishlist) : null;
     $: is_owned = wishlist_as_share == null;
     $: has_other_wishlists = wishlist_id == null ? total_wishlists > 0 : total_wishlists > 1;
 
-    let wishlist_items: IWishlistItem[];
-
     async function load_wishlist() {
-        if (wishlist_id == null) {
+        if (wishlist_id == 0) {
+            wishlist = <any>{
+                name: ""
+            };
+            wishlist_items = [];
             return;
         }
         
@@ -82,6 +85,8 @@
 
     async function move_item_out(event: CustomEvent<{ item: IWishlistItem, target_wishlist_id: number }>) {
         const { item, target_wishlist_id } = event.detail;
+
+        remove_item(item);
 
         await save_changes(
             Patch(Api.WishlistItems.PatchReparent.append(item.id).append(target_wishlist_id), {})
@@ -160,6 +165,19 @@
     }
 
     async function save_wishlist_name() {
+        if (wishlist_id == 0) {
+            const wishlist_id_result = await save_changes(
+                Post<{ name: string, wishlist_items: IWishlistItem[] }, IWishlist>(
+                    Api.Wishlists.Post, {
+                        name: wishlist.name, wishlist_items
+                    }
+                )
+            );
+
+            location.href = Views.Wishlist.append(wishlist_id_result.id).to_string();
+            return;
+        }
+
         await save_changes(
             Patch(Api.Wishlists.PatchUpdateName.append(wishlist_id), { name: wishlist.name })
         );
@@ -178,7 +196,7 @@
     Loading...
 {:then}
     {#if is_owned}
-        <EditableHeading tag="h1" classes="text-2xl" bind:value={wishlist.name} on:save={save_wishlist_name} />
+        <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
     {:else}
         <h1 class="text-2xl">{wishlist.name}</h1>
     {/if}
@@ -190,7 +208,7 @@
     </div>
     {/if}
 
-    {#if is_owned}
+    {#if is_owned && wishlist_id != 0}
         <div class="mt-8 flex space-x-3">
             <button class="button" on:click={() => add_item(false)}>Add item</button>
             <button class="button" on:click={() => add_item(true)}>Add heading</button>
