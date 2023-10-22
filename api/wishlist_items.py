@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 
 from data_access.models.wishlist import Wishlist
 from data_access.models.wishlist_item import WishlistItem
+from services.notification_service import notify_wishlist_updated
 
 wishlist_items = Blueprint('wishlist_items', __name__)
 
@@ -38,6 +39,9 @@ def create():
             notes=wishlist_item.notes,
             order_number=wishlist_item.order_number,
             is_header=wishlist_item.is_header)
+    
+    if not wishlist_item.is_header:
+        notify_wishlist_updated(current_user, wishlist)
     
     return jsonify({
         "wishlist_item_id": wishlist_item_id

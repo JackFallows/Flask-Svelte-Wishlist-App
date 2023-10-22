@@ -63,7 +63,7 @@ def send_update_email(receiver_emails: List[str], sender_name: str, sender_email
     <html>
     <body>
         <p>
-        {sender_name} ({sender_email}) just updated the wishlist '{sender_wishlist}' that they shared with you.<br />
+        {sender_name} ({sender_email}) just added items to the wishlist '{sender_wishlist}' that they shared with you.<br />
     Log into the website to see what's new.<br />
     - Wishlist App
         </p>
