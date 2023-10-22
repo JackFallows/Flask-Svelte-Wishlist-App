@@ -53,6 +53,7 @@
     {% endblock %}
 
     <script type="module" defer src='{{ auto_bundles["navbar"] }}'></script>
+    <script type="module" defer src='{{ auto_bundles["footer"] }}'></script>
 
     {% block scripts %}
     {% endblock %}
@@ -65,5 +66,6 @@
     <div class="app-content" id="app-content"></div>
     {% endblock %}
 
+    <div id="footer-content"></div>
 </body>
 </html>
