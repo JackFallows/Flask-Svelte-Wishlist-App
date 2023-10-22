@@ -184,6 +184,7 @@
     {/if}
     {#if wishlist_as_share != null}
     <div>
+        <span class="fa-solid fa-users"></span>
         <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
         <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
     </div>
