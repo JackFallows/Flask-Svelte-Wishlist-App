@@ -94,6 +94,14 @@
         );
     }
 
+    async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem }>) {
+        const { item } = event.detail;
+
+        remove_item(item);
+
+        await save_changes(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), null));
+    }
+
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
         wishlist_items.splice(current_index, 1);
         wishlist_items.splice(target_index, 0, item);
@@ -157,6 +165,7 @@
                     on:move_out={move_item_out}
                     on:move_up={move_item_up}
                     on:move_down={move_item_down}
+                    on:buy={mark_item_bought}
                     on:remove={delete_item}
                 />
             </div>

@@ -10,7 +10,6 @@
 
     export let wishlist_item: IWishlistItem;
     export let is_owned: boolean = false;
-    export let share_guid: string = null;
     export let has_other_wishlists: boolean = false;
 
     const { Api } = makeRoutes(window.base_path);
@@ -55,13 +54,9 @@
             return;
         }
 
-        if (share_guid != null) {
-            await Patch(Api.WishlistItems.PatchLinkShareMarkBought.append(share_guid).append(wishlist_item.id), null);
-        } else {
-            await Patch(Api.WishlistItems.PatchMarkAsBought.append(wishlist_item.id), null);
-        }
-
-        dispatch('buy', wishlist_item);
+        dispatch('buy', {
+            item: wishlist_item
+        });
     }
 
     async function move_item_to_list() {
