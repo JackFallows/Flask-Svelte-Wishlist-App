@@ -28,6 +28,7 @@
     let move_item_modal: Modal;
     let target_wishlist: IWishlist = null;
     let bought_confirmation_modal: Modal;
+    let confirm_delete_modal: Modal;
 
     $: {
         wishlist_item.link = link;
@@ -88,7 +89,13 @@
         });
     }
 
-    function remove() {
+    async function remove() {
+        const confirmed = await confirm_delete_modal.show();
+
+        if (!confirmed) {
+            return;
+        }
+
         dispatch('remove', {
             item: wishlist_item
         });
@@ -215,6 +222,19 @@
     <span slot="buttons" let:close_modal={close}>
         <button class="button" on:click={() => close()}>Cancel</button>
         <button class="button" on:click={() => close("true")}>Yes</button>
+    </span>
+</Modal>
+
+<Modal bind:this={confirm_delete_modal} is_danger={true} id="delete">
+    <span slot="header">
+        Are you sure?
+    </span>
+    <span slot="body">
+        Once the wishlist is saved, this action cannot be undone.
+    </span>
+    <span slot="buttons" let:close_modal={close}>
+        <button class="button" on:click={() => close()}>Cancel</button>
+        <button class="danger-button" on:click={() => close("true")}>Delete</button>
     </span>
 </Modal>
 

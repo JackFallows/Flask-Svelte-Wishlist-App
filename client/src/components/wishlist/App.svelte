@@ -1,7 +1,7 @@
 <script lang="ts">
     import { flip } from 'svelte/animate';
     import { ToastType } from '../../enums';
-    import { Get, Patch } from '../../http';
+    import { Delete, Get, Patch } from '../../http';
     import { makeRoutes } from '../../routes';
     import EditableHeading from '../EditableHeading.svelte';
     import Toast from '../Toast.svelte';
@@ -74,6 +74,16 @@
         await rearrange(item, current_index, target_index);
     }
 
+    async function delete_item(event: CustomEvent<{ item: IWishlistItem }>) {
+        const { item } = event.detail;
+
+        remove_item(item);
+
+        await save_changes(
+            Delete(Api.WishlistItems.Delete.append(item.id), {})
+        );
+    }
+
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
         wishlist_items.splice(current_index, 1);
         wishlist_items.splice(target_index, 0, item);
@@ -138,6 +148,7 @@
                     on:move_out={move_item_out}
                     on:move_up={move_item_up}
                     on:move_down={move_item_down}
+                    on:remove={delete_item}
                 />
             </div>
         {/each}

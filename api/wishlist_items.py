@@ -87,3 +87,13 @@ def reorder(wishlist_item_id, order_number):
     affected_item.apply_changes()
     
     return jsonify({})
+
+@login_required
+@wishlist_items.route('/delete/<wishlist_item_id>', methods=["DELETE"])
+def delete_item(wishlist_item_id):
+    if not WishlistItem.get_is_owned_by_user(wishlist_item_id, user_id=current_user.id):
+        return "Not found", 404
+    
+    WishlistItem.remove(wishlist_item_id)
+    
+    return jsonify({})
