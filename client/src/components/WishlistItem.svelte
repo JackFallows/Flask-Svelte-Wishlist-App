@@ -5,7 +5,7 @@
     import { Get, Patch } from '../http';
     import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
-    import RadioList from './RadioList.svelte';
+    import RadioGroup from './RadioGroup.svelte';
     import Collapse from './Collapse.svelte';
 
     export let wishlist_item: IWishlistItem;
@@ -220,7 +220,7 @@
             Loading...
         {:then wishlists} 
             <p>Choose the wishlist to move this item to:</p>
-            <RadioList group_id="wishlists_group" items={wishlists} bind:selected_item={target_wishlist}></RadioList>
+            <RadioGroup group_id="wishlists_group" items={wishlists} bind:selected_item={target_wishlist}></RadioGroup>
         {/await}
     </span>
     <span slot="buttons" let:close_modal={close}>
