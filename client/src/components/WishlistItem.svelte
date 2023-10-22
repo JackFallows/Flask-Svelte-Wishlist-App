@@ -21,8 +21,9 @@
     let link: string = wishlist_item.link;
     let notes: string = wishlist_item.notes;
     let bought: boolean = wishlist_item.bought;
+    let is_new: boolean = wishlist_item.id == null;
 
-    let is_editing: boolean = false;
+    let is_editing: boolean = is_new;
 
     let move_item_modal: Modal;
     let target_wishlist: IWishlist = null;
@@ -85,10 +86,12 @@
     }
 
     async function remove() {
-        const confirmed = await confirm_delete_modal.show();
+        if (wishlist_item.id != null){
+            const confirmed = await confirm_delete_modal.show();
 
-        if (!confirmed) {
-            return;
+            if (!confirmed) {
+                return;
+            }
         }
 
         dispatch('remove', {
@@ -97,6 +100,10 @@
     }
 
     async function change_text() {
+        if (wishlist_item.link == null || wishlist_item.link.trim() == "") {
+            return;
+        }
+
         is_editing = false;
         dispatch('change_text', {
             item: wishlist_item
@@ -182,7 +189,7 @@
                 <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
                 <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
             </div>
-            {#if has_other_wishlists && !is_editing}
+            {#if has_other_wishlists && !is_editing && !is_new}
                 <button class="icon-button" on:click={move_item_to_list}>
                     <span class="fa-solid fa-arrow-right-from-bracket"></span>
                 </button>
@@ -191,9 +198,11 @@
                 <span class="fa-solid fa-trash pointer-events-none"></span>
             </button>
         {/if}
-        <button class="icon-button" on:click={mark_as_bought}>
-            <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
-        </button>
+        {#if !is_new}
+            <button class="icon-button" on:click={mark_as_bought}>
+                <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
+            </button>
+        {/if}
     </div>
 {/if}
 
@@ -233,7 +242,7 @@
         Are you sure?
     </span>
     <span slot="body">
-        Once the wishlist is saved, this action cannot be undone.
+        This action cannot be undone.
     </span>
     <span slot="buttons" let:close_modal={close}>
         <button class="button" on:click={() => close()}>Cancel</button>

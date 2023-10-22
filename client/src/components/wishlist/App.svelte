@@ -1,7 +1,7 @@
 <script lang="ts">
     import { flip } from 'svelte/animate';
     import { ToastType } from '../../enums';
-    import { Delete, Get, Patch } from '../../http';
+    import { Delete, Get, HttpResult, Patch, Post } from '../../http';
     import { makeRoutes } from '../../routes';
     import EditableHeading from '../EditableHeading.svelte';
     import Toast from '../Toast.svelte';
@@ -40,14 +40,44 @@
         total_wishlists = countPayload.get_json().total_wishlists;
     }
 
+    function add_item(is_header: boolean = false) {
+        const new_item: IWishlistItem = {
+            id: null,
+            wishlist_id,
+            link: "",
+            notes: "",
+            bought: false,
+            order_number: 0,
+            is_header
+        };
+        wishlist_items = [new_item, ...wishlist_items.map((wi, i) => {
+            wi.order_number = i + 1;
+            return wi;
+        })];
+    }
+
     async function change_item_text(event: CustomEvent<{ item: IWishlistItem }>) {
         const { item } = event.detail;
-        await save_changes(
-            Patch(Api.WishlistItems.PatchChangeText.append(item.id), {
-                name: item.link,
-                description: item.notes
-            })
-        );
+
+        if (item.id == null) {
+            // create new
+            const result = await save_changes<{ wishlist_item_id: number }>(
+                Post(Api.WishlistItems.PostCreate, item)
+            );
+
+            item.id = result.wishlist_item_id;
+
+            wishlist_items.splice(wishlist_items.indexOf(item), 1, item);
+            wishlist_items = wishlist_items; // trigger reactivity
+        } else {
+            // update existing
+            await save_changes(
+                Patch(Api.WishlistItems.PatchChangeText.append(item.id), {
+                    name: item.link,
+                    description: item.notes
+                })
+            );
+        }
     }
 
     async function move_item_out(event: CustomEvent<{ item: IWishlistItem, target_wishlist_id: number }>) {
@@ -89,9 +119,11 @@
 
         remove_item(item);
 
-        await save_changes(
-            Delete(Api.WishlistItems.Delete.append(item.id), {})
-        );
+        if (item.id != null) {
+            await save_changes(
+                Delete(Api.WishlistItems.Delete.append(item.id), {})
+            );
+        }
     }
 
     async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem }>) {
@@ -110,9 +142,11 @@
             return wi;
         });
 
-        await save_changes(
-            Patch(Api.WishlistItems.PatchReorder.append(item.id).append(item.order_number), {})
-        );
+        if (item.id != null) {
+            await save_changes(
+                Patch(Api.WishlistItems.PatchReorder.append(item.id).append(item.order_number), {})
+            );
+        }
     }
 
     function remove_item(item: IWishlistItem) {
@@ -131,10 +165,11 @@
         );
     }
 
-    async function save_changes(request: Promise<any>) {
+    async function save_changes<T>(request: Promise<HttpResult<T>>): Promise<T> {
         toast.show("Saving...", ToastType.INFO);
-        await request;
+        const result = await request;
         toast.show("Saved!", ToastType.SUCCESS);
+        return await result.get_json();
     }
 </script>
 
@@ -152,6 +187,13 @@
         <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
         <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
     </div>
+    {/if}
+
+    {#if is_owned}
+        <div class="mt-8 flex space-x-3">
+            <button class="button" on:click={() => add_item(false)}>Add item</button>
+            <button class="button" on:click={() => add_item(true)}>Add heading</button>
+        </div>
     {/if}
 
     <div class="mt-8 flex space-y-3 flex-col">

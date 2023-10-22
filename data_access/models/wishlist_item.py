@@ -180,6 +180,17 @@ class WishlistItem():
             db.commit()
             
     @staticmethod
+    def increment_order_numbers_from(wishlist_id, order_number):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                UPDATE wishlist_item SET order_number = order_number + 1 WHERE order_number >= ? AND wishlist_id = ? AND bought = 0
+                """,
+                (order_number, wishlist_id,)
+            )
+            db.commit()
+            
+    @staticmethod
     def reparent(wishlist_item_id: int, wishlist_id: int):
         with get_db_connection() as db:
             db.execute(
@@ -193,9 +204,27 @@ class WishlistItem():
     @staticmethod
     def remove(wishlist_item_id):
         with get_db_connection() as db:
+            order_number_result = db.execute(
+                """
+                SELECT wishlist_id, order_number FROM wishlist_item WHERE rowid = ?
+                """,
+                (wishlist_item_id,)
+            ).fetchone()
+            
+            wishlist_id = order_number_result[0]
+            order_number = order_number_result[1]
+            
             db.execute(
                 "DELETE FROM wishlist_item WHERE rowid = ?",
                 (wishlist_item_id,)
+            )
+            db.commit()
+            
+            db.execute(
+                """
+                UPDATE wishlist_item SET order_number = order_number - 1 WHERE wishlist_id = ? AND order_number > ?
+                """,
+                (wishlist_id, order_number,)
             )
             db.commit()
             
