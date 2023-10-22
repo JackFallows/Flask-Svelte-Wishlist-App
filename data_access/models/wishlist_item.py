@@ -46,6 +46,20 @@ class WishlistItem():
         )
         
     @staticmethod
+    def get_wishlist_id(wishlist_item_id: int):
+        with get_db_connection() as db:
+            wishlist_item = db.execute(
+                """
+                SELECT wishlist_id FROM wishlist_item WHERE rowid = ?
+                """, (wishlist_item_id,)
+            ).fetchone()
+            
+            if not wishlist_item:
+                return None
+            
+            return wishlist_item[0]
+        
+    @staticmethod
     def get_all_for_wishlist(wishlist_id):
         with get_db_connection() as db:
             wishlist_items = db.execute(

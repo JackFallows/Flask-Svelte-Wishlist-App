@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { flip } from 'svelte/animate';
     import { ToastType } from '../../enums';
     import { Get, Patch } from '../../http';
     import { makeRoutes } from '../../routes';
@@ -39,6 +40,53 @@
         total_wishlists = countPayload.get_json().total_wishlists;
     }
 
+    async function move_item_out(event: CustomEvent<{ item: IWishlistItem, target_wishlist_id: number }>) {
+        const { item, target_wishlist_id } = event.detail;
+
+        await save_changes(
+            Patch(Api.WishlistItems.PatchReparent.append(item.id).append(target_wishlist_id), {})
+        );
+    }
+
+    async function move_item_up(event: CustomEvent<{ item: IWishlistItem }>) {
+        const { item } = event.detail;
+
+        const current_index = wishlist_items.indexOf(item);
+        if (current_index <= 0) {
+            return;
+        }
+
+        const target_index = current_index - 1;
+
+        await rearrange(item, current_index, target_index);
+    }
+
+    async function move_item_down(event: CustomEvent<{ item: IWishlistItem }>) {
+        const { item } = event.detail;
+
+        const current_index = wishlist_items.indexOf(item);
+        if (current_index === (wishlist_items.length - 1)) {
+            return;
+        }
+
+        const target_index = current_index + 1;
+
+        await rearrange(item, current_index, target_index);
+    }
+
+    async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
+        wishlist_items.splice(current_index, 1);
+        wishlist_items.splice(target_index, 0, item);
+        wishlist_items = wishlist_items.map((wi, i) => {
+            wi.order_number = i;
+            return wi;
+        });
+
+        await save_changes(
+            Patch(Api.WishlistItems.PatchReorder.append(item.id).append(item.order_number), {})
+        );
+    }
+
     function remove_item(item: IWishlistItem) {
         const item_index = wishlist_items.indexOf(item);
         if (item_index === -1) {
@@ -50,8 +98,14 @@
     }
 
     async function save_wishlist_name() {
+        await save_changes(
+            Patch(Api.Wishlists.PatchUpdateName.append(wishlist_id), { name: wishlist.name })
+        );
+    }
+
+    async function save_changes(request: Promise<any>) {
         toast.show("Saving...", ToastType.INFO);
-        await Patch(Api.Wishlists.PatchUpdateName.append(wishlist_id), { name: wishlist.name });
+        await request;
         toast.show("Saved!", ToastType.SUCCESS);
     }
 </script>
@@ -72,15 +126,20 @@
     </div>
     {/if}
 
-    <div class="mt-4 flex space-y-3 flex-col">
+    <div class="mt-8 flex space-y-3 flex-col">
         {#each wishlist_items as wishlist_item(wishlist_item)}
-            <WishlistItem
-                wishlist_item={wishlist_item}
-                is_owned={is_owned}
-                has_other_wishlists={has_other_wishlists}
-                on:bought={(e) => remove_item(e.detail)}
-                on:moved={(e) => remove_item(e.detail)}
-            />
+            <div animate:flip={{ duration: 200 }}>
+                <WishlistItem
+                    wishlist_item={wishlist_item}
+                    is_owned={is_owned}
+                    has_other_wishlists={has_other_wishlists}
+                    on:bought={(e) => remove_item(e.detail)}
+                    on:moved={(e) => remove_item(e.detail)}
+                    on:move_out={move_item_out}
+                    on:move_up={move_item_up}
+                    on:move_down={move_item_down}
+                />
+            </div>
         {/each}
     </div>
 {/await}

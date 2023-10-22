@@ -9,7 +9,6 @@
     import Collapse from './Collapse.svelte';
 
     export let wishlist_item: IWishlistItem;
-    export let is_edit: boolean = false;
     export let is_owned: boolean = false;
     export let share_guid: string = null;
     export let has_other_wishlists: boolean = false;
@@ -23,6 +22,9 @@
     let link: string = wishlist_item.link;
     let notes: string = wishlist_item.notes;
     let bought: boolean = wishlist_item.bought;
+
+    let is_editing: boolean = false;
+
     let move_item_modal: Modal;
     let target_wishlist: IWishlist = null;
     let bought_confirmation_modal: Modal;
@@ -68,9 +70,10 @@
             return;
         }
 
-        await Patch(Api.WishlistItems.PatchReparent.append(wishlist_item.id).append(target_wishlist.id), {});
-
-        dispatch('moved', wishlist_item);
+        dispatch('move_out', {
+            item: wishlist_item,
+            target_wishlist_id: target_wishlist.id
+        });
     }
 
     function move_up() {
@@ -82,7 +85,13 @@
     function move_down() {
         dispatch('move_down', {
             item: wishlist_item
-        })
+        });
+    }
+
+    function remove() {
+        dispatch('remove', {
+            item: wishlist_item
+        });
     }
 
     function is_link(link: string): boolean {
@@ -91,27 +100,38 @@
 </script>
 
 {#if wishlist_item.is_header}
-    <div class="flex items-center space-x-3 p-2">
-        {#if is_edit}
-            <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Section name" />
-        {:else}
-            <h2 class="text-xl">{wishlist_item.link}</h2>
-        {/if}
+    <div class="flex items-center space-x-3 p-2 border-b-2 border-slate-200">
+        <div class="grow">
+            {#if is_editing}
+                <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Section name" />
+            {:else}
+                <h2 class="text-xl">{wishlist_item.link}</h2>
+            {/if}
+        </div>
         <div class="flex items-center">
-            {#if is_edit}
-            <div class="flex flex-col">
-                <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
-                <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
-            </div>
-            <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
-                <span class="fa-solid fa-trash pointer-events-none"></span>
-            </button>
+            {#if is_owned}
+                {#if !is_editing}
+                    <button class="icon-button" on:click={() => is_editing = true}>
+                        <span class="fa-solid fa-pencil"></span>
+                    </button>
+                {:else}
+                    <button class="icon-button" on:click={() => is_editing = false}>
+                        <span class="fa-solid fa-floppy-disk"></span>
+                    </button>
+                {/if}
+                <div class="flex flex-col">
+                    <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
+                    <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
+                </div>
+                <button class="icon-button" on:click={remove}>
+                    <span class="fa-solid fa-trash pointer-events-none"></span>
+                </button>
             {/if}
         </div>
     </div>
 {:else}
     <div class="rounded-md bg-slate-200 p-2" id="{html_id}">
-        {#if is_edit}
+        {#if is_editing}
         <div class="flex items-center space-x-3">
             <div class="grow">
                 <div class="flex items-start space-y-3 flex-col">

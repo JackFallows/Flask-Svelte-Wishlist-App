@@ -156,7 +156,6 @@ function makeRoutes(base_path: string) {
             GetCountForUser: WishlistsApiRoot.append("get_count_for_user").as_get(),
             GetSharedWithUser: WishlistsApiRoot.append("get_shared_with_user").as_get(),
             Post: WishlistsApiRoot.append("post").as_post(),
-            Put: WishlistsApiRoot.append("put").as_put(),
             PatchUpdateName: WishlistsApiRoot.append("update-name").as_patch(),
             PatchShare: WishlistsApiRoot.append("share").as_patch(),
             PatchShareLink: WishlistsApiRoot.append("share-link").as_patch(),
@@ -166,7 +165,8 @@ function makeRoutes(base_path: string) {
             GetAllForWishlist: WishlistItemsApiRoot.append("get_all_for_wishlist").as_get(),
             PatchMarkAsBought: WishlistItemsApiRoot.append("mark-as-bought").as_patch(),
             PatchLinkShareMarkBought: WishlistItemsApiRoot.append("link_share_mark_bought").as_patch(),
-            PatchReparent: WishlistItemsApiRoot.append("reparent").as_patch()
+            PatchReparent: WishlistItemsApiRoot.append("reparent").as_patch(),
+            PatchReorder: WishlistItemsApiRoot.append("reorder").as_patch()
         },
         Notifications: {
             Get: NotificationsApiRoot.append("get").as_get(),
