@@ -40,6 +40,16 @@
         total_wishlists = countPayload.get_json().total_wishlists;
     }
 
+    async function change_item_text(event: CustomEvent<{ item: IWishlistItem }>) {
+        const { item } = event.detail;
+        await save_changes(
+            Patch(Api.WishlistItems.PatchChangeText.append(item.id), {
+                name: item.link,
+                description: item.notes
+            })
+        );
+    }
+
     async function move_item_out(event: CustomEvent<{ item: IWishlistItem, target_wishlist_id: number }>) {
         const { item, target_wishlist_id } = event.detail;
 
@@ -143,8 +153,7 @@
                     wishlist_item={wishlist_item}
                     is_owned={is_owned}
                     has_other_wishlists={has_other_wishlists}
-                    on:bought={(e) => remove_item(e.detail)}
-                    on:moved={(e) => remove_item(e.detail)}
+                    on:change_text={change_item_text}
                     on:move_out={move_item_out}
                     on:move_up={move_item_up}
                     on:move_down={move_item_down}

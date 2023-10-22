@@ -61,7 +61,7 @@
             await Patch(Api.WishlistItems.PatchMarkAsBought.append(wishlist_item.id), null);
         }
 
-        dispatch('bought', wishlist_item);
+        dispatch('buy', wishlist_item);
     }
 
     async function move_item_to_list() {
@@ -101,6 +101,13 @@
         });
     }
 
+    async function change_text() {
+        is_editing = false;
+        dispatch('change_text', {
+            item: wishlist_item
+        });
+    }
+
     function is_link(link: string): boolean {
         return link.startsWith("http://") || link.startsWith("https://");
     }
@@ -115,31 +122,28 @@
                 <h2 class="text-xl">{wishlist_item.link}</h2>
             {/if}
         </div>
-        <div class="flex items-center">
-            {#if is_owned}
-                {#if !is_editing}
-                    <button class="icon-button" on:click={() => is_editing = true}>
-                        <span class="fa-solid fa-pencil"></span>
-                    </button>
-                {:else}
-                    <button class="icon-button" on:click={() => is_editing = false}>
-                        <span class="fa-solid fa-floppy-disk"></span>
-                    </button>
-                {/if}
-                <div class="flex flex-col">
-                    <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
-                    <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
-                </div>
-                <button class="icon-button" on:click={remove}>
-                    <span class="fa-solid fa-trash pointer-events-none"></span>
+        {#if is_owned}
+            {#if !is_editing}
+                <button class="icon-button" on:click={() => is_editing = true}>
+                    <span class="fa-solid fa-pencil"></span>
+                </button>
+            {:else}
+                <button class="icon-button" on:click={change_text}>
+                    <span class="fa-solid fa-floppy-disk"></span>
                 </button>
             {/if}
-        </div>
+            <div class="flex flex-col">
+                <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
+                <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
+            </div>
+            <button class="icon-button" on:click={remove}>
+                <span class="fa-solid fa-trash pointer-events-none"></span>
+            </button>
+        {/if}
     </div>
 {:else}
-    <div class="rounded-md bg-slate-200 p-2" id="{html_id}">
+    <div class="rounded-md bg-slate-200 p-2 flex items-center space-x-3" id="{html_id}">
         {#if is_editing}
-        <div class="flex items-center space-x-3">
             <div class="grow">
                 <div class="flex items-start space-y-3 flex-col">
                     <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
@@ -148,49 +152,53 @@
                     </Collapse>
                 </div>
             </div>
-            <div class="flex items-center">
-                <div class="flex flex-col">
-                    <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
-                    <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
-                </div>
-                <button class="icon-button" on:click={() => dispatch('delete', wishlist_item)}>
-                    <span class="fa-solid fa-trash pointer-events-none"></span>
-                </button>
-            </div>
-        </div>
         {:else}
-        <div class="flex items-center space-x-3">
             <div class="grow">
                 {#if is_link(link)}
-                <span class="text-lg">
-                    <a class="text-purple-600 hover:underline" target="_blank" href="{link}">{link}</a>
-                    <span class="fa-solid fa-arrow-up-right-from-square"></span>
-                </span>
+                    <span class="text-lg">
+                        <a class="text-purple-600 hover:underline" target="_blank" href="{link}">{link}</a>
+                        <span class="fa-solid fa-arrow-up-right-from-square"></span>
+                    </span>
                 {:else}
-                <span class="text-lg text-black">{link}</span>
+                    <span class="text-lg text-black">{link}</span>
                 {/if}
                 {#if notes?.trim().length > 0}
-                <div class="mt-2">
-                    <Collapse heading="Description" subtle collapsed>
-                        <div class="text-sm">
-                            {notes}
-                        </div>
-                    </Collapse>
-                </div>
+                    <div class="mt-2">
+                        <Collapse heading="Description" subtle collapsed>
+                            <div class="text-sm">
+                                {notes}
+                            </div>
+                        </Collapse>
+                    </div>
                 {/if}
             </div>
-            <div class="text-base text-slate-600">
-                {#if has_other_wishlists && is_owned}
-                <button class="icon-button" on:click={() => move_item_to_list()}>
+        {/if}
+        {#if is_owned}
+            {#if !is_editing}
+                <button class="icon-button" on:click={() => is_editing = true}>
+                    <span class="fa-solid fa-pencil"></span>
+                </button>
+            {:else}
+                <button class="icon-button" on:click={change_text}>
+                    <span class="fa-solid fa-floppy-disk"></span>
+                </button>
+            {/if}
+            <div class="flex flex-col">
+                <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
+                <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
+            </div>
+            {#if has_other_wishlists && !is_editing}
+                <button class="icon-button" on:click={move_item_to_list}>
                     <span class="fa-solid fa-arrow-right-from-bracket"></span>
                 </button>
-                {/if}
-                <button class="icon-button" on:click={mark_as_bought}>
-                    <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
-                </button>
-            </div>
-        </div>
+            {/if}
+            <button class="icon-button" on:click={remove}>
+                <span class="fa-solid fa-trash pointer-events-none"></span>
+            </button>
         {/if}
+        <button class="icon-button" on:click={mark_as_bought}>
+            <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
+        </button>
     </div>
 {/if}
 

@@ -21,18 +21,6 @@ class WishlistItem():
             "is_header": self.is_header
         }
         
-    def apply_changes(self):
-        if (self.id == None):
-            return
-        
-        with get_db_connection() as db:
-            db.execute(
-                "UPDATE wishlist_item SET link = ?, notes = ?, bought = ?, order_number = ?, is_header = ? WHERE rowid = ?",
-                (self.link, self.notes, self.bought, self.order_number, self.is_header, self.id,)
-            )
-            
-            db.commit()
-        
     @staticmethod
     def from_json(json):
         return WishlistItem(
@@ -159,6 +147,17 @@ class WishlistItem():
             ).fetchone()[0]
             
             return wishlist_item_id
+        
+    @staticmethod
+    def set_item_text(wishlist_item_id, name, description):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                UPDATE wishlist_item SET link = ?, notes = ? WHERE rowid = ?
+                """,
+                (name, description, wishlist_item_id,)
+            )
+            db.commit()
         
     @staticmethod
     def set_as_bought(wishlist_item_id):
