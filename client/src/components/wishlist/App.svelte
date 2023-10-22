@@ -72,6 +72,8 @@
 
             wishlist_items.splice(wishlist_items.indexOf(item), 1, item);
             wishlist_items = wishlist_items; // trigger reactivity
+
+            await ensure_order();
         } else {
             // update existing
             await save_changes(
@@ -91,6 +93,8 @@
         await save_changes(
             Patch(Api.WishlistItems.PatchReparent.append(item.id).append(target_wishlist_id), {})
         );
+
+        await ensure_order();
     }
 
     async function move_item_up(event: CustomEvent<{ item: IWishlistItem }>) {
@@ -129,6 +133,8 @@
                 Delete(Api.WishlistItems.Delete.append(item.id), {})
             );
         }
+        
+        await ensure_order();
     }
 
     async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem }>) {
@@ -137,21 +143,31 @@
         remove_item(item);
 
         await save_changes(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), null));
+
+        await ensure_order();
     }
 
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
         wishlist_items.splice(current_index, 1);
         wishlist_items.splice(target_index, 0, item);
-        wishlist_items = wishlist_items.map((wi, i) => {
-            wi.order_number = i;
-            return wi;
-        });
 
-        if (item.id != null) {
-            await save_changes(
-                Patch(Api.WishlistItems.PatchReorder.append(item.id).append(item.order_number), {})
-            );
+        await ensure_order()
+    }
+
+    async function ensure_order() {
+        let current_order_number = 0;
+        for (const item of wishlist_items) {
+            item.order_number = item.id == null ? 0 : current_order_number++;
         }
+        wishlist_items = wishlist_items; // trigger reactivity
+
+        const payload = wishlist_items
+            .filter(wi => wi.id != null && wi.id != 0)
+            .map(wi => ({ wishlist_item_id: wi.id, order_number: wi.order_number }));
+
+        await save_changes(
+            Patch(Api.WishlistItems.PatchEnsureOrder.append(wishlist.id), payload)
+        );
     }
 
     function remove_item(item: IWishlistItem) {
