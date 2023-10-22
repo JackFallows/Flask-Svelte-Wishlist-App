@@ -1,6 +1,7 @@
 from typing import List
 from datetime import datetime
 from data_access.models.user import User
+from data_access.models.user_shared_wishlist import UserSharedWishlist
 from data_access.models.wishlist import Wishlist
 from data_access.models.notification import Notification
 from services.email_service import send_share_email, send_update_email
@@ -17,7 +18,12 @@ def notify_wishlist_shared(source_user: User, target_user: User, wishlist: Wishl
     if target_user.email_on_share:
         send_share_email(target_user.email, source_user.name, source_user.email, wishlist.name)
     
-def notify_wishlist_updated(source_user: User, target_users: List[User], wishlist: Wishlist):
+def notify_wishlist_updated(source_user: User, wishlist: Wishlist):
+    if not wishlist.shared:
+        return
+    
+    target_users = UserSharedWishlist.get_users_with_share(wishlist.id)
+    
     users_to_email: List[User] = []
     
     def get_can_notify_user(target_user: User) -> bool:
@@ -35,7 +41,7 @@ def notify_wishlist_updated(source_user: User, target_users: List[User], wishlis
             
         Notification.create(
             target_user.id,
-            f"{source_user.name} ({source_user.email}) updated the wishlist '{wishlist.name}'",
+            f"{source_user.name} ({source_user.email}) added items to the wishlist '{wishlist.name}'",
             wishlist.id,
             NotificationType.UPDATE
         )

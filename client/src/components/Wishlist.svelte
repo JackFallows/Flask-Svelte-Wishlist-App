@@ -61,7 +61,7 @@
 </script>
 
 <div class="flex flex-nowrap space-x-3 w-full" id="wishlist-{wishlist.id}">
-    <button class="button grow flex items-center relative" on:click={() => location.href = Views.Wishlist.View.append(wishlist.id).to_string()}>
+    <button class="button grow flex items-center relative" on:click={() => location.href = Views.Wishlist.append(wishlist.id).to_string()}>
         {#if wishlist.shared}
         <span class="fa-solid fa-users absolute right-2.5"></span>
         {/if}

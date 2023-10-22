@@ -21,18 +21,6 @@ class WishlistItem():
             "is_header": self.is_header
         }
         
-    def apply_changes(self):
-        if (self.id == None):
-            return
-        
-        with get_db_connection() as db:
-            db.execute(
-                "UPDATE wishlist_item SET link = ?, notes = ?, bought = ?, order_number = ?, is_header = ? WHERE rowid = ?",
-                (self.link, self.notes, self.bought, self.order_number, self.is_header, self.id,)
-            )
-            
-            db.commit()
-        
     @staticmethod
     def from_json(json):
         return WishlistItem(
@@ -44,6 +32,20 @@ class WishlistItem():
             order_number=json['order_number'],
             is_header=json['is_header']
         )
+        
+    @staticmethod
+    def get_wishlist_id(wishlist_item_id: int):
+        with get_db_connection() as db:
+            wishlist_item = db.execute(
+                """
+                SELECT wishlist_id FROM wishlist_item WHERE rowid = ?
+                """, (wishlist_item_id,)
+            ).fetchone()
+            
+            if not wishlist_item:
+                return None
+            
+            return wishlist_item[0]
         
     @staticmethod
     def get_all_for_wishlist(wishlist_id):
@@ -147,6 +149,17 @@ class WishlistItem():
             return wishlist_item_id
         
     @staticmethod
+    def set_item_text(wishlist_item_id, name, description):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                UPDATE wishlist_item SET link = ?, notes = ? WHERE rowid = ?
+                """,
+                (name, description, wishlist_item_id,)
+            )
+            db.commit()
+        
+    @staticmethod
     def set_as_bought(wishlist_item_id):
         with get_db_connection() as db:
             db.execute(
@@ -156,12 +169,44 @@ class WishlistItem():
             db.commit()
             
     @staticmethod
-    def reparent(wishlist_item_id: int, wishlist_id: int):
+    def set_order_number(wishlist_item_id, order_number):
         with get_db_connection() as db:
             db.execute(
                 """
-                UPDATE wishlist_item SET wishlist_id = ? WHERE rowid = ?
-                """, (wishlist_id, wishlist_item_id,)
+                UPDATE wishlist_item SET order_number = ? WHERE rowid = ?
+                """,
+                (order_number, wishlist_item_id,)
+            )
+            db.commit()
+            
+    @staticmethod
+    def increment_order_numbers_from(wishlist_id, order_number):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                UPDATE wishlist_item SET order_number = order_number + 1 WHERE order_number >= ? AND wishlist_id = ? AND bought = 0
+                """,
+                (order_number, wishlist_id,)
+            )
+            db.commit()
+            
+    @staticmethod
+    def reparent(wishlist_item_id: int, wishlist_id: int):
+        with get_db_connection() as db:
+            order_number_result = db.execute(
+                """
+                SELECT MAX(order_number) FROM wishlist_item WHERE wishlist_id = ?
+                """,
+                (wishlist_id,)
+            ).fetchone()
+            
+            order_number = order_number_result[0]
+            target_order_number = order_number + 1
+            
+            db.execute(
+                """
+                UPDATE wishlist_item SET wishlist_id = ?, order_number = ? WHERE rowid = ?
+                """, (wishlist_id, target_order_number, wishlist_item_id,)
             )
             
             db.commit()
@@ -169,9 +214,27 @@ class WishlistItem():
     @staticmethod
     def remove(wishlist_item_id):
         with get_db_connection() as db:
+            order_number_result = db.execute(
+                """
+                SELECT wishlist_id, order_number FROM wishlist_item WHERE rowid = ?
+                """,
+                (wishlist_item_id,)
+            ).fetchone()
+            
+            wishlist_id = order_number_result[0]
+            order_number = order_number_result[1]
+            
             db.execute(
                 "DELETE FROM wishlist_item WHERE rowid = ?",
                 (wishlist_item_id,)
+            )
+            db.commit()
+            
+            db.execute(
+                """
+                UPDATE wishlist_item SET order_number = order_number - 1 WHERE wishlist_id = ? AND order_number > ?
+                """,
+                (wishlist_id, order_number,)
             )
             db.commit()
             

@@ -13,9 +13,8 @@ export default defineConfig({
         navbar: resolve(__dirname, './src/components/navbar/main.ts'),
         sign_up: resolve(__dirname, './src/components/sign_up/main.ts'),
         login: resolve(__dirname, './src/components/login/main.ts'),
-        index: resolve(__dirname, './src/components/index/main.ts'),
-        view_wishlist: resolve(__dirname, './src/components/wishlist/view/main.ts'),
-        edit_wishlist: resolve(__dirname, './src/components/wishlist/edit/main.ts'),
+        home: resolve(__dirname, './src/components/index/main.ts'),
+        wishlist: resolve(__dirname, './src/components/wishlist/main.ts'),
         share: resolve(__dirname, './src/components/share/main.ts'),
         profile: resolve(__dirname, './src/components/profile/main.ts')
       },

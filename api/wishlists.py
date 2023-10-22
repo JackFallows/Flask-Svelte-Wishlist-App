@@ -91,50 +91,18 @@ def post_wishlist():
     return jsonify(id=wishlist_id)
 
 @login_required
-@wishlists.route('/put', methods=["PUT"])
-def put_wishlist():
-    wishlist_json = json.loads(request.data)
+@wishlists.route('/update-name/<wishlist_id>', methods=["PATCH"])
+def update_name(wishlist_id):
+    request_json = json.loads(request.data)
+    new_name = request_json['name']
+    wishlist = Wishlist.get(wishlist_id, current_user.id)
     
-    wishlist = Wishlist.from_json(wishlist_json)
-    wishlist_items = list(map(lambda wi: WishlistItem.from_json(wi), wishlist_json['wishlist_items']))
-    
-    db_wishlist = Wishlist.get(wishlist_id=wishlist.id, user_id=current_user.id)
-    
-    if db_wishlist is None:
+    if wishlist is None:
         return "Not found", 404
     
-    if len(list(filter(lambda wi: wi.wishlist_id is not None and wi.wishlist_id != wishlist.id, wishlist_items))) != 0:
-        # there are items belonging to different wishlists
-        return "Not found", 404
-    
-    # TODO validation
-    
+    wishlist.name = new_name
     wishlist.apply_changes()
     
-    existing_item_ids = WishlistItem.get_ids_for_wishlist(wishlist_id=wishlist.id)
-    saving_ids = list(map(lambda item: item.id, filter(lambda item: item.id is not None, wishlist_items)))
-    
-    ids_to_remove = list(filter(lambda existing_id: existing_id not in saving_ids, existing_item_ids))
-    
-    for id_to_remove in ids_to_remove:
-        WishlistItem.remove(wishlist_item_id=id_to_remove)
-    
-    for wishlist_item in wishlist_items:
-        if wishlist_item.id is None:
-            WishlistItem.create(
-                wishlist_id=wishlist.id,
-                link=wishlist_item.link,
-                notes=wishlist_item.notes,
-                order_number=wishlist_item.order_number,
-                is_header=wishlist_item.is_header)
-        else:
-            wishlist_item.apply_changes()
-            
-    if db_wishlist.shared:
-        user = User.get(current_user.id)
-        target_users = UserSharedWishlist.get_users_with_share(wishlist.id)
-        notify_wishlist_updated(user, target_users, wishlist)
-            
     return jsonify({})
 
 @login_required

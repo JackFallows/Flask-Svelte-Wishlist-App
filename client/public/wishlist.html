@@ -2,7 +2,7 @@
 
 {% block global_script %}
 <script>
-    window.page_title = "View wishlist"
+    window.page_title = "Wishlist"
 </script>
 {% endblock %}
 
@@ -11,5 +11,5 @@
     window.wishlist_id = {{ 'null' if wishlist_id == None else wishlist_id }};
 </script>
 
-<script type="module" defer src='{{ auto_bundles["view_wishlist"] }}'></script>
+<script type="module" defer src='{{ auto_bundles["wishlist"] }}'></script>
 {% endblock %}

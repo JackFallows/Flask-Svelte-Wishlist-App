@@ -137,11 +137,7 @@ function makeRoutes(base_path: string) {
                 Login: ExternalAuthRoot.append("login")
             }
         },
-        Wishlist: {
-            Create: WishlistViewRoot.append("create"),
-            Edit: WishlistViewRoot.append("edit"),
-            View: WishlistViewRoot.append("view")
-        },
+        Wishlist: WishlistViewRoot,
         Profile: ProfileViewRoot.to_string() + "/",
         Home: ViewsRoot.to_string() + "/"
     }
@@ -160,16 +156,20 @@ function makeRoutes(base_path: string) {
             GetCountForUser: WishlistsApiRoot.append("get_count_for_user").as_get(),
             GetSharedWithUser: WishlistsApiRoot.append("get_shared_with_user").as_get(),
             Post: WishlistsApiRoot.append("post").as_post(),
-            Put: WishlistsApiRoot.append("put").as_put(),
+            PatchUpdateName: WishlistsApiRoot.append("update-name").as_patch(),
             PatchShare: WishlistsApiRoot.append("share").as_patch(),
             PatchShareLink: WishlistsApiRoot.append("share-link").as_patch(),
             Delete: WishlistsApiRoot.append("delete").as_delete()
         },
         WishlistItems: {
             GetAllForWishlist: WishlistItemsApiRoot.append("get_all_for_wishlist").as_get(),
+            PostCreate: WishlistItemsApiRoot.append("/create").as_post(),
             PatchMarkAsBought: WishlistItemsApiRoot.append("mark-as-bought").as_patch(),
+            PatchChangeText: WishlistItemsApiRoot.append("change-text").as_patch(),
             PatchLinkShareMarkBought: WishlistItemsApiRoot.append("link_share_mark_bought").as_patch(),
-            PatchReparent: WishlistItemsApiRoot.append("reparent").as_patch()
+            PatchReparent: WishlistItemsApiRoot.append("reparent").as_patch(),
+            PatchEnsureOrder: WishlistItemsApiRoot.append("ensure-order").as_patch(),
+            Delete: WishlistItemsApiRoot.append("delete").as_delete()
         },
         Notifications: {
             Get: NotificationsApiRoot.append("get").as_get(),
