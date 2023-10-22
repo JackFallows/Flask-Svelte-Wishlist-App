@@ -220,7 +220,7 @@
             Loading...
         {:then wishlists} 
             <p>Choose the wishlist to move this item to:</p>
-            <RadioGroup group_id="wishlists_group" items={wishlists} bind:selected_item={target_wishlist}></RadioGroup>
+            <RadioGroup group_id="{"wishlists_group_" + wishlist_item.id}" items={wishlists} bind:selected_item={target_wishlist}></RadioGroup>
         {/await}
     </span>
     <span slot="buttons" let:close_modal={close}>

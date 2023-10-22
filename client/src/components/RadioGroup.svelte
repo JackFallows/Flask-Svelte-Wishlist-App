@@ -13,9 +13,9 @@
 
 <div class="flex flex-col space-y-1">
     {#each items as item}
-        <label for={"radio-option-" + item.id.toString()} class="container border-2 border-slate-300 hover:border-purple-600 rounded">
+        <label for={`radio-option-${group_id}-${item.id}`} class="container border-2 border-slate-300 hover:border-purple-600 rounded">
             {item.name}
-            <input type="radio" class="" id={"radio-option-" + item.id.toString()} name={group_id} value={item} bind:group={selected_item} />
+            <input type="radio" class="" id={`radio-option-${group_id}-${item.id}`} name={group_id} value={item} bind:group={selected_item} />
             <span class="checkmark"></span>
         </label>
     {/each}
