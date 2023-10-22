@@ -134,13 +134,13 @@
                     <span class="fa-solid fa-floppy-disk"></span>
                 </button>
             {/if}
+            <button class="icon-button" on:click={remove}>
+                <span class="fa-solid fa-trash pointer-events-none"></span>
+            </button>
             <div class="flex flex-col">
                 <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
                 <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
             </div>
-            <button class="icon-button" on:click={remove}>
-                <span class="fa-solid fa-trash pointer-events-none"></span>
-            </button>
         {/if}
     </div>
 {:else}
@@ -176,6 +176,18 @@
             </div>
         {/if}
         {#if is_owned}
+            {#if has_other_wishlists && !is_editing && !is_new}
+                <button class="icon-button" on:click={move_item_to_list}>
+                    <span class="fa-solid fa-arrow-right-from-bracket"></span>
+                </button>
+            {/if}
+        {/if}
+        {#if !is_new}
+            <button class="icon-button" on:click={mark_as_bought}>
+                <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
+            </button>
+        {/if}
+        {#if is_owned}
             {#if !is_editing}
                 <button class="icon-button" on:click={() => is_editing = true}>
                     <span class="fa-solid fa-pencil"></span>
@@ -185,23 +197,13 @@
                     <span class="fa-solid fa-floppy-disk"></span>
                 </button>
             {/if}
+            <button class="icon-button" on:click={remove}>
+                <span class="fa-solid fa-trash pointer-events-none"></span>
+            </button>
             <div class="flex flex-col">
                 <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
                 <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
             </div>
-            {#if has_other_wishlists && !is_editing && !is_new}
-                <button class="icon-button" on:click={move_item_to_list}>
-                    <span class="fa-solid fa-arrow-right-from-bracket"></span>
-                </button>
-            {/if}
-            <button class="icon-button" on:click={remove}>
-                <span class="fa-solid fa-trash pointer-events-none"></span>
-            </button>
-        {/if}
-        {#if !is_new}
-            <button class="icon-button" on:click={mark_as_bought}>
-                <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
-            </button>
         {/if}
     </div>
 {/if}
