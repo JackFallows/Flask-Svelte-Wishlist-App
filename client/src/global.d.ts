@@ -8,6 +8,7 @@ interface Window {
     wishlist_id?: number;
     base_path: string;
     email_is_configured: boolean;
+    version_number: string;
 }
 
 interface IValidationState {

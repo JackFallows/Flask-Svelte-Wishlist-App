@@ -1,7 +1,7 @@
 import pathlib
 import functools
 from os import listdir, environ
-from os.path import isfile, join
+from os.path import isfile, join, exists
 
 from flask import render_template
 from flask_login import current_user
@@ -62,6 +62,14 @@ def get_js():
     
     return auto_bundles
 
+def get_version_number():
+    file_path = "version.txt"
+    if exists(file_path):
+        f = open(file_path, "r")
+        return f.read()
+    
+    return "VX, XXXX-XX-XX"
+
 def custom_render_template(template_name, **context):
     return render_template(
         template_name_or_list=template_name,
@@ -71,5 +79,6 @@ def custom_render_template(template_name, **context):
         module_css=get_css(),
         base_path=BASE_PATH,
         email_is_configured=is_email_configured(),
+        version_number=get_version_number(),
         **context
     )
