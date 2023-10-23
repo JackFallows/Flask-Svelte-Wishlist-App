@@ -66,7 +66,7 @@ def get_version_number():
     file_path = "version.txt"
     if exists(file_path):
         f = open(file_path, "r")
-        return f.read()
+        return f.read().strip()
     
     return "VX, XXXX-XX-XX"
 
