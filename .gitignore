@@ -6,3 +6,4 @@ secure
 .DS_Store
 *.db
 client/public/library_content
+version.txt
