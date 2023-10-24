@@ -63,12 +63,12 @@ def get_js():
     return auto_bundles
 
 def get_version_number():
-    file_path = "version.txt"
+    file_path = "version.html"
     if exists(file_path):
         f = open(file_path, "r")
         return f.read().strip()
     
-    return "VX, XXXX-XX-XX"
+    return None
 
 def custom_render_template(template_name, **context):
     return render_template(

@@ -48,7 +48,13 @@
             false
             {% endif %};
 
-        window.version_number = "{{ version_number }}";
+        window.version_number = 
+            {% if version_number %}
+            "{{ version_number|safe }}"
+            {% else %}
+            null
+            {% endif %};
+
     </script>
 
     {% block global_script %}
