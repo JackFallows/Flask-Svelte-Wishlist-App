@@ -2,7 +2,7 @@
 
 </script>
 
-<div class="flex flex-col space-y-1 md:space-y-0 md:flex-row w-full h-24 mt-12 px-4 py-2 md:py-4 bg-slate-100">
+<footer class="flex flex-col space-y-1 sm:space-y-0 sm:flex-row w-full h-24 mt-12 px-4 py-2 sm:py-4 bg-slate-100">
     <div class="grow flex flex-col space-y-1 md:space-y-3">
         <div class="grow flex items-baseline space-x-3">
             <span class="text-xl">Wishlist App</span>
@@ -20,7 +20,7 @@
             <div><a class="hover:text-purple-600" href="https://github.com/JackFallows/Flask-Svelte-Wishlist-App" target="_blank">GitHub</a> <span class="fa-solid fa-arrow-up-right-from-square"></span></div>
         </div>
     </div>
-    <div class="md:self-end">
-        Copyright &copy; {(new Date()).getFullYear()} Jack Fallows. All rights reserved.
+    <div class="sm:self-end text-slate-600">
+        &copy; {(new Date()).getFullYear()} Jack Fallows
     </div>
-</div>
+</footer>

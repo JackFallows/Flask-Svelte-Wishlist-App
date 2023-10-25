@@ -63,7 +63,12 @@
     </div>
     <div class="flex space-x-4 items-center">
         {#if user_is_authenticated}
-            <a class="button" href="{ Views.Wishlist.to_string() }">Create wishlist</a>
+            <a class="button text-center" href="{ Views.Wishlist.to_string() }">
+                <span class="hidden sm:inline">Create wishlist</span>
+                <span class="inline sm:hidden">
+                    <span class="fa-solid fa-plus fa-fw"></span>
+                </span>
+            </a>
             <div class="flex items-center">
                 <div class="p-3 {notifications_panel_visible ? 'bg-white rounded-t-xl' : ''}">
                     <button class="icon-button relative" type="button" aria-label="Notifications button" on:click={toggle_notifications_panel}>

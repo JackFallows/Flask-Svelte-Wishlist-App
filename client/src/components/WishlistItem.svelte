@@ -7,6 +7,7 @@
     import Modal from './Modal.svelte';
     import RadioGroup from './RadioGroup.svelte';
     import Collapse from './Collapse.svelte';
+    import BurgerMenu from './BurgerMenu.svelte';
 
     export let wishlist_item: IWishlistItem;
     export let is_owned: boolean = false;
@@ -125,18 +126,20 @@
             {/if}
         </div>
         {#if is_owned}
-            {#if !is_editing}
-                <button class="icon-button" on:click={() => is_editing = true}>
-                    <span class="fa-solid fa-pencil"></span>
+            <BurgerMenu>
+                {#if !is_editing}
+                    <button class="icon-button" on:click={() => is_editing = true}>
+                        <span class="fa-solid fa-pencil"></span>
+                    </button>
+                {:else}
+                    <button class="icon-button" on:click={change_text}>
+                        <span class="fa-solid fa-floppy-disk"></span>
+                    </button>
+                {/if}
+                <button class="icon-button" on:click={remove}>
+                    <span class="fa-solid fa-trash pointer-events-none"></span>
                 </button>
-            {:else}
-                <button class="icon-button" on:click={change_text}>
-                    <span class="fa-solid fa-floppy-disk"></span>
-                </button>
-            {/if}
-            <button class="icon-button" on:click={remove}>
-                <span class="fa-solid fa-trash pointer-events-none"></span>
-            </button>
+            </BurgerMenu>
             <div class="flex flex-col">
                 <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
                 <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
@@ -162,31 +165,35 @@
                     {/if}
                 </div>
             {/if}
-            {#if is_owned}
-                {#if has_other_wishlists && !is_editing && !is_new}
-                    <button class="icon-button" on:click={move_item_to_list}>
-                        <span class="fa-solid fa-arrow-right-from-bracket"></span>
+            <BurgerMenu>
+                {#if is_owned}
+                    {#if has_other_wishlists && !is_editing && !is_new}
+                        <button class="icon-button" on:click={move_item_to_list}>
+                            <span class="fa-solid fa-arrow-right-from-bracket"></span>
+                        </button>
+                    {/if}
+                {/if}
+                {#if !is_new}
+                    <button class="icon-button" on:click={mark_as_bought}>
+                        <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
                     </button>
                 {/if}
-            {/if}
-            {#if !is_new}
-                <button class="icon-button" on:click={mark_as_bought}>
-                    <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
-                </button>
-            {/if}
-            {#if is_owned}
-                {#if !is_editing}
-                    <button class="icon-button" on:click={() => is_editing = true}>
-                        <span class="fa-solid fa-pencil"></span>
-                    </button>
-                {:else}
-                    <button class="icon-button" on:click={change_text}>
-                        <span class="fa-solid fa-floppy-disk"></span>
+                {#if is_owned}
+                    {#if !is_editing}
+                        <button class="icon-button" on:click={() => is_editing = true}>
+                            <span class="fa-solid fa-pencil"></span>
+                        </button>
+                    {:else}
+                        <button class="icon-button" on:click={change_text}>
+                            <span class="fa-solid fa-floppy-disk"></span>
+                        </button>
+                    {/if}
+                    <button class="icon-button" on:click={remove}>
+                        <span class="fa-solid fa-trash pointer-events-none"></span>
                     </button>
                 {/if}
-                <button class="icon-button" on:click={remove}>
-                    <span class="fa-solid fa-trash pointer-events-none"></span>
-                </button>
+            </BurgerMenu>
+            {#if is_owned}
                 <div class="flex flex-col">
                     <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
                     <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>

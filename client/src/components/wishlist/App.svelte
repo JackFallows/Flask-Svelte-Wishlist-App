@@ -214,14 +214,16 @@
     {#if is_owned}
         <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
     {:else}
-        <h1 class="text-2xl">{wishlist.name}</h1>
-    {/if}
-    {#if wishlist_as_share != null}
-    <div>
-        <span class="fa-solid fa-users"></span>
-        <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
-        <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
-    </div>
+        <div class="flex flex-col sm:flex-row">
+            <h1 class="text-2xl grow">{wishlist.name}</h1>
+            {#if wishlist_as_share != null}
+                <div>
+                    <span class="fa-solid fa-users"></span>
+                    <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
+                    <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
+                </div>
+            {/if}
+        </div>
     {/if}
 
     {#if is_owned && wishlist_id != 0}
