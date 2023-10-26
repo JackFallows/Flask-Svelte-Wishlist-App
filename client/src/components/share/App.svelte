@@ -62,7 +62,6 @@
     <div class="grow">
         <h1 class="text-2xl">{wishlist.name}</h1>
 
-        <h2 class="text-lg">Items</h2>
         <div class="flex space-y-3 flex-col">
             {#each wishlist_items as wishlist_item(wishlist_item)}
                 <WishlistItem wishlist_item={wishlist_item} on:buy={mark_item_bought} />

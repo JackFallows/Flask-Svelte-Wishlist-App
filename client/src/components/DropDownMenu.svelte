@@ -3,6 +3,7 @@
 
     export let button: HTMLElement;
     export let classes: string = '';
+    export let left: boolean = false;
 
     let dropdown: HTMLElement;
     let visible: boolean = false;
@@ -20,7 +21,9 @@
 
 <svelte:window on:click={auto_hide} />
 
-<div class="{visible ? 'block' : 'hidden'} absolute bg-white shadow-lg border-slate-400 border p-2 rounded-md {classes}" bind:this={dropdown}>
-    <slot>
-    </slot>
+<div class="relative">
+    <div class="{visible ? 'block' : 'hidden'} absolute {left ? "right-0" : "left-0"} min-w-max bg-white shadow-lg border-slate-400 border p-2 rounded-md {classes}" bind:this={dropdown}>
+        <slot>
+        </slot>
+    </div>
 </div>

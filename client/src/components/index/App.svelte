@@ -31,10 +31,10 @@
 
 <main>
 	{#if !user_is_authenticated}
-	<h1 class="text-purple-600">Hello there!</h1>
+	<h1 class="text-purple-600 text-4xl sm:text-6xl">Hello there!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 	{:else}
-	<h1 class="text-purple-600">Hello {name}!</h1>
+	<h1 class="text-purple-600 text-4xl sm:text-6xl">Hello {name}!</h1>
 	{/if}
 </main>
 
@@ -42,7 +42,7 @@
 {#await loading_promise}
 <p>Loading...</p>
 {:then}
-<div class="flex flex-col space-y-3 md:flex-row md:space-x-3 md:space-y-0">
+<div class="flex flex-col space-y-3 sm:flex-row sm:space-x-3 sm:space-y-0">
 	<div class="grow">
 		<div class="rounded-md border-2 border-slate-200">
 			<div class="bg-slate-200 text-center p-2">
@@ -94,19 +94,11 @@
 	main {
 		text-align: center;
 		padding: 1em;
-		max-width: 240px;
 		margin: 0 auto;
 	}
 
 	h1 {
 		text-transform: uppercase;
-		font-size: 4em;
 		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
 	}
 </style>
