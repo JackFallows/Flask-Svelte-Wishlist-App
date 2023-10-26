@@ -7,6 +7,7 @@
     import Modal from './Modal.svelte';
     import Collapse from './Collapse.svelte';
     import Accordion from './Accordion.svelte';
+    import IconButton from './IconButton.svelte';
 
     export let wishlist: IWishlist;
     export let is_third_party: boolean = false; // someone shared it with us
@@ -68,12 +69,8 @@
         <h2 class="grow">{wishlist.name}</h2>
     </button>
     {#if !is_third_party}
-    <button class="icon-button" aria-label="Share button" on:click={share_wishlist}>
-        <span class="fa-solid fa-share-nodes"></span>
-    </button>
-    <button class="icon-button" aria-label="Delete button" on:click={delete_wishlist}>
-        <span class="fa-solid fa-trash" style="pointer-events: none;"></span>
-    </button>
+        <IconButton id="{wishlist.id}-share-button" icon="fa-solid fa-share-nodes" label="Share wishlist" on:click={share_wishlist} />
+        <IconButton id="{wishlist.id}-delete-button" icon="fa-solid fa-trash" label="Delete wishlist" on:click={delete_wishlist} />
     {/if}
 </div>
 

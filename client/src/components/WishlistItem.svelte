@@ -2,12 +2,13 @@
     import '../tailwind.css';
 
     import { createEventDispatcher } from 'svelte';
-    import { Get, Patch } from '../http';
+    import { Get } from '../http';
     import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
     import RadioGroup from './RadioGroup.svelte';
     import Collapse from './Collapse.svelte';
     import BurgerMenu from './BurgerMenu.svelte';
+    import IconButton from './IconButton.svelte';
 
     export let wishlist_item: IWishlistItem;
     export let is_owned: boolean = false;
@@ -126,23 +127,17 @@
             {/if}
         </div>
         {#if is_owned}
-            <BurgerMenu>
+            <BurgerMenu id="{wishlist_item.id}-menu" label="Heading menu">
                 {#if !is_editing}
-                    <button class="icon-button" on:click={() => is_editing = true}>
-                        <span class="fa-solid fa-pencil"></span>
-                    </button>
+                    <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
                 {:else}
-                    <button class="icon-button" on:click={change_text}>
-                        <span class="fa-solid fa-floppy-disk"></span>
-                    </button>
+                    <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-floppy-disk" label="Save" on:click={change_text} />
                 {/if}
-                <button class="icon-button" on:click={remove}>
-                    <span class="fa-solid fa-trash pointer-events-none"></span>
-                </button>
+                <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
             </BurgerMenu>
             <div class="flex flex-col">
-                <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
-                <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
+                <IconButton id="{wishlist_item.id}-move-up-button" icon="fa-solid fa-arrow-up" label="Move up" on:click={move_up} />
+                <IconButton id="{wishlist_item.id}-move-down-button" icon="fa-solid fa-arrow-down" label="Move down" on:click={move_down} />
             </div>
         {/if}
     </div>
@@ -165,38 +160,28 @@
                     {/if}
                 </div>
             {/if}
-            <BurgerMenu>
+            <BurgerMenu id="{wishlist_item.id}-menu" label="Item menu">
                 {#if is_owned}
                     {#if has_other_wishlists && !is_editing && !is_new}
-                        <button class="icon-button" on:click={move_item_to_list}>
-                            <span class="fa-solid fa-arrow-right-from-bracket"></span>
-                        </button>
+                        <IconButton id="{wishlist_item.id}-move-out-button" icon="fa-solid fa-arrow-right-from-bracket" label="Move to list" on:click={move_item_to_list} />
                     {/if}
                 {/if}
                 {#if !is_new}
-                    <button class="icon-button" on:click={mark_as_bought}>
-                        <span class="fa-solid fa-basket-shopping pointer-events-none"></span>
-                    </button>
+                    <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
                 {/if}
                 {#if is_owned}
                     {#if !is_editing}
-                        <button class="icon-button" on:click={() => is_editing = true}>
-                            <span class="fa-solid fa-pencil"></span>
-                        </button>
+                        <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
                     {:else}
-                        <button class="icon-button" on:click={change_text}>
-                            <span class="fa-solid fa-floppy-disk"></span>
-                        </button>
+                        <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-floppy-disk" label="Save" on:click={change_text} />
                     {/if}
-                    <button class="icon-button" on:click={remove}>
-                        <span class="fa-solid fa-trash pointer-events-none"></span>
-                    </button>
+                    <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
                 {/if}
             </BurgerMenu>
             {#if is_owned}
                 <div class="flex flex-col">
-                    <button class="icon-button" on:click={move_up}><span class="fa-solid fa-arrow-up"></span></button>
-                    <button class="icon-button" on:click={move_down}><span class="fa-solid fa-arrow-down"></span></button>
+                    <IconButton id="{wishlist_item.id}-move-up-button" icon="fa-solid fa-arrow-up" label="Move up" on:click={move_up} />
+                    <IconButton id="{wishlist_item.id}-move-down-button" icon="fa-solid fa-arrow-down" label="Move down" on:click={move_down} />
                 </div>
             {/if}
         </div>

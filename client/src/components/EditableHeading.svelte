@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import IconButton from "./IconButton.svelte";
 
     export let tag: string;
     export let value: string;
@@ -22,12 +23,12 @@
 {#if !is_editing}
     <svelte:element this={tag} class="flex items-center transition-all rounded hover:shadow-[0_0_10px_rgba(0,0,0,0.3)] {classes}">
         <span class="grow">{value}</span>
-        <button class="icon-button" on:click={() => is_editing = true}><span class="fa-solid fa-pencil"></span></button>
+        <IconButton id="edit-heading-button" icon="fa-solid fa-pencil" label="Edit heading" on:click={() => is_editing = true} />
     </svelte:element>
 {:else}
     <div class="flex items-center">
         <input class="text-input grow" type="text" bind:value={value} placeholder="{placeholder}" />
-        <button class="icon-button" on:click={save}><span class="fa-solid fa-floppy-disk"></span></button>
+        <IconButton id="save-heading-button" icon="fa-solid fa-floppy-disk" label="Save heading" on:click={save} />
     </div>
 {/if}
 
