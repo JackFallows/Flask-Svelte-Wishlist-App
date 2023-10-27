@@ -95,6 +95,8 @@ def reparent(wishlist_item_id, target_wishlist_id):
     
     WishlistItem.reparent(wishlist_item_id, target_wishlist_id)
     
+    notify_wishlist_updated(current_user, target_wishlist)
+    
     return jsonify({})
 
 @login_required
