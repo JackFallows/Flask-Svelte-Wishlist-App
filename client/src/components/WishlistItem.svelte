@@ -110,6 +110,7 @@
         dispatch('change_text', {
             item: wishlist_item
         });
+        is_new = false;
     }
 
     function is_link(link: string): boolean {
