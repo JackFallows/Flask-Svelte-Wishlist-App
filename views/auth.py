@@ -6,8 +6,8 @@ from helpers import custom_render_template
 
 auth = Blueprint('auth', __name__)
 
-@login_required
 @auth.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for("index"))

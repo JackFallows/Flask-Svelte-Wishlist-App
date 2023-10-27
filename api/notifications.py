@@ -7,8 +7,8 @@ from api.models.notification_dto import NotificationDto
 
 notifications = Blueprint('notifications', __name__)
 
-@login_required
 @notifications.route('/get')
+@login_required
 def get():
     notifications = Notification.get_all_for_user(current_user.id)
     
@@ -25,8 +25,8 @@ def get():
     
     return jsonify(list(map(lambda x: x.as_dict(), notification_dtos)))
 
-@login_required
 @notifications.route('/read/<notification_id>', methods=["PATCH"])
+@login_required
 def read(notification_id):
     notification = Notification.get(notification_id)
     
@@ -35,8 +35,8 @@ def read(notification_id):
     
     return jsonify({})
 
-@login_required
 @notifications.route('/accept_share/<notification_id>', methods=["PATCH"])
+@login_required
 def accept_share(notification_id):
     notification = Notification.get(notification_id)
     
@@ -47,8 +47,8 @@ def accept_share(notification_id):
     
     return jsonify({})
     
-@login_required
 @notifications.route('/reject_share/<notification_id>', methods=["PATCH"])
+@login_required
 def reject_share(notification_id):
     notification = Notification.get(notification_id)
     

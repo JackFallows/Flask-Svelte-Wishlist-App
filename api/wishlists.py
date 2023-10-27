@@ -12,8 +12,8 @@ from services.notification_service import notify_wishlist_shared, notify_wishlis
 
 wishlists = Blueprint('wishlists', __name__)
 
-@login_required
 @wishlists.route('/get/<wishlist_id>')
+@login_required
 def get_wishlist(wishlist_id):
     if wishlist_id == None:
         return jsonify({})
@@ -47,8 +47,8 @@ def get_link_share(share_guid):
     
     return jsonify(wishlist_merged)
 
-@login_required
 @wishlists.route('/get_all_for_user')
+@login_required
 def get_all_for_user():
     user_id = current_user.id
     
@@ -56,21 +56,21 @@ def get_all_for_user():
     
     return jsonify(list(map(lambda w: w.as_dict(), wishlists)))
 
-@login_required
 @wishlists.route('/get_count_for_user')
+@login_required
 def get_count_for_user():
     count = Wishlist.get_count_for_user(current_user.id)
     
     return jsonify({ "total_wishlists": count })
 
-@login_required
 @wishlists.route('/get_shared_with_user')
+@login_required
 def get_shared_with_user():
     wishlists = WishlistShare.get_shared_with_user(current_user.id)
     return jsonify(list(map(lambda w: w.as_dict(), wishlists)))
 
-@login_required
 @wishlists.route('/post', methods=["POST"])
+@login_required
 def post_wishlist():
     wishlist = json.loads(request.data)
     
@@ -90,8 +90,8 @@ def post_wishlist():
     
     return jsonify(id=wishlist_id)
 
-@login_required
 @wishlists.route('/update-name/<wishlist_id>', methods=["PATCH"])
+@login_required
 def update_name(wishlist_id):
     request_json = json.loads(request.data)
     new_name = request_json['name']
@@ -105,8 +105,8 @@ def update_name(wishlist_id):
     
     return jsonify({})
 
-@login_required
 @wishlists.route('/share', methods=["PATCH"])
+@login_required
 def share_wishlist():
     request_json = json.loads(request.data)
     
@@ -125,8 +125,8 @@ def share_wishlist():
     
     return jsonify({})
 
-@login_required
 @wishlists.route('/share-link/<wishlist_id>', methods=["PATCH"])
+@login_required
 def share_wishlist_link(wishlist_id: int):
     wishlist = Wishlist.get(wishlist_id, current_user.id)
     
@@ -137,8 +137,8 @@ def share_wishlist_link(wishlist_id: int):
         "share_guid": wishlist.share_guid
     })
 
-@login_required
 @wishlists.route('/delete/<wishlist_id>', methods=["DELETE"])
+@login_required
 def delete(wishlist_id):
     wishlist = Wishlist.get(wishlist_id=wishlist_id, user_id=current_user.id)
     

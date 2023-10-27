@@ -204,24 +204,6 @@
     </div>
 {/if}
 
-<Modal bind:this={move_item_modal} id="move">
-    <span slot="header">
-        Move item
-    </span>
-    <span slot="body">
-        {#await get_all_wishlists()}
-            Loading...
-        {:then wishlists} 
-            <p>Choose the wishlist to move this item to:</p>
-            <RadioGroup group_id="{"wishlists_group_" + wishlist_item.id}" items={wishlists} bind:selected_item={target_wishlist}></RadioGroup>
-        {/await}
-    </span>
-    <span slot="buttons" let:close_modal={close}>
-        <button class="button" on:click={() => close()}>Cancel</button>
-        <button class="button" on:click={() => close("true")}>Move item</button>
-    </span>
-</Modal>
-
 <Modal bind:this={bought_confirmation_modal} id="bought-modal">
     <span slot="header">
         Have you bought this item?
@@ -235,18 +217,38 @@
     </span>
 </Modal>
 
-<Modal bind:this={confirm_delete_modal} is_danger={true} id="delete">
-    <span slot="header">
-        Are you sure?
-    </span>
-    <span slot="body">
-        This action cannot be undone.
-    </span>
-    <span slot="buttons" let:close_modal={close}>
-        <button class="button" on:click={() => close()}>Cancel</button>
-        <button class="danger-button" on:click={() => close("true")}>Delete</button>
-    </span>
-</Modal>
+{#if is_owned}
+    <Modal bind:this={move_item_modal} id="move">
+        <span slot="header">
+            Move item
+        </span>
+        <span slot="body">
+            {#await get_all_wishlists()}
+                Loading...
+            {:then wishlists} 
+                <p>Choose the wishlist to move this item to:</p>
+                <RadioGroup group_id="{"wishlists_group_" + wishlist_item.id}" items={wishlists} bind:selected_item={target_wishlist}></RadioGroup>
+            {/await}
+        </span>
+        <span slot="buttons" let:close_modal={close}>
+            <button class="button" on:click={() => close()}>Cancel</button>
+            <button class="button" on:click={() => close("true")}>Move item</button>
+        </span>
+    </Modal>
+
+    <Modal bind:this={confirm_delete_modal} is_danger={true} id="delete">
+        <span slot="header">
+            Are you sure?
+        </span>
+        <span slot="body">
+            This action cannot be undone.
+        </span>
+        <span slot="buttons" let:close_modal={close}>
+            <button class="button" on:click={() => close()}>Cancel</button>
+            <button class="danger-button" on:click={() => close("true")}>Delete</button>
+        </span>
+    </Modal>
+{/if}
 
 <style lang="less">
 </style>

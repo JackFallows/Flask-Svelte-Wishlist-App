@@ -8,8 +8,8 @@ from services.notification_service import notify_wishlist_updated
 
 wishlist_items = Blueprint('wishlist_items', __name__)
 
-@login_required
 @wishlist_items.route('/get_all_for_wishlist/<wishlist_id>')
+@login_required
 def get_all_for_wishlist(wishlist_id):
     user_id = current_user.id
     
@@ -21,8 +21,8 @@ def get_all_for_wishlist(wishlist_id):
     
     return jsonify(list(map(lambda w: w.as_dict(), wishlist_items)))
 
-@login_required
 @wishlist_items.route('/create', methods=["POST"])
+@login_required
 def create():
     wishlist_item_json = json.loads(request.data)
     wishlist_item = WishlistItem.from_json(wishlist_item_json)
@@ -47,8 +47,8 @@ def create():
         "wishlist_item_id": wishlist_item_id
     })
 
-@login_required
 @wishlist_items.route('/change-text/<wishlist_item_id>', methods=["PATCH"])
+@login_required
 def change_text(wishlist_item_id):
     if not WishlistItem.get_is_available_to_user(wishlist_item_id=wishlist_item_id, user_id=current_user.id):
         return "Not found", 404
@@ -63,8 +63,8 @@ def change_text(wishlist_item_id):
     return jsonify({})
     
 
-@login_required
 @wishlist_items.route('/mark-as-bought/<wishlist_item_id>', methods=["PATCH"])
+@login_required
 def mark_as_bought(wishlist_item_id):
     if not WishlistItem.get_is_available_to_user(wishlist_item_id=wishlist_item_id, user_id=current_user.id):
         return "Not found", 404
@@ -82,8 +82,8 @@ def link_share_mark_bought(share_guid, wishlist_item_id):
     
     return jsonify({})
 
-@login_required
 @wishlist_items.route('/reparent/<wishlist_item_id>/<target_wishlist_id>', methods=["PATCH"])
+@login_required
 def reparent(wishlist_item_id, target_wishlist_id):
     if not WishlistItem.get_is_owned_by_user(wishlist_item_id, user_id=current_user.id):
         return "Not found", 404
@@ -99,8 +99,8 @@ def reparent(wishlist_item_id, target_wishlist_id):
     
     return jsonify({})
 
-@login_required
 @wishlist_items.route('/ensure-order/<wishlist_id>', methods=["PATCH"])
+@login_required
 def ensure_order(wishlist_id):
     wishlist = Wishlist.get(wishlist_id, current_user.id)
     if not wishlist:
@@ -113,8 +113,8 @@ def ensure_order(wishlist_id):
         
     return jsonify({})
 
-@login_required
 @wishlist_items.route('/delete/<wishlist_item_id>', methods=["DELETE"])
+@login_required
 def delete_item(wishlist_item_id):
     if not WishlistItem.get_is_owned_by_user(wishlist_item_id, user_id=current_user.id):
         return "Not found", 404

@@ -40,8 +40,8 @@ def login():
     login_user(user)
     return jsonify({})
 
-@login_required
 @users.route('/get')
+@login_required
 def get():
     user = User.get(current_user.id)
         
@@ -50,8 +50,8 @@ def get():
     
     return jsonify(user.as_dict())
 
-@login_required
 @users.route("/update", methods=["PATCH"])
+@login_required
 #@validate(user_update_validator)
 def update():
     request_json = json.loads(request.data)
