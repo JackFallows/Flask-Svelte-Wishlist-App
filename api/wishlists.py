@@ -157,6 +157,7 @@ def delete(wishlist_id):
     if wishlist is None:
         return "Not found", 404
     
+    UserSharedWishlist.remove_all_for_wishlist(wishlist_id)
     WishlistItem.remove_all_for_wishlist(wishlist_id=wishlist_id)
     Wishlist.remove(wishlist_id=wishlist_id)
     

@@ -142,3 +142,15 @@ class UserSharedWishlist():
             )
             
             db.commit()
+            
+    @staticmethod
+    def remove_all_for_wishlist(wishlist_id: int):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                DELETE FROM user_shared_wishlist WHERE wishlist_id = ?
+                """,
+                (wishlist_id,)
+            )
+            
+            db.commit()
