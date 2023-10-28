@@ -15,7 +15,7 @@
 
     let toast: Toast;
 
-    const { Api } = makeRoutes(window.base_path);
+    const { Api, Views } = makeRoutes(window.base_path);
 
     let loading_promise: Promise<any> = load_wishlist();
 
@@ -31,6 +31,11 @@
 
         wishlist = wishlistPayload.get_json();
         wishlist_items = wishlist.wishlist_items;
+    }
+
+    async function add_to_account() {
+        await Patch(Api.Wishlists.PatchAddToAccount.append(share_guid), {});
+        location.href = Views.Wishlist.append(wishlist.id).to_string();
     }
 
     async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem }>) {
@@ -66,11 +71,18 @@
         <div class="grow">
             <h1 class="text-2xl">{wishlist.name}</h1>
 
-            {#if !is_logged_in}
                 <Alert color={AlertColor.BLUE}>
-                    <p>Log in or create an account to receive notifications when this wishlist is updated!</p>
+                    <p>Add this wishlist to your account to receive notifications when it changes!</p>
+                    {#if !is_logged_in}
+                        <p>Use the buttons in the top right to log in or create an account.</p>
+                    {:else}
+                        <p>
+                            <button class="button" on:click={add_to_account}>
+                                <span class="fa-solid fa-plus pointer-events-none"></span> Add to my account
+                            </button>
+                        </p>
+                    {/if}
                 </Alert>
-            {/if}
 
             <div class="flex space-y-3 flex-col">
                 {#each wishlist_items as wishlist_item(wishlist_item)}

@@ -136,6 +136,15 @@ def share_wishlist_link(wishlist_id: int):
     return jsonify({
         "share_guid": wishlist.share_guid
     })
+    
+@wishlists.route('/add-to-account/<share_guid>', methods=["PATCH"])
+@login_required
+def add_to_account(share_guid: str):
+    wishlist = Wishlist.get_link_share(share_guid)
+    
+    UserSharedWishlist.create(current_user.id, wishlist.id, owner_anonymous=True)
+    
+    return jsonify({})
 
 @wishlists.route('/delete/<wishlist_id>', methods=["DELETE"])
 @login_required

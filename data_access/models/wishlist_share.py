@@ -13,6 +13,7 @@ class WishlistShare(Wishlist):
         return {
             **dict,
             **{
+                "is_share": True,
                 "owner_name": self.owner_name,
                 "owner_email": self.owner_email
             }
@@ -25,7 +26,7 @@ class WishlistShare(Wishlist):
                 "SELECT w.rowid, w.user_id, w.name, w.shared, w.deleted, w.share_guid, u.name, u.email "
                 "FROM wishlist AS w "
                 "INNER JOIN user_shared_wishlist AS usw ON w.rowid = usw.wishlist_id "
-                "INNER JOIN user AS u ON u.id = w.user_id "
+                "LEFT OUTER JOIN user AS u ON u.id = w.user_id AND usw.owner_anonymous = 0 "
                 "WHERE usw.user_id = ? AND w.rowid = ? AND w.shared = 1 AND usw.accepted = 1 ",
                 (user_id, wishlist_id,)
             ).fetchone()
@@ -53,7 +54,7 @@ class WishlistShare(Wishlist):
                 "SELECT w.rowid, w.user_id, w.name, w.shared, w.deleted, w.share_guid, u.name, u.email "
                 "FROM wishlist AS w "
                 "INNER JOIN user_shared_wishlist AS usw ON w.rowid = usw.wishlist_id "
-                "INNER JOIN user AS u ON u.id = w.user_id "
+                "LEFT OUTER JOIN user AS u ON u.id = w.user_id AND usw.owner_anonymous = 0 "
                 "WHERE usw.user_id = ? AND w.shared = 1 AND usw.accepted = 1 ",
                 (user_id,)
             ).fetchall()

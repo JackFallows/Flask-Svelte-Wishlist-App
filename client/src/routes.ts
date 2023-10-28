@@ -159,6 +159,7 @@ function makeRoutes(base_path: string) {
             PatchUpdateName: WishlistsApiRoot.append("update-name").as_patch(),
             PatchShare: WishlistsApiRoot.append("share").as_patch(),
             PatchShareLink: WishlistsApiRoot.append("share-link").as_patch(),
+            PatchAddToAccount: WishlistsApiRoot.append("add-to-account").as_patch(),
             Delete: WishlistsApiRoot.append("delete").as_delete()
         },
         WishlistItems: {

@@ -51,6 +51,7 @@ interface IWishlistLinkShare {
 }
 
 interface IWishlistShare extends IWishlist {
+    is_share: boolean;
     owner_name: string;
     owner_email: string;
 }

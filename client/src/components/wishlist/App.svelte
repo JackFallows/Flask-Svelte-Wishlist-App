@@ -22,7 +22,7 @@
 
     let loading_promise: Promise<any> = load_wishlist();
 
-    $: wishlist_as_share = (<IWishlistShare>wishlist)?.owner_name != null ? (<IWishlistShare>wishlist) : null;
+    $: wishlist_as_share = (<IWishlistShare>wishlist)?.is_share ? (<IWishlistShare>wishlist) : null;
     $: is_owned = wishlist_as_share == null;
     $: has_other_wishlists = wishlist_id == null ? total_wishlists > 0 : total_wishlists > 1;
 
@@ -144,7 +144,9 @@
 
         await save_changes(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), null));
 
-        await ensure_order();
+        if (is_owned) {
+            await ensure_order();
+        }
     }
 
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
@@ -216,7 +218,7 @@
     {:else}
         <div class="flex flex-col sm:flex-row">
             <h1 class="text-2xl grow">{wishlist.name}</h1>
-            {#if wishlist_as_share != null}
+            {#if wishlist_as_share != null && wishlist_as_share.owner_name != null}
                 <div>
                     <span class="fa-solid fa-users"></span>
                     <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>

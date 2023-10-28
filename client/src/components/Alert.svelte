@@ -16,7 +16,9 @@
     }
 </script>
 
-<div class="{bg_color} p-6 my-2 rounded flex space-x-4">
+<div class="{bg_color} p-6 my-2 rounded flex space-x-6 items-center">
     <span class="fa-solid fa-circle-info text-2xl"></span>
-    <slot></slot>
+    <div>
+        <slot></slot>
+    </div>
 </div>

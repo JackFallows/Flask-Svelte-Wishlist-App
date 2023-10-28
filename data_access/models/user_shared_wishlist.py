@@ -3,17 +3,18 @@ from data_access.db_connect import get_db_connection
 from data_access.models.user import User
 
 class UserSharedWishlist():
-    def __init__(self, id, user_id, wishlist_id, accepted):
+    def __init__(self, id, user_id, wishlist_id, accepted, owner_anonymous):
         self.id = id
         self.user_id = user_id
         self.wishlist_id = wishlist_id
         self.accepted = accepted
+        self.owner_anonymous = owner_anonymous
         
     @staticmethod
     def get(share_id):
         with get_db_connection() as db:
             usw = db.execute(
-                "SELECT rowid, user_id, wishlist_id, accepted "
+                "SELECT rowid, user_id, wishlist_id, accepted, owner_anonymous "
                 "FROM user_shared_wishlist "
                 "WHERE rowid = ?",
                 (share_id,)
@@ -26,7 +27,8 @@ class UserSharedWishlist():
                 id=usw[0],
                 user_id=usw[1],
                 wishlist_id=usw[2],
-                accepted=usw[3]
+                accepted=usw[3],
+                owner_anonymous=usw[4]
             )
         
     @staticmethod
@@ -39,12 +41,35 @@ class UserSharedWishlist():
             db.commit()
         
     @staticmethod
-    def create(user_id, wishlist_id):
+    def create(user_id, wishlist_id, owner_anonymous=False):
         with get_db_connection() as db:
-            db.execute(
-                "INSERT INTO user_shared_wishlist (user_id, wishlist_id, accepted) "
-                "VALUES (?, ?, NULL)",
+            
+            # ensure has not already been shared with user
+            existing = db.execute(
+                """
+                SELECT rowid FROM user_shared_wishlist WHERE user_id = ? AND wishlist_id = ?
+                """,
                 (user_id, wishlist_id,)
+            ).fetchone()
+            
+            if existing is not None:
+                return
+            
+            # ensure owner is not trying to share with themself
+            owner = db.execute(
+                """
+                SELECT user_id FROM wishlist WHERE user_id = ? AND rowid = ?
+                """,
+                (user_id, wishlist_id,)
+            ).fetchone()
+            
+            if owner is not None:
+                return
+            
+            db.execute(
+                "INSERT INTO user_shared_wishlist (user_id, wishlist_id, accepted, owner_anonymous) "
+                "VALUES (?, ?, ?, ?)",
+                (user_id, wishlist_id, 1 if owner_anonymous == True else None, owner_anonymous,)
             )
             
             db.commit()
@@ -70,3 +95,15 @@ class UserSharedWishlist():
                 email_on_share=user[5],
                 email_on_update=user[6]
             ), users))
+            
+    @staticmethod
+    def get_share_is_anonymous(wishlist_id: int, user_id: str) -> bool:
+        with get_db_connection() as db:
+            owner_anonymous = db.execute(
+                """
+                SELECT owner_anonymous FROM user_shared_wishlist usw WHERE user_id = ? AND wishlist_id = ?
+                """,
+                (user_id, wishlist_id,)
+            ).fetchone()
+            
+            return True if owner_anonymous[0] == 1 else False
