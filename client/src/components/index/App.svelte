@@ -72,7 +72,7 @@
 			<div class="bg-slate-200 text-center p-2">
 				<h2>Friends' lists</h2>
 			</div>
-			<div class="p-2">
+			<div class="p-2 flex flex-col space-y-3">
 				{#each shared_wishlists as shared_wishlist(shared_wishlist.id)}
 				<div class="rounded-md border border-slate-200 p-2">
 					{#if shared_wishlist.owner_name != null}

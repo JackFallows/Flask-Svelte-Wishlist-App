@@ -8,15 +8,18 @@ from services.email_service import send_share_email, send_update_email
 from enums.notification_type import NotificationType
 
 def notify_wishlist_shared(source_user: User, target_user: User, wishlist: Wishlist):
+    subject = f"{source_user.name} shared a wishlist with you!"
+    message = f"{source_user.name} ({source_user.email}) shared the wishlist '{wishlist.name}' with you"
+    
     Notification.create(
         target_user.id,
-        f"{source_user.name} ({source_user.email}) shared the wishlist '{wishlist.name}' with you",
+        message,
         wishlist.id,
         NotificationType.SHARE
     )
     
     if target_user.email_on_share:
-        send_share_email(target_user.email, source_user.name, source_user.email, wishlist.name)
+        send_share_email(subject, message).to(target_user.email)
     
 def notify_wishlist_updated(source_user: User, wishlist: Wishlist):
     if not wishlist.shared:
