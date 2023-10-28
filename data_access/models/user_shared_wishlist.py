@@ -97,6 +97,29 @@ class UserSharedWishlist():
             ), users))
             
     @staticmethod
+    def get_existing(wishlist_id: int, user_id: str):
+        with get_db_connection() as db:
+            usw = db.execute(
+                """
+                SELECT rowid, user_id, wishlist_id, accepted, owner_anonymous 
+                FROM user_shared_wishlist 
+                WHERE wishlist_id = ? AND user_id = ?
+                """,
+                (wishlist_id, user_id,)
+            ).fetchone()
+            
+            if not usw:
+                return None
+            
+            return UserSharedWishlist(
+                id=usw[0],
+                user_id=usw[1],
+                wishlist_id=usw[2],
+                accepted=usw[3],
+                owner_anonymous=usw[4]
+            )
+            
+    @staticmethod
     def get_share_is_anonymous(wishlist_id: int, user_id: str) -> bool:
         with get_db_connection() as db:
             owner_anonymous = db.execute(
@@ -107,3 +130,15 @@ class UserSharedWishlist():
             ).fetchone()
             
             return True if owner_anonymous[0] == 1 else False
+        
+    @staticmethod
+    def set_not_anonymous(share_id: int):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                UPDATE user_shared_wishlist SET owner_anonymous = 0 WHERE rowid = ?
+                """,
+                (share_id,)
+            )
+            
+            db.commit()

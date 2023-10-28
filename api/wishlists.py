@@ -116,12 +116,15 @@ def share_wishlist():
     if not wishlist or not target_user:
         return jsonify({}) # don't expose if a user doesn't exist
     
-    UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
-    Wishlist.set_shared(wishlist_id=wishlist.id)
+    existing_share = UserSharedWishlist.get_existing(wishlist.id, target_user.id)
     
-    user = User.get(current_user.id)
-    
-    notify_wishlist_shared(user, target_user, wishlist)
+    if existing_share and existing_share.owner_anonymous:
+        UserSharedWishlist.set_not_anonymous(existing_share.id)
+    else:
+        UserSharedWishlist.create(user_id=target_user.id, wishlist_id=wishlist.id)
+        Wishlist.set_shared(wishlist_id=wishlist.id)
+        user = User.get(current_user.id)
+        notify_wishlist_shared(user, target_user, wishlist)
     
     return jsonify({})
 
