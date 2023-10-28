@@ -1,13 +1,17 @@
 <script lang="ts">
     import '../../tailwind.css';
 
+    import { flip } from 'svelte/animate';
     import { Get, Patch } from '../../http';
     import { makeRoutes } from '../../routes';
-    import { ToastType } from '../../enums';
+    import { AlertColor, ToastType } from '../../enums';
     import WishlistItem from '../WishlistItem.svelte';
     import Toast from '../Toast.svelte';
+    import Alert from '../Alert.svelte';
 
     let share_guid: string = location.href.substring(location.href.lastIndexOf('/') + 1);
+
+    const is_logged_in: boolean = window.user_name != null;
 
     let toast: Toast;
 
@@ -58,15 +62,23 @@
 {#await loading_promise}
     Loading...
 {:then}
-<div class="flex space-x-3">
-    <div class="grow">
-        <h1 class="text-2xl">{wishlist.name}</h1>
+    <div class="flex space-x-3">
+        <div class="grow">
+            <h1 class="text-2xl">{wishlist.name}</h1>
 
-        <div class="flex space-y-3 flex-col">
-            {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} on:buy={mark_item_bought} />
-            {/each}
+            {#if !is_logged_in}
+                <Alert color={AlertColor.BLUE}>
+                    <p>Log in or create an account to receive notifications when this wishlist is updated!</p>
+                </Alert>
+            {/if}
+
+            <div class="flex space-y-3 flex-col">
+                {#each wishlist_items as wishlist_item(wishlist_item)}
+                    <div animate:flip={{ duration: 200 }}>
+                        <WishlistItem wishlist_item={wishlist_item} on:buy={mark_item_bought} />
+                    </div>
+                {/each}
+            </div>
         </div>
     </div>
-</div>
 {/await}

@@ -7,3 +7,8 @@ export enum ToastType {
     INFO = 1,
     SUCCESS = 2
 }
+
+export enum AlertColor {
+    YELLOW,
+    BLUE
+}
