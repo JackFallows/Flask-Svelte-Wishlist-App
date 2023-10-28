@@ -119,7 +119,7 @@
 </script>
 
 {#if wishlist_item.is_header}
-    <div class="flex items-center space-x-3 py-2 border-b-2 border-slate-200">
+    <div class="flex items-center space-x-3 pr-2 border-b-2 border-slate-200">
         <div class="grow">
             {#if is_editing}
                 <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Section name" />
