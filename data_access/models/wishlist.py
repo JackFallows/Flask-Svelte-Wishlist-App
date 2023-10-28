@@ -154,7 +154,7 @@ class Wishlist():
                 share_guid = generate_guid()
             
             db.execute(
-                "UPDATE wishlist SET share_guid = ? WHERE rowid = ?",
+                "UPDATE wishlist SET share_guid = ?, shared = 1 WHERE rowid = ?",
                 (share_guid, wishlist_id,)
             )
             

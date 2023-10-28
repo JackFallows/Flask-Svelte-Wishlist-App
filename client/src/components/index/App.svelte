@@ -72,13 +72,15 @@
 			<div class="bg-slate-200 text-center p-2">
 				<h2>Friends' lists</h2>
 			</div>
-			<div class="p-2">
+			<div class="p-2 flex flex-col space-y-3">
 				{#each shared_wishlists as shared_wishlist(shared_wishlist.id)}
 				<div class="rounded-md border border-slate-200 p-2">
-					<div>
-						<span class="text-base text-black">{shared_wishlist.owner_name}</span>
-						<span class="text-sm text-slate-500">{shared_wishlist.owner_email}</span>
-					</div>
+					{#if shared_wishlist.owner_name != null}
+						<div>
+							<span class="text-base text-black">{shared_wishlist.owner_name}</span>
+							<span class="text-sm text-slate-500">{shared_wishlist.owner_email}</span>
+						</div>
+					{/if}
 					<Wishlist wishlist={shared_wishlist} is_third_party />
 				</div>
 				{/each}

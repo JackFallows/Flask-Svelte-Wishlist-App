@@ -1,17 +1,21 @@
 <script lang="ts">
     import '../../tailwind.css';
 
+    import { flip } from 'svelte/animate';
     import { Get, Patch } from '../../http';
     import { makeRoutes } from '../../routes';
-    import { ToastType } from '../../enums';
+    import { AlertColor, ToastType } from '../../enums';
     import WishlistItem from '../WishlistItem.svelte';
     import Toast from '../Toast.svelte';
+    import Alert from '../Alert.svelte';
 
     let share_guid: string = location.href.substring(location.href.lastIndexOf('/') + 1);
 
+    const is_logged_in: boolean = window.user_name != null;
+
     let toast: Toast;
 
-    const { Api } = makeRoutes(window.base_path);
+    const { Api, Views } = makeRoutes(window.base_path);
 
     let loading_promise: Promise<any> = load_wishlist();
 
@@ -27,6 +31,11 @@
 
         wishlist = wishlistPayload.get_json();
         wishlist_items = wishlist.wishlist_items;
+    }
+
+    async function add_to_account() {
+        await Patch(Api.Wishlists.PatchAddToAccount.append(share_guid), {});
+        location.href = Views.Wishlist.append(wishlist.id).to_string();
     }
 
     async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem }>) {
@@ -58,15 +67,30 @@
 {#await loading_promise}
     Loading...
 {:then}
-<div class="flex space-x-3">
-    <div class="grow">
-        <h1 class="text-2xl">{wishlist.name}</h1>
+    <div class="flex space-x-3">
+        <div class="grow">
+            <h1 class="text-2xl">{wishlist.name}</h1>
 
-        <div class="flex space-y-3 flex-col">
-            {#each wishlist_items as wishlist_item(wishlist_item)}
-                <WishlistItem wishlist_item={wishlist_item} on:buy={mark_item_bought} />
-            {/each}
+                <Alert color={AlertColor.BLUE}>
+                    <p>Add this wishlist to your account to receive notifications when it changes!</p>
+                    {#if !is_logged_in}
+                        <p>Use the buttons in the top right to log in or create an account.</p>
+                    {:else}
+                        <p>
+                            <button class="button" on:click={add_to_account}>
+                                <span class="fa-solid fa-plus pointer-events-none"></span> Add to my account
+                            </button>
+                        </p>
+                    {/if}
+                </Alert>
+
+            <div class="flex space-y-3 flex-col">
+                {#each wishlist_items as wishlist_item(wishlist_item)}
+                    <div animate:flip={{ duration: 200 }}>
+                        <WishlistItem wishlist_item={wishlist_item} on:buy={mark_item_bought} />
+                    </div>
+                {/each}
+            </div>
         </div>
     </div>
-</div>
 {/await}
