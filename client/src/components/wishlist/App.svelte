@@ -214,7 +214,9 @@
     Loading...
 {:then}
     {#if is_owned}
-        <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
+        <div class="pr-2">
+            <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
+        </div>
     {:else}
         <div class="flex flex-col sm:flex-row">
             <h1 class="text-2xl grow">{wishlist.name}</h1>
