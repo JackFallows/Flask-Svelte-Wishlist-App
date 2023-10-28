@@ -47,10 +47,31 @@
 
 <main>
 	{#if !user_is_authenticated}
-	<h1 class="text-purple-600 text-4xl sm:text-6xl">Hello there!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+		<div class="rounded-lg border border-slate-200 p-6 shadow">
+			<h1 class="text-purple-600 text-4xl sm:text-6xl">Wishlist App</h1>
+			<p class="text-xl mt-3">Log in or create an account to get started</p>
+		</div>
+		<div class="flex flex-col space-y-6 sm:flex-row sm:space-x-6 sm:space-y-0 justify-between mt-6">
+			<div class="rounded-lg border border-slate-200 p-6 shadow w-[100%] sm:w-[50%]">
+				<h2 class="text-purple-600 text-2xl sm:text-4xl mb-3">Create...</h2>
+				<ul class="text-left text-xl">
+					<li>Create multiple separate lists</li>
+					<li>Add dozens of items with a link/name and optional description</li>
+					<li>Arrange them under headings</li>
+					<li>Sort them how you'd like</li>
+				</ul>
+			</div>
+			<div class="rounded-lg border border-slate-200 p-6 shadow w-[100%] sm:w-[50%]">
+				<h2 class="text-purple-600 text-2xl sm:text-4xl mb-3">...And share</h2>
+				<ul class="text-left text-xl">
+					<li>Share select lists that you have created</li>
+					<li>Send them directly to other users of the site, or copy a link</li>
+					<li>Receive notifications when lists that have been shared with you have been updated</li>
+				</ul>
+			</div>
+		</div>
 	{:else}
-	<h1 class="text-purple-600 text-4xl sm:text-6xl">Hello {name}!</h1>
+		<h1 class="text-purple-600 text-4xl sm:text-6xl">Hello {name}!</h1>
 	{/if}
 </main>
 
@@ -110,15 +131,21 @@
 {/await}
 {/if}
 
-<style lang="postcss">
+<style lang="less">
 	main {
 		text-align: center;
 		padding: 1em;
 		margin: 0 auto;
 	}
 
-	h1 {
+	h1, h2 {
 		text-transform: uppercase;
 		font-weight: 100;
+	}
+
+	ul {
+		li:not(:last-child) {
+			margin-bottom: 15px;
+		}
 	}
 </style>
