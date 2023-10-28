@@ -3,9 +3,9 @@ import App from './App.svelte';
 
 test.use({ viewport: { width: 500, height: 500 } });
 
-test('missing username displays "Hello there!"', async ({ mount }) => {
+test('missing username displays "Wishlist App"', async ({ mount }) => {
     const component = await mount(App);
-    await expect(component).toContainText("Hello there!");
+    await expect(component).toContainText("Wishlist App");
 });
 
 test('provided username displays "Hello {name}!"', async ({ mount }) => {

@@ -57,7 +57,7 @@
 				<ul class="text-left text-xl">
 					<li>Create multiple separate lists</li>
 					<li>Add dozens of items with a link/name and optional description</li>
-					<li>Arrange them under headings</li>
+					<li>Arrange the items under headings, and</li>
 					<li>Sort them how you'd like</li>
 				</ul>
 			</div>
