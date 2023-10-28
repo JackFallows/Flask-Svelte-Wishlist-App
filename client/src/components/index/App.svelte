@@ -12,7 +12,7 @@
 	let user_is_authenticated: boolean = name != null;
 
 	let wishlists: IWishlist[] = [];
-	let shared_wishlists: IWishlistShare[] = [];
+	let shared_wishlists: { owner_name: string, owner_email: string, wishlists: IWishlistShare[] }[] = [];
 	
 	let loading_promise = get_wishlists();
 
@@ -25,7 +25,23 @@
 		const sharedWishlistsPayload = await Get<IWishlistShare[]>(Api.Wishlists.GetSharedWithUser);
 
 		wishlists = wishlistsPayload.get_json();
-		shared_wishlists = sharedWishlistsPayload.get_json();
+
+		const flat_shared_wishlists = sharedWishlistsPayload.get_json();
+
+		shared_wishlists = flat_shared_wishlists.reduce((groups, list) => {
+			const existing_group = groups.find(g => g.owner_name === list.owner_name && g.owner_email === list.owner_email);
+			if (existing_group) {
+				existing_group.wishlists.push(list);
+			} else {
+				groups.push({
+					owner_name: list.owner_name,
+					owner_email: list.owner_email,
+					wishlists: [list]
+				});
+			}
+
+			return groups;
+		}, []);
 	}
 </script>
 
@@ -73,16 +89,18 @@
 				<h2>Friends' lists</h2>
 			</div>
 			<div class="p-2 flex flex-col space-y-3">
-				{#each shared_wishlists as shared_wishlist(shared_wishlist.id)}
-				<div class="rounded-md border border-slate-200 p-2">
-					{#if shared_wishlist.owner_name != null}
-						<div>
-							<span class="text-base text-black">{shared_wishlist.owner_name}</span>
-							<span class="text-sm text-slate-500">{shared_wishlist.owner_email}</span>
-						</div>
-					{/if}
-					<Wishlist wishlist={shared_wishlist} is_third_party />
-				</div>
+				{#each shared_wishlists as shared_wishlist_group}
+					<div class="{shared_wishlist_group.owner_name == null ? "" : "border"} rounded-md border-slate-200 p-2 flex flex-col space-y-3">
+						{#if shared_wishlist_group.owner_name != null}
+							<div>
+								<span class="text-base text-black">{shared_wishlist_group.owner_name}</span>
+								<span class="text-sm text-slate-500">{shared_wishlist_group.owner_email}</span>
+							</div>
+						{/if}
+						{#each shared_wishlist_group.wishlists as shared_wishlist}
+							<Wishlist wishlist={shared_wishlist} is_third_party />
+						{/each}
+					</div>
 				{/each}
 			</div>
 		</div>
