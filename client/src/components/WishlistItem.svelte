@@ -136,7 +136,7 @@
                     <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
                 </BurgerMenu>
             {:else}
-                <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-floppy-disk" label="Save" on:click={change_text} />
+                <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
                 {#if is_new}
                     <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
                 {/if}
@@ -168,7 +168,7 @@
                 </div>
             {/if}
             {#if is_owned && is_editing}
-                <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-floppy-disk" label="Save" on:click={change_text} />
+                <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
                 {#if is_new}
                     <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
                 {/if}

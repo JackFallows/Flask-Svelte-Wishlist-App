@@ -28,7 +28,7 @@
 {:else}
     <div class="flex items-center">
         <input class="text-input grow" type="text" bind:value={value} placeholder="{placeholder}" />
-        <IconButton id="save-heading-button" icon="fa-solid fa-floppy-disk" label="Save heading" on:click={save} />
+        <IconButton id="save-heading-button" icon="fa-solid fa-check" label="Save heading" on:click={save} />
     </div>
 {/if}
 
