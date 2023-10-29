@@ -9,7 +9,7 @@ from enums.notification_type import NotificationType
 
 def notify_wishlist_shared(source_user: User, target_user: User, wishlist: Wishlist):
     subject = f"{source_user.name} shared a wishlist with you!"
-    message = f"{source_user.name} ({source_user.email}) shared the wishlist '{wishlist.name}' with you"
+    message = f"{source_user.name} ({source_user.email}) shared the wishlist '{wishlist.name}' with you."
     
     Notification.create(
         target_user.id,
@@ -45,12 +45,12 @@ def notify_wishlist_updated(source_user: User, wishlist: Wishlist):
         if owner_anonymous:
             return (
                 f"Items were added to the wishlist '{wishlist.name}'",
-                f"Items were added to the wishlist '{wishlist.name}'"
+                f"Items were added to the wishlist '{wishlist.name}'."
             )
             
         return (
             f"{source_user.name} added items to their wishlist",
-            f"{source_user.name} ({source_user.email}) added items to the wishlist '{wishlist.name}'"
+            f"{source_user.name} ({source_user.email}) added items to the wishlist '{wishlist.name}'."
         )
     
     for target_user in target_users:
@@ -61,8 +61,6 @@ def notify_wishlist_updated(source_user: User, wishlist: Wishlist):
             users_to_email.append(target_user)
             
         (subject, message) = get_user_notification_message(target_user)
-
-        email_message = f"{message}<br />Log into the website to see what's new."
             
         Notification.create(
             target_user.id,
@@ -72,4 +70,4 @@ def notify_wishlist_updated(source_user: User, wishlist: Wishlist):
         )
         
     if len(users_to_email) > 0:
-        send_update_email(subject, email_message).to(list(map(lambda u: u.email, users_to_email)))
+        send_update_email(subject, message).to(list(map(lambda u: u.email, users_to_email)))

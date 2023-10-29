@@ -1,5 +1,6 @@
 import os
 import smtplib, ssl
+import html
 from typing import List
 from email.message import EmailMessage
 
@@ -36,7 +37,7 @@ def send_share_email(subject: str, message: str):
     <html>
     <body>
         <p>
-        {message}<br />
+        {html.escape(message)}<br />
     Log into the website to see their gift ideas!<br />
     - Wishlist App
         </p>
@@ -55,7 +56,7 @@ def send_update_email(subject: str, message: str):
     <html>
     <body>
         <p>
-        {message}
+        {html.escape(message)}<br />Log into the website to see what's new.<br />
     - Wishlist App
         </p>
     </body>
