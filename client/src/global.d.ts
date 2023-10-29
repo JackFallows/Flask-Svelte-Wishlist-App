@@ -71,3 +71,14 @@ interface INotificationDto {
     shared_wishlist_id: number;
     type: NotificationType;
 }
+
+interface ITab {
+    id: string;
+    label: string;
+}
+
+interface ITabContent {
+    for_tab_id: string;
+    activate: () => void;
+    deactivate: () => void;
+}

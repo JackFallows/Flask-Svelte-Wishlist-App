@@ -5,9 +5,9 @@
     import { Delete, Patch } from '../http';
     import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
-    import Collapse from './Collapse.svelte';
-    import Accordion from './Accordion.svelte';
     import IconButton from './IconButton.svelte';
+    import TabContainer from './TabContainer.svelte';
+    import TabContent from './TabContent.svelte';
 
     export let wishlist: IWishlist;
     export let is_third_party: boolean = false; // someone shared it with us
@@ -19,8 +19,8 @@
     let is_sharing_to_user: boolean = true;
     let share_link: string = null;
 
-    function sharing_to_user_change(e: { detail: { collapsed: boolean } }) {
-        is_sharing_to_user = !e.detail.collapsed;
+    function sharing_to_user_change(e: { detail: ITab }) {
+        is_sharing_to_user = e.detail.id === "share-to-user-tab";
     }
 
     let share_email: string;
@@ -30,6 +30,10 @@
     async function share_wishlist() {
         const confirmed = await share_modal.show();
         if (!confirmed) {
+            return;
+        }
+
+        if (!is_sharing_to_user) {
             return;
         }
 
@@ -92,34 +96,43 @@
     <span slot="header">
         Share wishlist '{wishlist.name}'
     </span>
-    <span slot="body">
-        <Accordion>
-            <Collapse heading="Share to existing user" on:collapse_change={sharing_to_user_change}>
-                <p>
-                    Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
-                    <input type="email" class="text-input" bind:value={share_email} />
-                </p>
-                <p>
-                    Please be aware that <b>the recipient will gain visibility of the name and email address of the sender</b> (that's you!).<br />
-                    Only share wishlists with those you trust with this information.
-                </p>
-            </Collapse>
-            <Collapse heading="Share with link" collapsed={true}>
-                <p>Click the button below to generate a unique link to your wishlist which you can share with people who do not have an account on this website.</p>
-                {#if !share_link}
-                <button class="button" on:click={get_share_link}>Get link</button>
-                {:else}
-                <input type="text" class="text-input" readonly bind:value={share_link} />
-                <button class="button mt-1" on:click={() => navigator.clipboard.writeText(share_link)}>Copy to clipboard</button>
-                {/if}
-            </Collapse>
-        </Accordion>
-    </span>
+    <div slot="body" class="-mx-2 -mt-2">
+        <TabContainer on:change_tab={sharing_to_user_change} tabs={[
+            {
+                id: "share-to-user-tab",
+                label: "Share to user"
+            },
+            {
+                id: "share-with-link-tab",
+                label: "Share with link"
+            }
+        ]}>
+            <span slot="tab-content">
+                <TabContent for_tab_id="share-to-user-tab">
+                    <p>
+                        Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
+                        <input type="email" class="text-input" bind:value={share_email} />
+                    </p>
+                    <p>
+                        Please be aware that <b>the recipient will gain visibility of the name and email address of the sender</b> (that's you!).<br />
+                        Only share wishlists with those you trust with this information.
+                    </p>
+                </TabContent>
+                <TabContent for_tab_id="share-with-link-tab">
+                    <p>Click the button below to generate a unique link to your wishlist which you can share with people who do not have an account on this website.</p>
+                    {#if !share_link}
+                    <button class="button" on:click={get_share_link}>Get link</button>
+                    {:else}
+                    <input type="text" class="text-input" readonly bind:value={share_link} />
+                    <button class="button mt-1" on:click={() => navigator.clipboard.writeText(share_link)}>Copy to clipboard</button>
+                    {/if}
+                </TabContent>
+            </span>
+        </TabContainer>
+    </div>
     <span slot="buttons" let:close_modal={close}>
         <button class="button" on:click={() => close()}>Cancel</button>
-        {#if is_sharing_to_user}
         <button class="button" on:click={() => close("true")}>Ok</button>
-        {/if}
     </span>
 </Modal>
 
