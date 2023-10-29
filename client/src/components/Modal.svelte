@@ -38,7 +38,7 @@
                 <slot name="header"></slot>
             </h1>
         </div>
-        <div class="p-2 grow">
+        <div class="p-2 grow overflow-y-auto">
             <div>
                 <slot name="body"></slot>
             </div>
