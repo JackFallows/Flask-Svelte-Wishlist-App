@@ -22,7 +22,6 @@
     
     let link: string = wishlist_item.link;
     let notes: string = wishlist_item.notes;
-    let bought: boolean = wishlist_item.bought;
     let is_new: boolean = wishlist_item.id == null;
 
     let is_editing: boolean = is_new;
@@ -31,12 +30,6 @@
     let target_wishlist: IWishlist = null;
     let bought_confirmation_modal: Modal;
     let confirm_delete_modal: Modal;
-
-    $: {
-        wishlist_item.link = link;
-        wishlist_item.notes = notes;
-        wishlist_item.bought = bought;
-    }
 
     async function get_all_wishlists(): Promise<IWishlist[]> {
         const payload = await Get<IWishlist[]>(Api.Wishlists.GetAllForUser);
@@ -101,10 +94,19 @@
         });
     }
 
+    function cancel_change_text() {
+        link = wishlist_item.link;
+        notes = wishlist_item.notes;
+        is_editing = false;
+    }
+
     async function change_text() {
-        if (wishlist_item.link == null || wishlist_item.link.trim() == "") {
+        if (link == null || link.trim() == "") {
             return;
         }
+
+        wishlist_item.link = link;
+        wishlist_item.notes = notes;
 
         is_editing = false;
         dispatch('change_text', {
@@ -139,6 +141,8 @@
                 <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
                 {#if is_new}
                     <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                {:else}
+                    <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
                 {/if}
             {/if}
             <div class="flex flex-col">
@@ -171,6 +175,8 @@
                 <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
                 {#if is_new}
                     <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                {:else}
+                    <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
                 {/if}
             {:else if is_owned}
                 <BurgerMenu id="{wishlist_item.id}-menu" label="Item menu">
