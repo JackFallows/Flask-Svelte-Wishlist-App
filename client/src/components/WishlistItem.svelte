@@ -22,7 +22,6 @@
     
     let link: string = wishlist_item.link;
     let notes: string = wishlist_item.notes;
-    let bought: boolean = wishlist_item.bought;
     let is_new: boolean = wishlist_item.id == null;
 
     let is_editing: boolean = is_new;
@@ -31,12 +30,6 @@
     let target_wishlist: IWishlist = null;
     let bought_confirmation_modal: Modal;
     let confirm_delete_modal: Modal;
-
-    $: {
-        wishlist_item.link = link;
-        wishlist_item.notes = notes;
-        wishlist_item.bought = bought;
-    }
 
     async function get_all_wishlists(): Promise<IWishlist[]> {
         const payload = await Get<IWishlist[]>(Api.Wishlists.GetAllForUser);
@@ -101,10 +94,19 @@
         });
     }
 
+    function cancel_change_text() {
+        link = wishlist_item.link;
+        notes = wishlist_item.notes;
+        is_editing = false;
+    }
+
     async function change_text() {
-        if (wishlist_item.link == null || wishlist_item.link.trim() == "") {
+        if (link == null || link.trim() == "") {
             return;
         }
+
+        wishlist_item.link = link;
+        wishlist_item.notes = notes;
 
         is_editing = false;
         dispatch('change_text', {
@@ -119,7 +121,7 @@
 </script>
 
 {#if wishlist_item.is_header}
-    <div class="flex items-center space-x-3 pr-2 border-b-2 border-slate-200">
+    <div class="flex items-center space-x-3 pr-2 mt-3">
         <div class="grow">
             {#if is_editing}
                 <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Section name" />
@@ -128,20 +130,28 @@
             {/if}
         </div>
         {#if is_owned}
-            <BurgerMenu id="{wishlist_item.id}-menu" label="Heading menu">
-                {#if !is_editing}
-                    <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
+            {#if !is_editing}
+                <BurgerMenu id="{wishlist_item.id}-menu" label="Heading menu">
+                    {#if !is_editing}
+                        <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
+                    {/if}
+                    <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                </BurgerMenu>
+            {:else}
+                <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
+                {#if is_new}
+                    <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
                 {:else}
-                    <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-floppy-disk" label="Save" on:click={change_text} />
+                    <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
                 {/if}
-                <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
-            </BurgerMenu>
+            {/if}
             <div class="flex flex-col">
                 <IconButton id="{wishlist_item.id}-move-up-button" icon="fa-solid fa-arrow-up" label="Move up" on:click={move_up} />
                 <IconButton id="{wishlist_item.id}-move-down-button" icon="fa-solid fa-arrow-down" label="Move down" on:click={move_down} />
             </div>
         {/if}
     </div>
+    <hr class="mt-2" />
 {:else}
     <div class="rounded-md bg-slate-200 p-2">
         <div class="flex items-center space-x-3" id="{html_id}">
@@ -161,24 +171,29 @@
                     {/if}
                 </div>
             {/if}
-            <BurgerMenu id="{wishlist_item.id}-menu" label="Item menu">
-                {#if is_owned}
+            {#if is_owned && is_editing}
+                <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
+                {#if is_new}
+                    <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                {:else}
+                    <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
+                {/if}
+            {:else if is_owned}
+                <BurgerMenu id="{wishlist_item.id}-menu" label="Item menu">
                     {#if has_other_wishlists && !is_editing && !is_new}
                         <IconButton id="{wishlist_item.id}-move-out-button" icon="fa-solid fa-arrow-right-from-bracket" label="Move to list" on:click={move_item_to_list} />
                     {/if}
-                {/if}
-                {#if !is_new}
-                    <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
-                {/if}
-                {#if is_owned}
+                    {#if !is_new}
+                        <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
+                    {/if}
                     {#if !is_editing}
                         <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
-                    {:else}
-                        <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-floppy-disk" label="Save" on:click={change_text} />
                     {/if}
-                    <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
-                {/if}
-            </BurgerMenu>
+                        <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                </BurgerMenu>
+            {:else}
+                <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
+            {/if}
             {#if is_owned}
                 <div class="flex flex-col">
                     <IconButton id="{wishlist_item.id}-move-up-button" icon="fa-solid fa-arrow-up" label="Move up" on:click={move_up} />
