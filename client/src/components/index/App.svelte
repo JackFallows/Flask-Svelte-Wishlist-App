@@ -80,7 +80,7 @@
 <p>Loading...</p>
 {:then}
 <div class="flex flex-col space-y-3 sm:flex-row sm:space-x-3 sm:space-y-0">
-	<div class="grow">
+	<div class="{shared_wishlists.length > 0 ? "sm:w-[50%]" : "grow"}">
 		<div class="rounded-md border-2 border-slate-200">
 			<div class="bg-slate-200 text-center p-2">
 				<h2>Your wishlists</h2>
@@ -89,7 +89,9 @@
 				{#if wishlists.length === 0}
 				<div class="text-center">
 					<p>You have no wishlists. Click the button below to create one.</p>
-					<a class="button" href="{Views.Wishlist.to_string()}" id="no-wishlists-create-button">Create wishlist</a>
+					<div class="my-3">
+						<a class="button" href="{Views.Wishlist.to_string()}" id="no-wishlists-create-button">Create wishlist</a>
+					</div>
 				</div>
 				{:else}
 				<div class="flex flex-col space-y-3">
@@ -104,7 +106,7 @@
 		</div>
 	</div>
 	{#if shared_wishlists.length > 0}
-	<div class="grow">
+	<div class="sm:w-[50%]">
 		<div class="rounded-md border-2 border-slate-200">
 			<div class="bg-slate-200 text-center p-2">
 				<h2>Friends' lists</h2>
