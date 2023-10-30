@@ -12,7 +12,7 @@
     setContext("burger", true);
 </script>
 
-<div class="hidden sm:block">
+<div class="hidden sm:flex space-x-3 flex-nowrap items-center">
     <slot></slot>
 </div>
 <div class="block sm:hidden">

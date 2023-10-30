@@ -9,6 +9,7 @@
     import Collapse from './Collapse.svelte';
     import BurgerMenu from './BurgerMenu.svelte';
     import IconButton from './IconButton.svelte';
+    import RichText from './RichText.svelte';
 
     export let wishlist_item: IWishlistItem;
     export let is_owned: boolean = false;
@@ -114,10 +115,6 @@
         });
         is_new = false;
     }
-
-    function is_link(link: string): boolean {
-        return link.startsWith("http://") || link.startsWith("https://");
-    }
 </script>
 
 {#if wishlist_item.is_header}
@@ -160,15 +157,8 @@
                     <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
                 </div>
             {:else}
-                <div class="grow">
-                    {#if is_link(link)}
-                        <span class="text-lg">
-                            <a class="text-purple-600 hover:underline" target="_blank" href="{link}">{link}</a>
-                            <span class="fa-solid fa-arrow-up-right-from-square"></span>
-                        </span>
-                    {:else}
-                        <span class="text-lg text-black">{link}</span>
-                    {/if}
+                <div class="grow text-lg">
+                    <RichText text={link} />
                 </div>
             {/if}
             {#if is_owned && is_editing}
@@ -210,7 +200,7 @@
                 {#if notes?.trim().length > 0}
                     <Collapse heading="Description" subtle collapsed>
                         <div class="text-sm">
-                            {notes}
+                            <RichText text={notes} />
                         </div>
                     </Collapse>
                 {/if}
