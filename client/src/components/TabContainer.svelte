@@ -2,19 +2,21 @@
     import { setContext } from "svelte";
     import { createEventDispatcher } from "svelte";
 
-    export let tabs: ITab[];
-
     const dispatch = createEventDispatcher();
 
+    let tabs: ITab[] = [];
     let tab_contents: ITabContent[] = [];
 
-    let active_tab: ITab = tabs[0];
+    let active_tab: ITab;
     let active_tab_content: ITabContent;
 
     setContext("add_tab_content", (tab_content: ITabContent) => {
+        const tab: ITab = { id: tab_content.id, label: tab_content.label };
+        tabs.push(tab)
         tab_contents.push(tab_content);
 
         if (tab_contents.length === 1) {
+            active_tab = tab;
             active_tab_content = tab_content;
             tab_content.activate();
         }
@@ -27,7 +29,7 @@
 
         active_tab_content?.deactivate();
         active_tab = tab;
-        active_tab_content = tab_contents.find(tc => tc.for_tab_id === tab.id);
+        active_tab_content = tab_contents.find(tc => tc.id === tab.id);
         active_tab_content.activate();
 
         dispatch("change_tab", active_tab);
@@ -43,6 +45,6 @@
         {/each}
     </div>
     <div class="p-2">
-        <slot name="tab-content"></slot>
+        <slot></slot>
     </div>
 </div>

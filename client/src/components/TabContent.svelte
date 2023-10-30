@@ -1,12 +1,14 @@
 <script lang="ts">
     import { getContext } from "svelte";
-    
-    export let for_tab_id: string;
+
+    export let id: string;
+    export let label: string;
 
     let active: boolean = false;
 
     const obj: ITabContent = {
-        for_tab_id,
+        id,
+        label,
         activate() {
             active = true;
         },

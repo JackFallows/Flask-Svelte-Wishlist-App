@@ -97,37 +97,26 @@
         Share wishlist '{wishlist.name}'
     </span>
     <div slot="body" class="-mx-2 -mt-2">
-        <TabContainer on:change_tab={sharing_to_user_change} tabs={[
-            {
-                id: "share-to-user-tab",
-                label: "Share to user"
-            },
-            {
-                id: "share-with-link-tab",
-                label: "Share with link"
-            }
-        ]}>
-            <span slot="tab-content">
-                <TabContent for_tab_id="share-to-user-tab">
-                    <p>
-                        Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
-                        <input type="email" class="text-input" bind:value={share_email} />
-                    </p>
-                    <p>
-                        Please be aware that <b>the recipient will gain visibility of the name and email address of the sender</b> (that's you!).<br />
-                        Only share wishlists with those you trust with this information.
-                    </p>
-                </TabContent>
-                <TabContent for_tab_id="share-with-link-tab">
-                    <p>Click the button below to generate a unique link to your wishlist which you can share with people who do not have an account on this website.</p>
-                    {#if !share_link}
-                    <button class="button" on:click={get_share_link}>Get link</button>
-                    {:else}
-                    <input type="text" class="text-input" readonly bind:value={share_link} />
-                    <button class="button mt-1" on:click={() => navigator.clipboard.writeText(share_link)}>Copy to clipboard</button>
-                    {/if}
-                </TabContent>
-            </span>
+        <TabContainer on:change_tab={sharing_to_user_change}>
+            <TabContent id="share-to-user-tab" label="Share to user">
+                <p>
+                    Enter the email address of the user with whom you want to share this wishlist (the user must already have an account on this site):
+                    <input type="email" class="text-input" bind:value={share_email} />
+                </p>
+                <p>
+                    Please be aware that <b>the recipient will gain visibility of the name and email address of the sender</b> (that's you!).<br />
+                    Only share wishlists with those you trust with this information.
+                </p>
+            </TabContent>
+            <TabContent id="share-with-link-tab" label="Share with link">
+                <p>Click the button below to generate a unique link to your wishlist which you can share with people who do not have an account on this website.</p>
+                {#if !share_link}
+                <button class="button" on:click={get_share_link}>Get link</button>
+                {:else}
+                <input type="text" class="text-input" readonly bind:value={share_link} />
+                <button class="button mt-1" on:click={() => navigator.clipboard.writeText(share_link)}>Copy to clipboard</button>
+                {/if}
+            </TabContent>
         </TabContainer>
     </div>
     <span slot="buttons" let:close_modal={close}>

@@ -78,7 +78,8 @@ interface ITab {
 }
 
 interface ITabContent {
-    for_tab_id: string;
+    id: string;
+    label: string;
     activate: () => void;
     deactivate: () => void;
 }
