@@ -1,6 +1,6 @@
 import { GetRoute, PostRoute, PutRoute, PatchRoute, DeleteRoute } from "./routes";
 
-export class HttpResult<T> {
+export class HttpResult<T> implements IHttpResult<T> {
     public ok: boolean;
     public status: number;
     
@@ -54,6 +54,12 @@ async function SendRequest<T, TResult>(method: string, route: IRoute, data: T): 
         },
         body: JSON.stringify(data)
     });
+
+    if (response.status === 405) {
+        throw {
+            status: response.status
+        };
+    }
 
     const json = await response.json();
 

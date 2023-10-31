@@ -1,8 +1,7 @@
 <script lang="ts">
     import '../tailwind.css';
 
-    import { createEventDispatcher } from 'svelte';
-    import { Delete, Patch } from '../http';
+    import { createEventDispatcher, getContext } from 'svelte';
     import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
     import IconButton from './IconButton.svelte';
@@ -11,6 +10,8 @@
 
     export let wishlist: IWishlist;
     export let is_third_party: boolean = false; // someone shared it with us
+
+    const { Delete, Patch } = <IHttp>getContext("http");
 
     const { Views, Api } = makeRoutes(window.base_path);
 
