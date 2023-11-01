@@ -1,11 +1,11 @@
 <script lang="ts">
+    import { getContext } from 'svelte';
     import { flip } from 'svelte/animate';
     import { ToastType } from '../../enums';
     import { makeRoutes } from '../../routes';
-    import EditableHeading from '../EditableHeading.svelte';
-    import Toast from '../Toast.svelte';
-    import WishlistItem from '../WishlistItem.svelte';
-    import { getContext } from 'svelte';
+    import EditableHeading from '../../components/EditableHeading.svelte';
+    import Toast from '../../components/Toast.svelte';
+    import WishlistItem from '../../components/WishlistItem.svelte';
 
     export let wishlist_id: number;
 

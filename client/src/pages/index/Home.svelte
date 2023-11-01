@@ -2,7 +2,7 @@
 	import '../../tailwind.css';
 
 	import { getContext } from 'svelte';
-	import Wishlist from '../Wishlist.svelte';
+	import Wishlist from '../../components/Wishlist.svelte';
     import { makeRoutes } from "../../routes";
 
 	export let name: string;

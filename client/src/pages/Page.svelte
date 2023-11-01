@@ -1,7 +1,7 @@
 <script>
-    import HttpController from "./HttpController.svelte";
-    import Footer from "./Footer.svelte";
-    import NavBar from "./NavBar.svelte";
+    import HttpController from "../components/HttpController.svelte";
+    import Footer from "../components/Footer.svelte";
+    import NavBar from "../components/NavBar.svelte";
 </script>
 
 <HttpController>

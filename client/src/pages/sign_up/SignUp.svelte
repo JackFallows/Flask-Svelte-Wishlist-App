@@ -1,8 +1,8 @@
 <script lang="ts">
     import '../../tailwind.css';
 
-    import { makeRoutes } from "../../routes";
     import { getContext } from 'svelte';
+    import { makeRoutes } from "../../routes";
 
     const { Post } = <IHttp>getContext("http");
     const { Api, Views } = makeRoutes(window.base_path);
