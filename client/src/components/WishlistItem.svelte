@@ -1,8 +1,7 @@
 <script lang="ts">
     import '../tailwind.css';
 
-    import { createEventDispatcher } from 'svelte';
-    import { Get } from '../http';
+    import { createEventDispatcher, getContext } from 'svelte';
     import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
     import RadioGroup from './RadioGroup.svelte';
@@ -14,6 +13,8 @@
     export let wishlist_item: IWishlistItem;
     export let is_owned: boolean = false;
     export let has_other_wishlists: boolean = false;
+
+    const { Get } = <IHttp>getContext("http");
 
     const { Api } = makeRoutes(window.base_path);
     

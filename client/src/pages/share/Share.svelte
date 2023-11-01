@@ -1,13 +1,13 @@
 <script lang="ts">
     import '../../tailwind.css';
 
+    import { getContext } from 'svelte';
     import { flip } from 'svelte/animate';
-    import { Get, Patch } from '../../http';
     import { makeRoutes } from '../../routes';
     import { AlertColor, ToastType } from '../../enums';
-    import WishlistItem from '../WishlistItem.svelte';
-    import Toast from '../Toast.svelte';
-    import Alert from '../Alert.svelte';
+    import WishlistItem from '../../components/WishlistItem.svelte';
+    import Toast from '../../components/Toast.svelte';
+    import Alert from '../../components/Alert.svelte';
 
     let share_guid: string = location.href.substring(location.href.lastIndexOf('/') + 1);
 
@@ -15,6 +15,7 @@
 
     let toast: Toast;
 
+    const { Get, Patch } = <IHttp>getContext("http");
     const { Api, Views } = makeRoutes(window.base_path);
 
     let loading_promise: Promise<any> = load_wishlist();

@@ -1,14 +1,15 @@
 <script lang="ts">
+    import { getContext } from 'svelte';
     import { flip } from 'svelte/animate';
     import { ToastType } from '../../enums';
-    import { Delete, Get, HttpResult, Patch, Post } from '../../http';
     import { makeRoutes } from '../../routes';
-    import EditableHeading from '../EditableHeading.svelte';
-    import Toast from '../Toast.svelte';
-    import WishlistItem from '../WishlistItem.svelte';
+    import EditableHeading from '../../components/EditableHeading.svelte';
+    import Toast from '../../components/Toast.svelte';
+    import WishlistItem from '../../components/WishlistItem.svelte';
 
     export let wishlist_id: number;
 
+    const { Delete, Get, Patch, Post } = <IHttp>getContext("http");
     const { Api, Views } = makeRoutes(window.base_path);
 
     let toast: Toast;
@@ -201,7 +202,7 @@
         );
     }
 
-    async function save_changes<T>(request: Promise<HttpResult<T>>): Promise<T> {
+    async function save_changes<T>(request: Promise<IHttpResult<T>>): Promise<T> {
         toast.show("Saving...", ToastType.INFO);
         const result = await request;
         toast.show("Saved!", ToastType.SUCCESS);

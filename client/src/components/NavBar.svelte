@@ -1,17 +1,15 @@
 <script lang="ts">
-    import '../../tailwind.css';
-
-    import { makeRoutes } from '../../routes';
-    import { Get } from '../../http';
-
-    import Notification from '../Notification.svelte';
-    import SlidePanel from '../SlidePanel.svelte';
+    import { getContext } from 'svelte';
+    import { makeRoutes } from '../routes';
+    import Notification from './Notification.svelte';
+    import SlidePanel from './SlidePanel.svelte';
 
     export let page: string = "";
     export let internal_login_enabled: boolean;
     export let name: string;
     export let profile_pic: string;
 
+    const { Get } = <IHttp>getContext("http");
     const { Views, Api } = makeRoutes(window.base_path);
 
     const user_is_authenticated = name != null;

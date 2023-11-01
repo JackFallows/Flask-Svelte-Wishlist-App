@@ -4,6 +4,7 @@
     export let id: string;
     export let is_danger: boolean = false;
     export let is_wide: boolean = false;
+    export let prevent_escape: boolean = false;
 
     let promise_resolver: (val?: string) => void;
 
@@ -19,6 +20,12 @@
         promise_resolver(return_value);
     }
 
+    function cancel_modal_handler(event) {
+        if (prevent_escape) {
+            event.preventDefault();
+        }
+    }
+
     // expose to parent components via bind
     export function show(): Promise<string> {
         modal.showModal();
@@ -31,7 +38,7 @@
     }
 </script>
 
-<dialog id="modal-{id}" class="backdrop:bg-slate-600 backdrop:opacity-60 {is_wide ? 'w-[32rem]' : 'w-96'} h-96 rounded-md border-2 shadow-md {is_danger ? 'border-red-600' : 'border-slate-200'} mt-20" bind:this={modal} on:close={close_modal_handler}>
+<dialog id="modal-{id}" class="backdrop:bg-slate-600 backdrop:opacity-60 {is_wide ? 'w-[32rem]' : 'w-96'} h-96 rounded-md border-2 shadow-md {is_danger ? 'border-red-600' : 'border-slate-200'} mt-20" bind:this={modal} on:close={close_modal_handler} on:cancel={cancel_modal_handler}>
     <div class="flex flex-col h-full">
         <div class="{is_danger ? 'bg-red-600' : 'bg-slate-200'} p-2">
             <h1 class="text-xl {is_danger ? 'text-white' : 'text-black'}">

@@ -1,11 +1,13 @@
 <script lang="ts">
 	import '../../tailwind.css';
 
-	import Wishlist from '../Wishlist.svelte';
-	import { Get } from '../../http';
+	import { getContext } from 'svelte';
+	import Wishlist from '../../components/Wishlist.svelte';
     import { makeRoutes } from "../../routes";
 
 	export let name: string;
+
+	const { Get } = <IHttp>getContext("http");
 
 	const { Api, Views } = makeRoutes(window.base_path);
 

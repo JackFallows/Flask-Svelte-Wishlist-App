@@ -1,11 +1,12 @@
 <script lang="ts">
 	import '../../tailwind.css';
 
-    import { Get, Patch } from '../../http';
+    import { getContext } from 'svelte';
     import { makeRoutes } from "../../routes";
-    import Alert from '../Alert.svelte';
     import { AlertColor } from '../../enums';
+    import Alert from '../../components/Alert.svelte';
 
+    const { Get, Patch } = <IHttp>getContext("http");
 	const { Api, Views } = makeRoutes(window.base_path);
 
     let user_name: string;

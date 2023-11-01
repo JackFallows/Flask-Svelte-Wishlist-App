@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import { Patch } from "../http";
+    import { createEventDispatcher, getContext } from "svelte";
     import { makeRoutes } from "../routes";
     import { NotificationType } from "../enums";
 
     export let notification: INotificationDto;
 
+    const { Patch } = <IHttp>getContext("http");
     const { Api } = makeRoutes(window.base_path);
 
     let dispatch = createEventDispatcher();

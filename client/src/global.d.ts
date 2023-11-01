@@ -16,6 +16,21 @@ interface IValidationState {
     failures: { [property: string]: string }[]
 }
 
+interface IHttpResult<T> {
+    ok: boolean;
+    status: number;
+    get_json: () => T;
+    get_error: <TError>() => TError;
+}
+
+interface IHttp {
+    Get: <TResult>(route: GetRoute) => Promise<IHttpResult<TResult>>;
+    Post: <T, TResult>(route: PostRoute, data: T) => Promise<IHttpResult<Result>>;
+    Put: <T, TResult>(route: PutRoute, data: T) => Promise<IHttpResult<Result>>;
+    Patch: <T, TResult>(route: PatchRoute, data: T) => Promise<IHttpResult<Result>>;
+    Delete: <T, TResult>(route: DeleteRoute, data: T) => Promise<IHttpResult<Result>>;
+}
+
 interface IRoute {
     append(parameter: string | number): IRoute;
     to_string(): string;

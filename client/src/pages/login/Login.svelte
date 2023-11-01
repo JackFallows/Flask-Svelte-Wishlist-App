@@ -1,13 +1,14 @@
 <script lang="ts">
-    import { HttpResult, Post } from '../../http';
+    import { getContext } from 'svelte';
     import { makeRoutes } from '../../routes';
 
+    const { Post } = <IHttp>getContext("http");
     const { Views, Api } = makeRoutes(window.base_path);
 
     let email: string = "";
     let password: string = "";
 
-    let loading_promise: Promise<HttpResult<void>>;
+    let loading_promise: Promise<IHttpResult<void>>;
 
     async function external_login() {
         loading_promise = new Promise(() => {

@@ -1,9 +1,10 @@
 <script lang="ts">
     import '../../tailwind.css';
 
-    import { Post } from "../../http";
+    import { getContext } from 'svelte';
     import { makeRoutes } from "../../routes";
 
+    const { Post } = <IHttp>getContext("http");
     const { Api, Views } = makeRoutes(window.base_path);
 
     let email: string = "";

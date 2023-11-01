@@ -10,14 +10,12 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        navbar: resolve(__dirname, './src/components/navbar/main.ts'),
-        footer: resolve(__dirname, './src/components/footer/main.ts'),
-        sign_up: resolve(__dirname, './src/components/sign_up/main.ts'),
-        login: resolve(__dirname, './src/components/login/main.ts'),
-        home: resolve(__dirname, './src/components/index/main.ts'),
-        wishlist: resolve(__dirname, './src/components/wishlist/main.ts'),
-        share: resolve(__dirname, './src/components/share/main.ts'),
-        profile: resolve(__dirname, './src/components/profile/main.ts')
+        sign_up: resolve(__dirname, './src/pages/sign_up/main.ts'),
+        login: resolve(__dirname, './src/pages/login/main.ts'),
+        home: resolve(__dirname, './src/pages/index/main.ts'),
+        wishlist: resolve(__dirname, './src/pages/wishlist/main.ts'),
+        share: resolve(__dirname, './src/pages/share/main.ts'),
+        profile: resolve(__dirname, './src/pages/profile/main.ts')
       },
     },
     sourcemap: !isRelease,
