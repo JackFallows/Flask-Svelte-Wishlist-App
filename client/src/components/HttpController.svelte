@@ -7,6 +7,8 @@
 
     let session_expiry_modal: Modal;
 
+    const login_url = window.internal_login_enabled ? Views.Auth.Login : Views.Auth.External.Login;
+
     setContext("http", {
         Get,
         Post,
@@ -101,7 +103,7 @@
         Please log back in.
     </span>
     <span slot="buttons">
-        <a class="button" href="{Views.Auth.Login.to_string()}">Log in</a>
+        <a class="button" href="{login_url.to_string()}">Log in</a>
     </span>
 </Modal>
 
