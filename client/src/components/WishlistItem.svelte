@@ -4,6 +4,7 @@
     import { createEventDispatcher, getContext } from 'svelte';
     import { makeRoutes } from '../routes';
     import Modal from './Modal.svelte';
+    import BoughtModal from './modals/BoughtModal.svelte';
     import RadioGroup from './RadioGroup.svelte';
     import Collapse from './Collapse.svelte';
     import BurgerMenu from './BurgerMenu.svelte';
@@ -30,7 +31,7 @@
 
     let move_item_modal: Modal;
     let target_wishlist: IWishlist = null;
-    let bought_confirmation_modal: Modal;
+    let bought_confirmation_modal: BoughtModal;
     let confirm_delete_modal: Modal;
 
     async function get_all_wishlists(): Promise<IWishlist[]> {
@@ -53,7 +54,8 @@
         }
 
         dispatch('buy', {
-            item: wishlist_item
+            item: wishlist_item,
+            defer_until: typeof(confirmed) == "string" ? confirmed : null
         });
     }
 
@@ -210,18 +212,7 @@
     </div>
 {/if}
 
-<Modal bind:this={bought_confirmation_modal} id="bought-modal">
-    <span slot="header">
-        Have you bought this item?
-    </span>
-    <span slot="body">
-        If you have bought this item, click Yes below and it will be removed from the list.
-    </span>
-    <span slot="buttons" let:close_modal={close}>
-        <button class="button" on:click={() => close()}>Cancel</button>
-        <button class="button" on:click={() => close("true")}>Yes</button>
-    </span>
-</Modal>
+<BoughtModal is_owner={is_owned} bind:this={bought_confirmation_modal} />
 
 {#if is_owned}
     <Modal bind:this={move_item_modal} id="move">

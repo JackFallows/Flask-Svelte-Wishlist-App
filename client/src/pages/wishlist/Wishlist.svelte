@@ -138,12 +138,14 @@
         await ensure_order();
     }
 
-    async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem }>) {
-        const { item } = event.detail;
+    async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem, defer_until: string }>) {
+        const { item, defer_until } = event.detail;
 
         remove_item(item);
 
-        await save_changes(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), null));
+        await save_changes(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), {
+            defer_until
+        }));
 
         if (is_owned) {
             await ensure_order();
