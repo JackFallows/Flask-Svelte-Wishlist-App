@@ -13,6 +13,7 @@
 
     export let wishlist_item: IWishlistItem;
     export let is_owned: boolean = false;
+    export let is_link_share: boolean = false;
     export let has_other_wishlists: boolean = false;
 
     const { Get } = <IHttp>getContext("http");
@@ -184,7 +185,7 @@
                     {/if}
                         <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
                 </BurgerMenu>
-            {:else}
+            {:else if !is_link_share}
                 <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
             {/if}
             {#if is_owned}

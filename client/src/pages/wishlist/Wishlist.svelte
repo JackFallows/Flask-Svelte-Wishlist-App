@@ -15,17 +15,23 @@
     let toast: Toast;
 
     let wishlist: IWishlist;
-    let wishlist_items: IWishlistItem[];
+    let wishlist_items: IWishlistItem[] = [];
+    let bought_items: IBoughtItem[] = [];
     let wishlist_as_share: IWishlistShare;
     let is_owned: boolean;
     let total_wishlists: number;
     let has_other_wishlists: boolean;
+    let visible_wishlist_items: IWishlistItem[];
 
     let loading_promise: Promise<any> = load_wishlist();
 
     $: wishlist_as_share = (<IWishlistShare>wishlist)?.is_share ? (<IWishlistShare>wishlist) : null;
     $: is_owned = wishlist_as_share == null;
     $: has_other_wishlists = wishlist_id == null ? total_wishlists > 0 : total_wishlists > 1;
+    $: {
+        const bought_item_ids = bought_items.map(bi => bi.wishlist_item_id);
+        visible_wishlist_items = wishlist_items.filter(wi => !bought_item_ids.includes(wi.id));
+    }
 
     async function load_wishlist() {
         if (wishlist_id == 0) {
@@ -41,6 +47,12 @@
 
         wishlist = wishlistPayload.get_json();
         wishlist_items = wishlist.wishlist_items;
+        bought_items = wishlist.bought_items ?? [];
+
+        for (const bought_item of bought_items) {
+            bought_item.defer_until = new Date(<number><any>bought_item.defer_until * 1000);
+        }
+
         total_wishlists = countPayload.get_json().total_wishlists;
     }
 
@@ -141,15 +153,12 @@
     async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem, defer_until: string }>) {
         const { item, defer_until } = event.detail;
 
-        remove_item(item);
-
-        await save_changes(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), {
+        const bought_item = await save_changes<IBoughtItem>(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), {
             defer_until
         }));
 
-        if (is_owned) {
-            await ensure_order();
-        }
+        bought_items.push(bought_item);
+        bought_items = bought_items; // trigger reactivity
     }
 
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
@@ -241,7 +250,7 @@
     {/if}
 
     <div class="mt-8 flex space-y-3 flex-col">
-        {#each wishlist_items as wishlist_item(wishlist_item)}
+        {#each visible_wishlist_items as wishlist_item(wishlist_item)}
             <div animate:flip={{ duration: 200 }}>
                 <WishlistItem
                     wishlist_item={wishlist_item}

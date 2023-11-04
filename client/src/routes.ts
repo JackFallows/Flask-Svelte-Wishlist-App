@@ -167,7 +167,6 @@ function makeRoutes(base_path: string) {
             PostCreate: WishlistItemsApiRoot.append("/create").as_post(),
             PatchMarkAsBought: WishlistItemsApiRoot.append("mark-as-bought").as_patch(),
             PatchChangeText: WishlistItemsApiRoot.append("change-text").as_patch(),
-            PatchLinkShareMarkBought: WishlistItemsApiRoot.append("link_share_mark_bought").as_patch(),
             PatchReparent: WishlistItemsApiRoot.append("reparent").as_patch(),
             PatchEnsureOrder: WishlistItemsApiRoot.append("ensure-order").as_patch(),
             Delete: WishlistItemsApiRoot.append("delete").as_delete()

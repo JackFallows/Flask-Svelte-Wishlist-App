@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 
 from data_access.models.wishlist import Wishlist
 from data_access.models.wishlist_item import WishlistItem
+from data_access.models.bought_item import BoughtItem
 from services.notification_service import notify_wishlist_updated
 
 wishlist_items = Blueprint('wishlist_items', __name__)
@@ -30,8 +31,6 @@ def create():
     wishlist = Wishlist.get(wishlist_id=wishlist_item.wishlist_id, user_id=current_user.id)
     if wishlist is None:
         return "Not found", 404
-    
-    WishlistItem.increment_order_numbers_from(wishlist_item.wishlist_id, wishlist_item.order_number)
     
     wishlist_item_id = WishlistItem.create(
             wishlist_id=wishlist_item.wishlist_id,
@@ -69,18 +68,11 @@ def mark_as_bought(wishlist_item_id):
     if not WishlistItem.get_is_available_to_user(wishlist_item_id=wishlist_item_id, user_id=current_user.id):
         return "Not found", 404
     
-    WishlistItem.set_as_bought(wishlist_item_id=wishlist_item_id)
+    defer_until = json.loads(request.data)["defer_until"]
     
-    return jsonify({})
-
-@wishlist_items.route('/link_share_mark_bought/<share_guid>/<wishlist_item_id>', methods=["PATCH"])
-def link_share_mark_bought(share_guid, wishlist_item_id):
-    if not WishlistItem.get_is_available_to_link_share(wishlist_item_id, share_guid):
-        return "Not found", 404
+    bought_item = BoughtItem.create(current_user.id, wishlist_item_id, defer_until)
     
-    WishlistItem.set_as_bought(wishlist_item_id=wishlist_item_id)
-    
-    return jsonify({})
+    return jsonify(bought_item.as_dict())
 
 @wishlist_items.route('/reparent/<wishlist_item_id>/<target_wishlist_id>', methods=["PATCH"])
 @login_required

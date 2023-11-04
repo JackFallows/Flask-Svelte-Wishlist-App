@@ -6,9 +6,10 @@ from data_access.models.user import User
 from data_access.models.wishlist import Wishlist
 from data_access.models.wishlist_share import WishlistShare
 from data_access.models.wishlist_item import WishlistItem
+from data_access.models.bought_item import BoughtItem
 from data_access.models.user_shared_wishlist import UserSharedWishlist
 
-from services.notification_service import notify_wishlist_shared, notify_wishlist_updated
+from services.notification_service import notify_wishlist_shared
 
 wishlists = Blueprint('wishlists', __name__)
 
@@ -27,7 +28,15 @@ def get_wishlist(wishlist_id):
     
     wishlist_items = WishlistItem.get_all_for_wishlist(wishlist_id=wishlist.id)
     
-    wishlist_merged = { **wishlist.as_dict(), **{ "wishlist_items": list(map(lambda wi: wi.as_dict(), wishlist_items)) } }
+    bought_items = None
+    if current_user.id != wishlist.user_id:
+        bought_items = list(map(lambda bi: bi.as_dict(), BoughtItem.get_for_wishlist(wishlist_id)))
+    
+    wishlist_merged = {
+        **wishlist.as_dict(),
+        **{ "wishlist_items": list(map(lambda wi: wi.as_dict(), wishlist_items)) },
+        **{ "bought_items": bought_items }
+    }
     
     return jsonify(wishlist_merged)
 

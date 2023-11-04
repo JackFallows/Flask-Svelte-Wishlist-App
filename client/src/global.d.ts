@@ -46,6 +46,13 @@ interface IWishlistItem {
     is_header: boolean;
 }
 
+interface IBoughtItem {
+    id: number;
+    user_id: string;
+    wishlist_item_id: number;
+    defer_until: Date;
+}
+
 interface IWishlist {
     id: number;
     user_id: string;
@@ -55,6 +62,7 @@ interface IWishlist {
     share_guid: string;
 
     wishlist_items: IWishlistItem[];
+    bought_items: IBoughtItem[];
 }
 
 interface IWishlistLinkShare {

@@ -1,12 +1,12 @@
+from datetime import date, datetime
 from data_access.db_connect import get_db_connection
 
 class WishlistItem():
-    def __init__(self, id, wishlist_id, link, notes, bought, order_number, is_header):
+    def __init__(self, id, wishlist_id, link, notes, order_number, is_header):
         self.id = id
         self.wishlist_id = wishlist_id
         self.link = link
         self.notes = notes
-        self.bought = bought
         self.order_number = order_number
         self.is_header = is_header
         
@@ -16,7 +16,6 @@ class WishlistItem():
             "wishlist_id": self.wishlist_id,
             "link": self.link,
             "notes": self.notes,
-            "bought": self.bought,
             "order_number": self.order_number,
             "is_header": self.is_header
         }
@@ -28,7 +27,6 @@ class WishlistItem():
             wishlist_id=json['wishlist_id'],
             link=json['link'],
             notes=json['notes'],
-            bought=json['bought'],
             order_number=json['order_number'],
             is_header=json['is_header']
         )
@@ -50,11 +48,18 @@ class WishlistItem():
     @staticmethod
     def get_all_for_wishlist(wishlist_id):
         with get_db_connection() as db:
+            today = datetime.combine(date.today(), datetime.min.time()).timestamp()
+            
             wishlist_items = db.execute(
-                "SELECT rowid, wishlist_id, link, notes, bought, order_number, is_header "
-                "FROM wishlist_item "
-                "WHERE wishlist_id = ? AND bought = 0 "
-                "ORDER BY order_number", (wishlist_id,)
+                """
+                SELECT wi.rowid, wi.wishlist_id, wi.link, wi.notes, wi.order_number, wi.is_header 
+                FROM wishlist_item wi
+                LEFT OUTER JOIN bought_item bi ON bi.wishlist_item_id = wi.rowid
+                WHERE wi.wishlist_id = ? AND (bi.rowid IS NULL OR bi.defer_until > ?)
+                ORDER BY wi.order_number
+                """,
+                (wishlist_id, today,)
+                
             ).fetchall()
             
             return list(
@@ -64,21 +69,10 @@ class WishlistItem():
                         wishlist_id=w[1],
                         link=w[2],
                         notes=w[3],
-                        bought=w[4],
-                        order_number=w[5],
-                        is_header=w[6]),
+                        order_number=w[4],
+                        is_header=w[5]),
                     wishlist_items)
                 )
-    @staticmethod
-    def get_ids_for_wishlist(wishlist_id):
-        with get_db_connection() as db:
-            ids = db.execute(
-                "SELECT rowid FROM wishlist_item WHERE wishlist_id = ?",
-                (wishlist_id,)
-            ).fetchall()
-            
-            return list(map(lambda x: x[0], ids))
-    
             
     @staticmethod
     def get_is_available_to_user(wishlist_item_id, user_id):
@@ -135,8 +129,8 @@ class WishlistItem():
     def create(wishlist_id, link, notes, order_number, is_header):
         with get_db_connection() as db:
             db.execute(
-                "INSERT INTO wishlist_item (wishlist_id, link, notes, bought, order_number, is_header) "
-                "VALUES (?, ?, ?, 0, ?, ?)",
+                "INSERT INTO wishlist_item (wishlist_id, link, notes, order_number, is_header) "
+                "VALUES (?, ?, ?, ?, ?)",
                 (wishlist_id, link, notes, order_number, is_header,),
             )
             
@@ -158,15 +152,6 @@ class WishlistItem():
                 (name, description, wishlist_item_id,)
             )
             db.commit()
-        
-    @staticmethod
-    def set_as_bought(wishlist_item_id):
-        with get_db_connection() as db:
-            db.execute(
-                "UPDATE wishlist_item SET bought = 1 WHERE rowid = ?",
-                (wishlist_item_id,)
-            )
-            db.commit()
             
     @staticmethod
     def set_order_number(wishlist_item_id, order_number):
@@ -176,17 +161,6 @@ class WishlistItem():
                 UPDATE wishlist_item SET order_number = ? WHERE rowid = ?
                 """,
                 (order_number, wishlist_item_id,)
-            )
-            db.commit()
-            
-    @staticmethod
-    def increment_order_numbers_from(wishlist_id, order_number):
-        with get_db_connection() as db:
-            db.execute(
-                """
-                UPDATE wishlist_item SET order_number = order_number + 1 WHERE order_number >= ? AND wishlist_id = ? AND bought = 0
-                """,
-                (order_number, wishlist_id,)
             )
             db.commit()
             

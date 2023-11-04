@@ -13,8 +13,6 @@
     export async function show(): Promise<string | boolean> {
         const result = await modal.show();
 
-        console.log(defer_until);
-
         if (!result) {
             return false;
         }
