@@ -90,7 +90,8 @@ def callback():
         profile_pic=picture,
         internal_password=None,
         email_on_share=None,
-        email_on_update=None
+        email_on_update=None,
+        email_on_owner_bought=None
     )
 
     # Add to the db if it doesn't exist

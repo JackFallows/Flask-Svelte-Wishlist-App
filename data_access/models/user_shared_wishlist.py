@@ -78,7 +78,7 @@ class UserSharedWishlist():
     def get_users_with_share(wishlist_id: int) -> List[User]:
         with get_db_connection() as db:
             users = db.execute("""
-                SELECT id, name, email, profile_pic, internal_password, email_on_share, email_on_update
+                SELECT id, name, email, profile_pic, internal_password, email_on_share, email_on_update, email_on_owner_bought
                 FROM user AS u
                 INNER JOIN user_shared_wishlist AS usw ON u.id = usw.user_id
                 WHERE usw.wishlist_id = ? and usw.accepted = 1
@@ -93,7 +93,8 @@ class UserSharedWishlist():
                 profile_pic=user[3],
                 internal_password=user[4],
                 email_on_share=user[5],
-                email_on_update=user[6]
+                email_on_update=user[6],
+                email_on_owner_bought=user[7]
             ), users))
             
     @staticmethod

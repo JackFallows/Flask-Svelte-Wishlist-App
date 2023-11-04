@@ -9,7 +9,7 @@
 
     let cannot_save: boolean = false;
 
-    $: cannot_save = defer_bought && (defer_until == null || defer_until == "") ? true : false;
+    $: cannot_save = defer_bought && (defer_until == null || defer_until == "");
 
     const min_date: string = (new Date()).toISOString().split('T')[0];
 

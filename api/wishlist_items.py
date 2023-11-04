@@ -2,10 +2,11 @@ import json
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 
+from data_access.models.user import User
 from data_access.models.wishlist import Wishlist
 from data_access.models.wishlist_item import WishlistItem
 from data_access.models.bought_item import BoughtItem
-from services.notification_service import notify_wishlist_updated
+from services.notification_service import notify_wishlist_updated, notify_owner_bought_item
 
 wishlist_items = Blueprint('wishlist_items', __name__)
 
@@ -70,6 +71,23 @@ def mark_as_bought(wishlist_item_id):
     
     defer_until = json.loads(request.data)["defer_until"]
     
+    wishlist_id = WishlistItem.get_wishlist_id(wishlist_item_id)
+    wishlist = Wishlist.get(wishlist_id, current_user.id)
+    if wishlist is not None:
+        # the owner has bought the item, check another user hasn't already bought it
+        bought_items = BoughtItem.get_for_wishlist(wishlist_id)
+        existing: BoughtItem = next(filter(lambda bi: bi.wishlist_item_id == int(wishlist_item_id), bought_items), None)
+        if existing is not None:
+            target_user = User.get(existing.user_id)
+            wishlist_item = WishlistItem.get(wishlist_item_id)
+            
+            BoughtItem.remove_defer_date(existing.id, current_user.id)
+            existing.defer_until = None
+            
+            notify_owner_bought_item(current_user, target_user, wishlist, wishlist_item)
+            
+            return jsonify(existing.as_dict())
+            
     bought_item = BoughtItem.create(current_user.id, wishlist_item_id, defer_until)
     
     return jsonify(bought_item.as_dict())

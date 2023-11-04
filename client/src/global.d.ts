@@ -86,6 +86,7 @@ interface IUser {
     profile_pic: string;
     email_on_share: boolean;
     email_on_update: boolean;
+    email_on_owner_bought: boolean;
 }
 
 interface INotificationDto {

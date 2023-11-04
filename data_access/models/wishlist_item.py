@@ -32,6 +32,26 @@ class WishlistItem():
         )
         
     @staticmethod
+    def get(wishlist_item_id: int):
+        with get_db_connection() as db:
+            w = db.execute(
+                """
+                SELECT wi.rowid, wi.wishlist_id, wi.link, wi.notes, wi.order_number, wi.is_header 
+                FROM wishlist_item wi
+                WHERE wi.rowid = ?
+                """,
+                (wishlist_item_id,)
+            ).fetchone()
+            
+            return WishlistItem(
+                id=w[0],
+                wishlist_id=w[1],
+                link=w[2],
+                notes=w[3],
+                order_number=w[4],
+                is_header=w[5])
+        
+    @staticmethod
     def get_wishlist_id(wishlist_item_id: int):
         with get_db_connection() as db:
             wishlist_item = db.execute(

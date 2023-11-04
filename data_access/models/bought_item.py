@@ -46,6 +46,18 @@ class BoughtItem():
             )
             
     @staticmethod
+    def remove_defer_date(id: int, user_id: str):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                UPDATE bought_item SET defer_until = NULL, user_id = ? WHERE rowid = ?
+                """,
+                (user_id, id,)
+            )
+            
+            db.commit()
+            
+    @staticmethod
     def get_for_wishlist(wishlist_id: int):
         with get_db_connection() as db:
             bought_items_result = db.execute(

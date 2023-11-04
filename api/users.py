@@ -60,6 +60,7 @@ def update():
     
     user.email_on_share = request_json["email_on_share"]
     user.email_on_update = request_json["email_on_update"]
+    user.email_on_owner_bought = request_json["email_on_owner_bought"]
     
     user.apply_changes()
 
