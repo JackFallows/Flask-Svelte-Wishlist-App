@@ -15,6 +15,7 @@
     export let is_owned: boolean = false;
     export let is_link_share: boolean = false;
     export let has_other_wishlists: boolean = false;
+    export let most_recent_bought_item: IBoughtItem = null;
 
     const { Get } = <IHttp>getContext("http");
 
@@ -213,7 +214,12 @@
     </div>
 {/if}
 
-<BoughtModal is_owner={is_owned} bind:this={bought_confirmation_modal} />
+<BoughtModal
+    is_owner={is_owned}
+    defer_bought={most_recent_bought_item?.defer_until != null}
+    defer_until={most_recent_bought_item?.defer_until?.toISOString().split('T')[0]}
+    bind:this={bought_confirmation_modal}
+/>
 
 {#if is_owned}
     <Modal bind:this={move_item_modal} id="move">

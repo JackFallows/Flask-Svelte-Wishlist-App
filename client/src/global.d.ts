@@ -3,6 +3,7 @@
 interface Window {
     page_title?: string;
     internal_login_enabled: boolean;
+    user_id?: string;
     user_name?: string;
     profile_pic?: string;
     wishlist_id?: number;

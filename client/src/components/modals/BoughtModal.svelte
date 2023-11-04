@@ -2,11 +2,14 @@
     import Modal from "../Modal.svelte";
 
     export let is_owner: boolean;
+    export let defer_bought: boolean = false;
+    export let defer_until: string = null;
 
     let modal: Modal;
 
-    let defer_bought: boolean;
-    let defer_until: string;
+    let cannot_save: boolean = false;
+
+    $: cannot_save = defer_bought && (defer_until == null || defer_until == "") ? true : false;
 
     const min_date: string = (new Date()).toISOString().split('T')[0];
 
@@ -45,6 +48,6 @@
     </span>
     <span slot="buttons" let:close_modal={close}>
         <button class="button" on:click={() => close()}>Cancel</button>
-        <button class="button" on:click={() => close("true")}>Yes</button>
+        <button class="button" disabled="{cannot_save}" on:click={() => close("true")}>Yes</button>
     </span>
 </Modal>
