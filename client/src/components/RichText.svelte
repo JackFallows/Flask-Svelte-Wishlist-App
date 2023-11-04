@@ -10,36 +10,47 @@
     let fragments: IFragment[] = [];
 
     $: {
+        let current_fragment: IFragment = {
+            is_link: false,
+            is_line_break: false,
+            text: ""
+        };
+
+        function push_fragment({ is_line_break, with_ch }: { is_line_break?: boolean, with_ch?: string }) {
+            fragments.push(current_fragment);
+            current_fragment = {
+                is_link: false,
+                is_line_break: is_line_break ?? false,
+                text: with_ch ?? ""
+            };
+        }
+
         function is_link(str: string) {
             return str.startsWith("http://") || str.startsWith("https://") || str.startsWith("www.");
         }
 
-        fragments = text?.trim().split(" ").reduce((frags, text, i) => {
-            const line_breaks = text.split("\n");
-
-            if (line_breaks.length > 1) {
-                for (const br of line_breaks) {
-                    if (br.length > 0) {
-                        frags.push({
-                            text: br
-                        });
-                    }
-
-                    frags.push({
-                        is_line_break: true
-                    });
+        for (const ch of [...text]) {
+            if (ch === " ") {
+                if (!current_fragment.is_link) {
+                    current_fragment.text += ch;
                 }
 
-                return frags;
+                push_fragment({});
+                continue;
+            } else if (ch === "\n") {
+                push_fragment({ is_line_break: true });
+                push_fragment({});
+                continue;
+            } else {
+                current_fragment.text += ch;
+                if (is_link(current_fragment.text)) {
+                    current_fragment.is_link = true;
+                }
+                continue;
             }
+        }
 
-            frags.push({
-                is_link: is_link(text),
-                text: `${i > 0 ? " " : ""}${text}`
-            });
-
-            return frags;
-        }, []);
+        fragments.push(current_fragment);
     }
 </script>
 
