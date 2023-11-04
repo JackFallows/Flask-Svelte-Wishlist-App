@@ -3,6 +3,7 @@
 interface Window {
     page_title?: string;
     internal_login_enabled: boolean;
+    user_id?: string;
     user_name?: string;
     profile_pic?: string;
     wishlist_id?: number;
@@ -46,6 +47,13 @@ interface IWishlistItem {
     is_header: boolean;
 }
 
+interface IBoughtItem {
+    id: number;
+    user_id: string;
+    wishlist_item_id: number;
+    defer_until: Date;
+}
+
 interface IWishlist {
     id: number;
     user_id: string;
@@ -55,6 +63,7 @@ interface IWishlist {
     share_guid: string;
 
     wishlist_items: IWishlistItem[];
+    bought_items: IBoughtItem[];
 }
 
 interface IWishlistLinkShare {
@@ -77,6 +86,7 @@ interface IUser {
     profile_pic: string;
     email_on_share: boolean;
     email_on_update: boolean;
+    email_on_owner_bought: boolean;
 }
 
 interface INotificationDto {

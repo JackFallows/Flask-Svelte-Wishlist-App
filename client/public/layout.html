@@ -25,6 +25,13 @@
             false
             {% endif %};
 
+        window.user_id = 
+            {% if user.is_authenticated %}
+            "{{ user.id }}"
+            {% else %}
+            void 0
+            {% endif %};
+
         window.user_name = 
             {% if user.is_authenticated %}
             "{{ user.name }}"

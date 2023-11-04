@@ -13,6 +13,7 @@
     let email: string;
     let email_on_share: boolean;
     let email_on_update: boolean;
+    let email_on_owner_bought: boolean;
 
     let loading_promise = get_user();
 
@@ -25,12 +26,14 @@
         email = user.email;
         email_on_share = user.email_on_share;
         email_on_update = user.email_on_update;
+        email_on_owner_bought = user.email_on_owner_bought;
     }
 
     async function save_user() {
         const payload = {
             email_on_share,
-            email_on_update
+            email_on_update,
+            email_on_owner_bought
         };
 
         const response = await Patch(Api.Users.Update, payload);
@@ -66,6 +69,10 @@
 
                 <label for="email-on-update-checkbox">Receive an email notification when a wishlist that has already been shared with you is updated?</label>
                 <input id="email-on-update-checkbox" type="checkbox" name="email_on_update" bind:checked={email_on_update} />
+                <br />
+
+                <label for="email-on-owner-bought-checkbox">Receive an email notification when the owner of a wishlist shared with you buys an item that you previously bought yourself?</label>
+                <input id="email-on-owner-bought-checkbox" type="checkbox" name="email_on_owner_bought" bind:checked={email_on_owner_bought} />
 
                 <div>
                     <button class="success-button mt-8" id="save-button" on:click={() => loading_promise = save_user()}>Save</button>

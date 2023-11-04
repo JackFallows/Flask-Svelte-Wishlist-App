@@ -15,17 +15,33 @@
     let toast: Toast;
 
     let wishlist: IWishlist;
-    let wishlist_items: IWishlistItem[];
+    let wishlist_items: IWishlistItem[] = [];
+    let bought_items: IBoughtItem[] = [];
     let wishlist_as_share: IWishlistShare;
     let is_owned: boolean;
     let total_wishlists: number;
     let has_other_wishlists: boolean;
+    let visible_wishlist_items: IWishlistItem[];
+    let most_recent_bought_item: IBoughtItem;
 
     let loading_promise: Promise<any> = load_wishlist();
 
     $: wishlist_as_share = (<IWishlistShare>wishlist)?.is_share ? (<IWishlistShare>wishlist) : null;
     $: is_owned = wishlist_as_share == null;
     $: has_other_wishlists = wishlist_id == null ? total_wishlists > 0 : total_wishlists > 1;
+    $: {
+        const bought_item_ids = bought_items.map(bi => bi.wishlist_item_id);
+        visible_wishlist_items = wishlist_items.filter(wi => !bought_item_ids.includes(wi.id));
+    }
+    $: {
+        most_recent_bought_item = bought_items.reduce((most_recent: IBoughtItem, bought_item: IBoughtItem) => {
+            if (bought_item.user_id === window.user_id && (most_recent == null || bought_item.id > most_recent.id)) {
+                most_recent = bought_item;
+            }
+
+            return most_recent;
+        }, null);
+    }
 
     async function load_wishlist() {
         if (wishlist_id == 0) {
@@ -41,6 +57,12 @@
 
         wishlist = wishlistPayload.get_json();
         wishlist_items = wishlist.wishlist_items;
+        bought_items = wishlist.bought_items ?? [];
+
+        for (const bought_item of bought_items) {
+            bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
+        }
+
         total_wishlists = countPayload.get_json().total_wishlists;
     }
 
@@ -138,16 +160,19 @@
         await ensure_order();
     }
 
-    async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem }>) {
-        const { item } = event.detail;
+    async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem, defer_until: string }>) {
+        const { item, defer_until } = event.detail;
 
-        remove_item(item);
+        const bought_item = await save_changes<IBoughtItem>(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), {
+            defer_until
+        }));
 
-        await save_changes(Patch(Api.WishlistItems.PatchMarkAsBought.append(item.id), null));
-
-        if (is_owned) {
-            await ensure_order();
+        if (bought_item.defer_until) {
+            bought_item.defer_until = new Date(<number><any>bought_item.defer_until * 1000);
         }
+
+        bought_items.push(bought_item);
+        bought_items = bought_items; // trigger reactivity
     }
 
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
@@ -239,12 +264,13 @@
     {/if}
 
     <div class="mt-8 flex space-y-3 flex-col">
-        {#each wishlist_items as wishlist_item(wishlist_item)}
+        {#each visible_wishlist_items as wishlist_item(wishlist_item)}
             <div animate:flip={{ duration: 200 }}>
                 <WishlistItem
                     wishlist_item={wishlist_item}
                     is_owned={is_owned}
                     has_other_wishlists={has_other_wishlists}
+                    most_recent_bought_item={most_recent_bought_item}
                     on:change_text={change_item_text}
                     on:move_out={move_item_out}
                     on:move_up={move_item_up}

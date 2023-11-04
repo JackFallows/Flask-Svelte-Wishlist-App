@@ -64,3 +64,21 @@ def send_update_email(subject: str, message: str):
     """, subtype='html')
     
     return Email(email)
+
+def send_owner_bought_email(subject: str, message: str):
+    email = EmailMessage()
+    email['Subject'] = subject
+    email["From"] = SMTP_EMAIL
+    
+    email.set_content(f"""\
+    <html>
+    <body>
+        <p>
+        {html.escape(message)}<br />
+    - Wishlist App
+        </p>
+    </body>
+    </html>
+    """, subtype='html')
+    
+    return Email(email)
