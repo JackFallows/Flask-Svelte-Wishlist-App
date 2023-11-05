@@ -263,7 +263,7 @@
         </div>
     {/if}
 
-    <div class="mt-8 flex space-y-3 flex-col">
+    <div class="mt-8 flex space-y-8 flex-col">
         {#each visible_wishlist_items as wishlist_item(wishlist_item)}
             <div animate:flip={{ duration: 200 }}>
                 <WishlistItem

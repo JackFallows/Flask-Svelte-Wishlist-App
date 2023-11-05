@@ -7,6 +7,7 @@
     export let label: string;
     export let expand_in_burger_menu: boolean = !!getContext('burger');
     export let button: HTMLButtonElement = null;
+    export let small: boolean = false;
 </script>
 
 {#if expand_in_burger_menu}
@@ -22,7 +23,7 @@
         </label>
     </div>
 {:else}
-    <button class="icon-button" id={id} title="{label}" bind:this={button} on:click>
+    <button class="icon-button {small ? "!text-2xl !w-8 !h-8" : ""}" id={id} title="{label}" bind:this={button} on:click>
         <span class="fa-fw {icon} pointer-events-none"></span>
     </button>
     <label for={id} class="sr-only">
