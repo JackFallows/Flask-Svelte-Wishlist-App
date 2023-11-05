@@ -10,6 +10,7 @@
     import BurgerMenu from './BurgerMenu.svelte';
     import IconButton from './IconButton.svelte';
     import RichText from './RichText.svelte';
+    import SortControl from './SortControl.svelte';
 
     export let wishlist_item: IWishlistItem;
     export let is_owned: boolean = false;
@@ -74,6 +75,12 @@
         });
     }
 
+    function move_to_top() {
+        dispatch("move_to_top", {
+            item: wishlist_item
+        });
+    }
+
     function move_up() {
         dispatch('move_up', {
             item: wishlist_item
@@ -82,6 +89,12 @@
 
     function move_down() {
         dispatch('move_down', {
+            item: wishlist_item
+        });
+    }
+
+    function move_to_bottom() {
+        dispatch("move_to_bottom", {
             item: wishlist_item
         });
     }
@@ -147,10 +160,12 @@
                     <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
                 {/if}
             {/if}
-            <div class="flex flex-col">
-                <IconButton id="{wishlist_item.id}-move-up-button" icon="fa-solid fa-arrow-up" label="Move up" on:click={move_up} />
-                <IconButton id="{wishlist_item.id}-move-down-button" icon="fa-solid fa-arrow-down" label="Move down" on:click={move_down} />
-            </div>
+            <SortControl id={wishlist_item.id.toString()}
+                on:move_to_top={move_to_top}
+                on:move_up={move_up}
+                on:move_down={move_down}
+                on:move_to_bottom={move_to_bottom}
+            />
         {/if}
     </div>
     <hr class="mt-2" />
@@ -190,10 +205,12 @@
                 <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
             {/if}
             {#if is_owned}
-                <div class="flex flex-col">
-                    <IconButton id="{wishlist_item.id}-move-up-button" icon="fa-solid fa-arrow-up" label="Move up" on:click={move_up} />
-                    <IconButton id="{wishlist_item.id}-move-down-button" icon="fa-solid fa-arrow-down" label="Move down" on:click={move_down} />
-                </div>
+                <SortControl id={wishlist_item.id.toString()}
+                    on:move_to_top={move_to_top}
+                    on:move_up={move_up}
+                    on:move_down={move_down}
+                    on:move_to_bottom={move_to_bottom}
+                />
             {/if}
         </div>
         <div class="mt-2 bg-slate-300 -m-2 rounded-b-md">
