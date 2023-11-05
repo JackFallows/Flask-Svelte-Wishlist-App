@@ -4,9 +4,10 @@
 
     export let id: string;
 
+    let container: HTMLElement;
     const dispatch = createEventDispatcher();
 
-    let touch_count: number = 0;
+    let do_not_move: boolean = false;
 
     function move_to_top() {
         move("move_to_top");
@@ -25,20 +26,23 @@
     }
 
     function move(event: string) {
-        if (touch_count == 1) {
+        if (do_not_move) {
+            do_not_move = false;
             return;
         }
 
-        touch_count = 0;
         dispatch(event);
     }
     
     function touch_start() {
-        touch_count++;
+        const computedStyle = window.getComputedStyle(container);
+        if (computedStyle.overflow === "hidden") {
+            do_not_move = true;
+        }
     }
 </script>
 
-<div class="bg-white rounded-full relative min-w-[40px] h-[76px] overflow-hidden hover:overflow-visible" on:touchstart={touch_start}>
+<div bind:this={container} class="bg-white rounded-full relative min-w-[40px] h-[76px] overflow-hidden hover:overflow-visible" on:touchstart={touch_start}>
     <div class="absolute flex flex-col space-y-1 -top-9 bg-white p-1 right-0 rounded-full hover:outline hover:outline-1 hover:outline-slate-200">
         <IconButton id="{id}-move-top-button" icon="fa-solid fa-angles-up" label="Move to top" small on:click={move_to_top} />
         <IconButton id="{id}-move-up-button" icon="fa-solid fa-angle-up" label="Move up" small on:click={move_up} />
