@@ -31,10 +31,7 @@
 
         for (const ch of [...text]) {
             if (ch === " ") {
-                if (!current_fragment.is_link) {
-                    current_fragment.text += ch;
-                }
-
+                push_fragment({ with_ch: ch });
                 push_fragment({});
                 continue;
             } else if (ch === "\n") {
