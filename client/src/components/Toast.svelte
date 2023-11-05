@@ -41,7 +41,7 @@
 </script>
 
 {#if visible}
-    <div class="absolute right-4 bottom-4 rounded shadow-lg {bg_color} {text_color} px-8 py-4 text-xl flex items-center space-x-3" in:fade={{ duration: 100 }} out:fade={{ duration: 1000 }}>
+    <div class="absolute right-4 bottom-4 rounded shadow-lg {bg_color} {text_color} px-8 py-4 text-xl flex items-center space-x-3 z-10" in:fade={{ duration: 100 }} out:fade={{ duration: 1000 }}>
         <span class="fa-solid {icon}"></span>
         <span>
             {message}

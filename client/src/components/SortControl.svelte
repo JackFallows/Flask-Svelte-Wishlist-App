@@ -6,24 +6,39 @@
 
     const dispatch = createEventDispatcher();
 
+    let touch_count: number = 0;
+
     function move_to_top() {
-        dispatch("move_to_top");
+        move("move_to_top");
     }
 
     function move_up() {
-        dispatch("move_up");
+        move("move_up");
     }
 
     function move_down() {
-        dispatch("move_down");
+        move("move_down");
     }
 
     function move_to_bottom() {
-        dispatch("move_to_bottom");
+        move("move_to_bottom");
+    }
+
+    function move(event: string) {
+        if (touch_count == 1) {
+            return;
+        }
+
+        touch_count = 0;
+        dispatch(event);
+    }
+    
+    function touch_start() {
+        touch_count++;
     }
 </script>
 
-<div class=" bg-white rounded-full relative min-w-[40px] h-[76px] overflow-hidden hover:overflow-visible">
+<div class="bg-white rounded-full relative min-w-[40px] h-[76px] overflow-hidden hover:overflow-visible" on:touchstart={touch_start}>
     <div class="absolute flex flex-col space-y-1 -top-9 bg-white p-1 right-0 rounded-full hover:outline hover:outline-1 hover:outline-slate-200">
         <IconButton id="{id}-move-top-button" icon="fa-solid fa-angles-up" label="Move to top" small on:click={move_to_top} />
         <IconButton id="{id}-move-up-button" icon="fa-solid fa-angle-up" label="Move up" small on:click={move_up} />
