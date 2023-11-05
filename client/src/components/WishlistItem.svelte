@@ -160,7 +160,7 @@
                     <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
                 {/if}
             {/if}
-            <SortControl id={wishlist_item.id.toString()}
+            <SortControl id={html_id}
                 on:move_to_top={move_to_top}
                 on:move_up={move_up}
                 on:move_down={move_down}
@@ -205,7 +205,7 @@
                 <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
             {/if}
             {#if is_owned}
-                <SortControl id={wishlist_item.id.toString()}
+                <SortControl id={html_id}
                     on:move_to_top={move_to_top}
                     on:move_up={move_up}
                     on:move_down={move_down}
