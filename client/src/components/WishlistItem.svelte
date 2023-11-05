@@ -75,6 +75,12 @@
         });
     }
 
+    function move_to_top() {
+        dispatch("move_to_top", {
+            item: wishlist_item
+        });
+    }
+
     function move_up() {
         dispatch('move_up', {
             item: wishlist_item
@@ -83,6 +89,12 @@
 
     function move_down() {
         dispatch('move_down', {
+            item: wishlist_item
+        });
+    }
+
+    function move_to_bottom() {
+        dispatch("move_to_bottom", {
             item: wishlist_item
         });
     }
@@ -149,10 +161,10 @@
                 {/if}
             {/if}
             <SortControl id={wishlist_item.id.toString()}
-                on:move_to_top={move_up}
+                on:move_to_top={move_to_top}
                 on:move_up={move_up}
                 on:move_down={move_down}
-                on:move_to_bottom={move_down}
+                on:move_to_bottom={move_to_bottom}
             />
         {/if}
     </div>
@@ -194,10 +206,10 @@
             {/if}
             {#if is_owned}
                 <SortControl id={wishlist_item.id.toString()}
-                    on:move_to_top={move_up}
+                    on:move_to_top={move_to_top}
                     on:move_up={move_up}
                     on:move_down={move_down}
-                    on:move_to_bottom={move_down}
+                    on:move_to_bottom={move_to_bottom}
                 />
             {/if}
         </div>

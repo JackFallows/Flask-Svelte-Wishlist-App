@@ -120,6 +120,19 @@
         await ensure_order();
     }
 
+    async function move_item_to_top(event: CustomEvent<{ item: IWishlistItem }>) {
+        const { item } = event.detail;
+
+        const current_index = wishlist_items.indexOf(item);
+        if (current_index <= 0) {
+            return;
+        }
+
+        const target_index = 0;
+
+        await rearrange(item, current_index, target_index);
+    }
+
     async function move_item_up(event: CustomEvent<{ item: IWishlistItem }>) {
         const { item } = event.detail;
 
@@ -142,6 +155,19 @@
         }
 
         const target_index = current_index + 1;
+
+        await rearrange(item, current_index, target_index);
+    }
+
+    async function move_item_to_bottom(event: CustomEvent<{ item: IWishlistItem }>) {
+        const { item } = event.detail;
+
+        const current_index = wishlist_items.indexOf(item);
+        if (current_index === (wishlist_items.length - 1)) {
+            return;
+        }
+
+        const target_index = wishlist_items.length - 1;
 
         await rearrange(item, current_index, target_index);
     }
@@ -273,8 +299,10 @@
                     most_recent_bought_item={most_recent_bought_item}
                     on:change_text={change_item_text}
                     on:move_out={move_item_out}
+                    on:move_to_top={move_item_to_top}
                     on:move_up={move_item_up}
                     on:move_down={move_item_down}
+                    on:move_to_bottom={move_item_to_bottom}
                     on:buy={mark_item_bought}
                     on:remove={delete_item}
                 />
