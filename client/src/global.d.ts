@@ -10,6 +10,7 @@ interface Window {
     base_path: string;
     email_is_configured: boolean;
     version_number: string;
+    user_has_enabled_email: boolean;
 }
 
 interface IValidationState {

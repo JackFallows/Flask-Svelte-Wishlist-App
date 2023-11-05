@@ -6,6 +6,7 @@ from os.path import isfile, join, exists
 from flask import render_template
 from flask_login import current_user
 
+from data_access.models.user import User
 from decorators.auth import ENABLE_INTERNAL_AUTH
 
 from services.email_service import is_email_configured
@@ -70,6 +71,16 @@ def get_version_number():
     
     return None
 
+def get_user_has_enabled_email():
+    if not current_user.is_authenticated:
+        return False
+    
+    user = User.get(current_user.id)
+    
+    email_enabled = user.email_on_share or user.email_on_update or user.email_on_owner_bought
+
+    return email_enabled
+
 def custom_render_template(template_name, **context):
     return render_template(
         template_name_or_list=template_name,
@@ -80,5 +91,6 @@ def custom_render_template(template_name, **context):
         base_path=BASE_PATH,
         email_is_configured=is_email_configured(),
         version_number=get_version_number(),
+        user_has_enabled_email=get_user_has_enabled_email(),
         **context
     )

@@ -2,6 +2,7 @@
     import { createEventDispatcher, getContext } from "svelte";
     import { makeRoutes } from "../routes";
     import { NotificationType } from "../enums";
+    import PanelMessage from "./PanelMessage.svelte";
 
     export let notification: INotificationDto;
 
@@ -27,29 +28,31 @@
     }
 </script>
 
-<div class="border-[1px] border-slate-200 rounded-md p-2">
-    <p class="bg-slate-200 px-2 py-1 -mx-2 -mt-2 mb-2 text-xs text-slate-600 flex items-center">
+<PanelMessage>
+    <div slot="heading" class="flex items-center">
         <span class="flex-grow">
             {notification.created_at.toLocaleString()}
         </span>
         {#if notification.type !== NotificationType.SHARE}
         <button class="hover:text-purple-600 text-sm" on:click={() => read_notification()}>
-            <span class="fa-solid fa-xmark"></span>
+            <span class="fa-solid fa-xmark fa-fw"></span>
         </button>
         {/if}
-    </p>
-    <p>{notification.message}</p>
-    {#if notification.type === NotificationType.SHARE && notification.shared_wishlist_id != null}
-    <p>Accept?</p>
-    <div class="inline-block">
-        <div class="button-group">
-            <button class="button" on:click={() => accept_share()}>
-                <span class="fa-solid fa-check"></span> Yes
-            </button>
-            <button class="button" on:click={() => reject_share()}>
-                <span class="fa-solid fa-xmark"></span> No
-            </button>
-        </div>
     </div>
-    {/if}
-</div>
+    <div slot="body">
+        <p>{notification.message}</p>
+        {#if notification.type === NotificationType.SHARE && notification.shared_wishlist_id != null}
+        <p>Accept?</p>
+        <div class="inline-block">
+            <div class="button-group">
+                <button class="button" on:click={() => accept_share()}>
+                    <span class="fa-solid fa-check"></span> Yes
+                </button>
+                <button class="button" on:click={() => reject_share()}>
+                    <span class="fa-solid fa-xmark"></span> No
+                </button>
+            </div>
+        </div>
+        {/if}
+    </div>
+</PanelMessage>

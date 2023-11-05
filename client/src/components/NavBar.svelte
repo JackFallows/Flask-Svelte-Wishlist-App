@@ -3,6 +3,7 @@
     import { makeRoutes } from '../routes';
     import Notification from './Notification.svelte';
     import SlidePanel from './SlidePanel.svelte';
+    import PanelMessage from './PanelMessage.svelte';
 
     export let page: string = "";
     export let internal_login_enabled: boolean;
@@ -76,6 +77,16 @@
                         {/if}
                     </button>
                     <SlidePanel bind:visible={notifications_panel_visible}>
+                        <div class="mb-3">
+                            <PanelMessage>
+                                <div slot="heading" class="flex items-center">
+                                    <span class="grow">Email notifications are turned {window.user_has_enabled_email ? "on" : "off"}</span>
+                                    <a class="hover:text-purple-600 text-sm" href="{Views.Profile}">
+                                        <span class="fa-solid fa-gear fa-fw"></span>
+                                    </a>
+                                </div>
+                            </PanelMessage>
+                        </div>
                         {#await notifications_loading_promise}
                             Loading...
                         {:then}
