@@ -23,7 +23,7 @@
         </label>
     </div>
 {:else}
-    <button class="icon-button {small ? "!text-2xl !w-8 !h-8" : ""}" id={id} title="{label}" bind:this={button} on:click>
+    <button class="icon-button {small ? "!text-2xl !w-8 !h-8" : ""}" id={id} title="{label}" bind:this={button} on:click on:pointerdown>
         <span class="fa-fw {icon} pointer-events-none"></span>
     </button>
     <label for={id} class="sr-only">
