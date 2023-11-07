@@ -135,101 +135,115 @@
     }
 </script>
 
-{#if wishlist_item.is_header}
-    <div class="flex items-center space-x-3 pr-2 mt-3">
+<div class="flex space-x-2">
+    {#if wishlist_item.is_header}
         <div class="grow">
-            {#if is_editing}
-                <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Section name" />
-            {:else}
-                <h2 class="text-xl">{wishlist_item.link}</h2>
-            {/if}
-        </div>
-        {#if is_owned}
-            {#if !is_editing}
-                <BurgerMenu id="{wishlist_item.id}-menu" label="Heading menu">
-                    {#if !is_editing}
-                        <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
-                    {/if}
-                    <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
-                </BurgerMenu>
-            {:else}
-                <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
-                {#if is_new}
-                    <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
-                {:else}
-                    <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
-                {/if}
-            {/if}
-            <SortControl id={html_id}
-                on:move_to_top={move_to_top}
-                on:move_up={move_up}
-                on:move_down={move_down}
-                on:move_to_bottom={move_to_bottom}
-            />
-        {/if}
-    </div>
-    <hr class="mt-2" />
-{:else}
-    <div class="rounded-md bg-slate-200 p-2">
-        <div class="flex items-center space-x-3" id="{html_id}">
-            {#if is_editing}
+            <div class="flex items-center space-x-3 pr-2 mt-3">
                 <div class="grow">
-                    <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
-                </div>
-            {:else}
-                <div class="grow text-lg">
-                    <RichText text={link} />
-                </div>
-            {/if}
-            {#if is_owned && is_editing}
-                <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
-                {#if is_new}
-                    <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
-                {:else}
-                    <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
-                {/if}
-            {:else if is_owned}
-                <BurgerMenu id="{wishlist_item.id}-menu" label="Item menu">
-                    {#if has_other_wishlists && !is_editing && !is_new}
-                        <IconButton id="{wishlist_item.id}-move-out-button" icon="fa-solid fa-arrow-right-from-bracket" label="Move to list" on:click={move_item_to_list} />
+                    {#if is_editing}
+                        <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Section name" />
+                    {:else}
+                        <h2 class="text-xl">{wishlist_item.link}</h2>
                     {/if}
-                    {#if !is_new}
-                        <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
-                    {/if}
+                </div>
+                {#if is_owned}
                     {#if !is_editing}
-                        <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
+                        <BurgerMenu id="{wishlist_item.id}-menu" label="Heading menu">
+                            <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
+                            <div class="sm:hidden">
+                                <IconButton id="{html_id}-move-top-button" icon="fa-solid fa-angles-up" label="Move to top" on:click={move_to_top} />
+                                <IconButton id="{html_id}-move-bottom-button" icon="fa-solid fa-angles-down" label="Move to bottom" on:click={move_to_bottom} />
+                            </div>
+                            <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                        </BurgerMenu>
+                    {:else}
+                        <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
+                        {#if is_new}
+                            <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                        {:else}
+                            <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
+                        {/if}
                     {/if}
-                        <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
-                </BurgerMenu>
-            {:else if !is_link_share}
-                <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
-            {/if}
-            {#if is_owned}
-                <SortControl id={html_id}
-                    on:move_to_top={move_to_top}
-                    on:move_up={move_up}
-                    on:move_down={move_down}
-                    on:move_to_bottom={move_to_bottom}
-                />
-            {/if}
-        </div>
-        <div class="mt-2 bg-slate-300 -m-2 rounded-b-md">
-            {#if is_editing}
-                <Collapse heading="Description" subtle collapsed>
-                    <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Enter additional information about this item here..."></textarea>
-                </Collapse>
-            {:else}
-                {#if notes?.trim().length > 0}
-                    <Collapse heading="Description" subtle collapsed>
-                        <div class="text-sm">
-                            <RichText text={notes} />
-                        </div>
-                    </Collapse>
+                    <SortControl id={html_id}
+                        on:move_up={move_up}
+                        on:move_down={move_down}
+                    />
                 {/if}
-            {/if}
+            </div>
+            <hr class="mt-2" />
         </div>
-    </div>
-{/if}
+        {:else}
+        <div class="grow rounded-md bg-slate-200 p-2">
+            <div class="flex items-center space-x-3" id="{html_id}">
+                {#if is_editing}
+                    <div class="grow">
+                        <input class="text-input" bind:value={link} id="{html_id + "-link"}" placeholder="Item link or name" />
+                    </div>
+                {:else}
+                    <div class="grow text-lg">
+                        <RichText text={link} />
+                    </div>
+                {/if}
+                {#if is_owned && is_editing}
+                    <IconButton id="{wishlist_item.id}-save-button" icon="fa-solid fa-check" label="Save" on:click={change_text} />
+                    {#if is_new}
+                        <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                    {:else}
+                        <IconButton id="{wishlist_item.id}-cancel-button" icon="fa-solid fa-rotate-left" label="Cancel" on:click={cancel_change_text} />
+                    {/if}
+                {:else if is_owned}
+                    <BurgerMenu id="{wishlist_item.id}-menu" label="Item menu">
+                        {#if has_other_wishlists && !is_editing && !is_new}
+                            <IconButton id="{wishlist_item.id}-move-out-button" icon="fa-solid fa-arrow-right-from-bracket" label="Move to list" on:click={move_item_to_list} />
+                        {/if}
+                        {#if !is_new}
+                            <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
+                        {/if}
+                        {#if !is_editing}
+                            <IconButton id="{wishlist_item.id}-edit-button" icon="fa-solid fa-pencil" label="Edit" on:click={() => is_editing = true} />
+                            <div class="sm:hidden">
+                                <IconButton id="{html_id}-move-top-button" icon="fa-solid fa-angles-up" label="Move to top" on:click={move_to_top} />
+                                <IconButton id="{html_id}-move-bottom-button" icon="fa-solid fa-angles-down" label="Move to bottom" on:click={move_to_bottom} />
+                            </div>
+                        {/if}
+                        <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
+                    </BurgerMenu>
+                {:else if !is_link_share}
+                    <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
+                {/if}
+                {#if is_owned}
+                    <SortControl id={html_id}
+                        on:move_up={move_up}
+                        on:move_down={move_down}
+                    />
+                {/if}
+            </div>
+            <div class="mt-2 bg-slate-300 -m-2 rounded-b-md">
+                {#if is_editing}
+                    <Collapse heading="Description" subtle collapsed>
+                        <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Enter additional information about this item here..."></textarea>
+                    </Collapse>
+                {:else}
+                    {#if notes?.trim().length > 0}
+                        <Collapse heading="Description" subtle collapsed>
+                            <div class="text-sm">
+                                <RichText text={notes} />
+                            </div>
+                        </Collapse>
+                    {/if}
+                {/if}
+            </div>
+        </div>
+    {/if}
+    {#if is_owned}
+        <div class="{wishlist_item.is_header ? "py-3" : "py-2"} hidden sm:block">
+            <SortControl id={html_id} move_far has_background={!wishlist_item.is_header}
+                on:move_up={move_to_top}
+                on:move_down={move_to_bottom}
+            />
+        </div>
+    {/if}
+</div>
 
 <BoughtModal
     is_owner={is_owned}
