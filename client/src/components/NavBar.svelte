@@ -130,14 +130,14 @@
                 </div>
             </div>
         {:else}
-            <div class="button-group">
-                {#if internal_login_enabled}
+            {#if internal_login_enabled}
+                <div class="button-group">
                     <a class="button" href="{ Views.Auth.SignUp.to_string() }">Sign up</a>
                     <a class="button" href="{ Views.Auth.Login.to_string() }">Log in</a>
-                {:else}
-                    <GoogleSignInButton href={ Views.Auth.External.Login.to_string() } />
-                {/if}
-            </div>
+                </div>
+            {:else}
+                <GoogleSignInButton href={ Views.Auth.External.Login.to_string() } />
+            {/if}
         {/if}
     </div>
 </nav>
