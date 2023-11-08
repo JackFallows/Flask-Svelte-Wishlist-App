@@ -58,7 +58,9 @@
 
             <div class="flex space-y-3 flex-col">
                 {#each wishlist_items as wishlist_item(wishlist_item)}
-                    <WishlistItem wishlist_item={wishlist_item} is_link_share />
+                    <div>
+                        <WishlistItem wishlist_item={wishlist_item} is_link_share />
+                    </div>
                 {/each}
             </div>
         </div>

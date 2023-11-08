@@ -29,6 +29,9 @@
     let link: string = wishlist_item.link;
     let notes: string = wishlist_item.notes;
     let is_new: boolean = wishlist_item.id == null;
+    let has_notes: boolean = false;
+
+    $: has_notes = notes?.trim().length > 0;
 
     let is_editing: boolean = is_new;
 
@@ -135,7 +138,7 @@
     }
 </script>
 
-<div class="flex space-x-2">
+<div class="flex space-x-2 items-center">
     {#if wishlist_item.is_header}
         <div class="grow">
             <div class="flex items-center space-x-3 pr-2 mt-3">
@@ -173,7 +176,7 @@
             <hr class="mt-2" />
         </div>
         {:else}
-        <div class="grow rounded-md bg-slate-200 p-2">
+        <div class="grow rounded-t-md {is_editing || has_notes ? "" : "rounded-b-md"} bg-slate-200 p-2">
             <div class="flex items-center space-x-3" id="{html_id}">
                 {#if is_editing}
                     <div class="grow">
@@ -218,21 +221,6 @@
                     />
                 {/if}
             </div>
-            <div class="mt-2 bg-slate-300 -m-2 rounded-b-md">
-                {#if is_editing}
-                    <Collapse heading="Description" subtle collapsed>
-                        <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Enter additional information about this item here..."></textarea>
-                    </Collapse>
-                {:else}
-                    {#if notes?.trim().length > 0}
-                        <Collapse heading="Description" subtle collapsed>
-                            <div class="text-sm">
-                                <RichText text={notes} />
-                            </div>
-                        </Collapse>
-                    {/if}
-                {/if}
-            </div>
         </div>
     {/if}
     {#if is_owned}
@@ -244,6 +232,23 @@
         </div>
     {/if}
 </div>
+{#if !wishlist_item.is_header}
+    <div class="bg-slate-300 rounded-b-md {is_owned ? "sm:mr-12" : ""}">
+        {#if is_editing}
+            <Collapse heading="Description" subtle collapsed>
+                <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Enter additional information about this item here..."></textarea>
+            </Collapse>
+        {:else}
+            {#if has_notes}
+                <Collapse heading="Description" subtle collapsed>
+                    <div class="text-sm">
+                        <RichText text={notes} />
+                    </div>
+                </Collapse>
+            {/if}
+        {/if}
+    </div>
+{/if}
 
 <BoughtModal
     is_owner={is_owned}
