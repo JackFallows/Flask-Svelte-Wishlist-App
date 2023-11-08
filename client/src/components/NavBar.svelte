@@ -4,6 +4,7 @@
     import Notification from './Notification.svelte';
     import SlidePanel from './SlidePanel.svelte';
     import PanelMessage from './PanelMessage.svelte';
+    import GoogleSignInButton from './GoogleSignInButton.svelte';
 
     export let page: string = "";
     export let internal_login_enabled: boolean;
@@ -128,12 +129,14 @@
                 </SlidePanel>
                 </div>
             </div>
-            {:else}
+        {:else}
             <div class="button-group">
                 {#if internal_login_enabled}
                     <a class="button" href="{ Views.Auth.SignUp.to_string() }">Sign up</a>
+                    <a class="button" href="{ Views.Auth.Login.to_string() }">Log in</a>
+                {:else}
+                    <GoogleSignInButton href={ Views.Auth.External.Login.to_string() } />
                 {/if}
-                <a class="button" href="{ external_login_page.to_string() }">Log in</a>
             </div>
         {/if}
     </div>

@@ -3,6 +3,7 @@
 
     import { getContext } from 'svelte';
     import { makeRoutes } from "../../routes";
+    import GoogleSignInButton from '../../components/GoogleSignInButton.svelte';
 
     const { Post } = <IHttp>getContext("http");
     const { Api, Views } = makeRoutes(window.base_path);
@@ -68,7 +69,7 @@ Loading...
         <span class="text-4xl text-purple-600">OR</span>
     </div>
     <div class="text-center md:text-left">
-        <a class="danger-button" href="{ Views.Auth.External.Login.to_string() }">Log in with Google</a>
+        <GoogleSignInButton href={ Views.Auth.External.Login.to_string() } />
     </div>
 </div>
 {/await}

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getContext } from 'svelte';
     import { makeRoutes } from '../../routes';
+    import GoogleSignInButton from '../../components/GoogleSignInButton.svelte';
 
     const { Post } = <IHttp>getContext("http");
     const { Views, Api } = makeRoutes(window.base_path);
@@ -9,14 +10,6 @@
     let password: string = "";
 
     let loading_promise: Promise<IHttpResult<void>>;
-
-    async function external_login() {
-        loading_promise = new Promise(() => {
-            location.href = Views.Auth.External.Login.to_string();
-        });
-
-        await loading_promise;
-    }
 
     async function internal_login() {
         const payload = {
@@ -57,7 +50,7 @@ Loading...
         <span class="text-4xl text-purple-600">OR</span>
     </div>
     <div class="text-center md:text-left">
-        <button class="danger-button" on:click={external_login}>Log in with Google</button>
+        <GoogleSignInButton href={ Views.Auth.External.Login.to_string() } />
     </div>
 </div>
 
