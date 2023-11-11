@@ -37,10 +37,10 @@
 </script>
 
 <div>
-    <div class="px-2 pt-2 bg-slate-200 flex space-x-3 items-center">
+    <div class="px-2 pt-2 bg-slate-200 dark:bg-slate-700 flex space-x-3 items-center">
         {#each tabs as tab(tab)}
-            <div class="p-3 {active_tab.id === tab.id ? "bg-white rounded-t-xl" : ""}">
-                <button class="{active_tab.id !== tab.id ? "hover:text-purple-600 hover:underline" : "cursor-default"}" on:click={() => activate_tab(tab)}>{tab.label}</button>
+            <div class="p-3 {active_tab.id === tab.id ? "bg-white dark:bg-slate-600 rounded-t-xl" : ""}">
+                <button class="{active_tab.id !== tab.id ? "hover:text-purple-600 dark:hover:text-purple-300 hover:underline" : "cursor-default"}" on:click={() => activate_tab(tab)}>{tab.label}</button>
             </div>
         {/each}
     </div>

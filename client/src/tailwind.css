@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 .icon-button {
-    @apply rounded-full h-10 w-10 text-center text-black hover:bg-purple-600 hover:text-white transition-all text-3xl;
+    @apply rounded-full h-10 w-10 text-center text-black dark:text-slate-100 hover:bg-purple-600 dark:hover:bg-purple-300 hover:text-white dark:hover:text-black transition-all text-3xl;
 }
 
 .button {
-    @apply bg-white min-w-[36px] hover:bg-purple-600 text-purple-600 hover:text-white rounded-full transition-all p-1 border-purple-600 border-2 disabled:opacity-75 disabled:hover:bg-white disabled:hover:text-purple-600;
+    @apply bg-white dark:bg-transparent min-w-[36px] hover:bg-purple-600 dark:hover:bg-purple-300 text-purple-600 dark:text-slate-100 hover:text-white dark:hover:text-black rounded-full transition-all p-1 border-purple-600 dark:border-slate-100 dark:hover:border-purple-300 border-2 disabled:opacity-75 disabled:hover:bg-white disabled:hover:text-purple-600;
 }
 
 .clear-button {
@@ -15,7 +15,7 @@
 }
 
 .danger-button {
-    @apply bg-white min-w-[36px] border-red-600 border-2 text-red-600 hover:text-white hover:bg-red-600 transition-all rounded-full p-1;
+    @apply bg-white min-w-[36px] border-red-600 border-2 text-red-600 hover:text-white hover:bg-red-600 dark:bg-red-600 dark:text-white dark:hover:bg-red-300 dark:hover:border-red-300 dark:hover:text-black transition-all rounded-full p-1;
 }
 
 .success-button {
@@ -23,7 +23,7 @@
 }
 
 .button-group {
-    @apply bg-white rounded-full flex items-center p-0.5 space-x-2 border-2 border-purple-600;
+    @apply bg-white dark:bg-transparent rounded-full flex items-center p-0.5 space-x-2 border-2 border-purple-600 dark:border-slate-100;
 }
 
 .button-group > .button {
@@ -31,5 +31,5 @@
 }
 
 .text-input {
-    @apply p-2 border-2 border-slate-300 hover:border-purple-600 transition-all rounded-md w-full;
+    @apply p-2 border-2 dark:bg-slate-700 border-slate-300 dark:border-slate-800 dark:text-slate-100 hover:border-purple-600 dark:hover:border-purple-300 transition-all rounded-md w-full;
 }

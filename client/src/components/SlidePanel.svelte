@@ -5,7 +5,7 @@
 </script>
 
 {#if visible}
-    <div class="absolute w-full sm:w-96 right-0 top-[64px] full-height border-l-[1px] border-slate-200 bg-white p-2 shadow-lg overflow-y-scroll" transition:fly={{ x: 100, duration: 100 }}>
+    <div class="absolute w-full sm:w-96 right-0 top-[64px] full-height border-l-[1px] border-slate-200 dark:border-0 bg-white dark:bg-slate-600 dark:text-slate-100 p-2 shadow-lg overflow-y-scroll" transition:fly={{ x: 100, duration: 100 }}>
         <slot></slot>
     </div>
 {/if}

@@ -34,7 +34,7 @@
             {notification.created_at.toLocaleString()}
         </span>
         {#if notification.type !== NotificationType.SHARE}
-        <button class="hover:text-purple-600 text-sm" on:click={() => read_notification()}>
+        <button class="hover:text-purple-600 dark:hover:text-purple-300 text-sm" on:click={() => read_notification()}>
             <span class="fa-solid fa-xmark fa-fw"></span>
         </button>
         {/if}
@@ -42,7 +42,7 @@
     <div slot="body">
         <p>{notification.message}</p>
         {#if notification.type === NotificationType.SHARE && notification.shared_wishlist_id != null}
-        <p>Accept?</p>
+        <p class="mt-3 mb-1">Accept?</p>
         <div class="inline-block">
             <div class="button-group">
                 <button class="button" on:click={() => accept_share()}>
