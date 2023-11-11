@@ -49,13 +49,13 @@
 
 <main>
 	{#if !user_is_authenticated}
-		<div class="rounded-lg border border-slate-200 p-6 shadow">
-			<h1 class="text-purple-600 text-4xl sm:text-6xl">Wishlist App</h1>
+		<div class="rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow dark:text-slate-100">
+			<h1 class="text-purple-600 dark:text-purple-300 text-4xl sm:text-6xl">Wishlist App</h1>
 			<p class="text-xl mt-3">Log in or create an account to get started</p>
 		</div>
-		<div class="flex flex-col space-y-6 sm:flex-row sm:space-x-6 sm:space-y-0 justify-between mt-6">
-			<div class="rounded-lg border border-slate-200 p-6 shadow w-[100%] sm:w-[50%]">
-				<h2 class="text-purple-600 text-2xl sm:text-4xl mb-3">Create...</h2>
+		<div class="flex flex-col space-y-6 sm:flex-row sm:space-x-6 sm:space-y-0 justify-between mt-6 dark:text-slate-100">
+			<div class="rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow w-[100%] sm:w-[50%]">
+				<h2 class="text-purple-600 dark:text-purple-300 text-2xl sm:text-4xl mb-3">Create...</h2>
 				<ul class="text-left text-xl">
 					<li>Create multiple separate lists</li>
 					<li>Add dozens of items with a link/name and optional description</li>
@@ -63,8 +63,8 @@
 					<li>Sort them how you'd like</li>
 				</ul>
 			</div>
-			<div class="rounded-lg border border-slate-200 p-6 shadow w-[100%] sm:w-[50%]">
-				<h2 class="text-purple-600 text-2xl sm:text-4xl mb-3">...And share</h2>
+			<div class="rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow w-[100%] sm:w-[50%]">
+				<h2 class="text-purple-600 dark:text-purple-300 text-2xl sm:text-4xl mb-3">...And share</h2>
 				<ul class="text-left text-xl">
 					<li>Share select lists that you have created</li>
 					<li>Send them directly to other users of the site, or copy a link</li>
