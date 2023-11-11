@@ -49,13 +49,13 @@
 
 <main>
 	{#if !user_is_authenticated}
-		<div class="rounded-lg border border-slate-200 p-6 shadow">
-			<h1 class="text-purple-600 text-4xl sm:text-6xl">Wishlist App</h1>
+		<div class="rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow dark:text-slate-100">
+			<h1 class="text-purple-600 dark:text-purple-300 text-4xl sm:text-6xl">Wishlist App</h1>
 			<p class="text-xl mt-3">Log in or create an account to get started</p>
 		</div>
-		<div class="flex flex-col space-y-6 sm:flex-row sm:space-x-6 sm:space-y-0 justify-between mt-6">
-			<div class="rounded-lg border border-slate-200 p-6 shadow w-[100%] sm:w-[50%]">
-				<h2 class="text-purple-600 text-2xl sm:text-4xl mb-3">Create...</h2>
+		<div class="flex flex-col space-y-6 sm:flex-row sm:space-x-6 sm:space-y-0 justify-between mt-6 dark:text-slate-100">
+			<div class="rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow w-[100%] sm:w-[50%]">
+				<h2 class="text-purple-600 dark:text-purple-300 text-2xl sm:text-4xl mb-3">Create...</h2>
 				<ul class="text-left text-xl">
 					<li>Create multiple separate lists</li>
 					<li>Add dozens of items with a link/name and optional description</li>
@@ -63,8 +63,8 @@
 					<li>Sort them how you'd like</li>
 				</ul>
 			</div>
-			<div class="rounded-lg border border-slate-200 p-6 shadow w-[100%] sm:w-[50%]">
-				<h2 class="text-purple-600 text-2xl sm:text-4xl mb-3">...And share</h2>
+			<div class="rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow w-[100%] sm:w-[50%]">
+				<h2 class="text-purple-600 dark:text-purple-300 text-2xl sm:text-4xl mb-3">...And share</h2>
 				<ul class="text-left text-xl">
 					<li>Share select lists that you have created</li>
 					<li>Send them directly to other users of the site, or copy a link</li>
@@ -73,7 +73,7 @@
 			</div>
 		</div>
 	{:else}
-		<h1 class="text-purple-600 text-4xl sm:text-6xl">Hello {name}!</h1>
+		<h1 class="text-purple-600 dark:text-purple-300 text-4xl sm:text-6xl mb-3">Hello {name}!</h1>
 	{/if}
 </main>
 
@@ -83,8 +83,8 @@
 {:then}
 <div class="flex flex-col space-y-3 sm:flex-row sm:space-x-3 sm:space-y-0">
 	<div class="{shared_wishlists.length > 0 ? "sm:w-[50%]" : "grow"}">
-		<div class="rounded-md border-2 border-slate-200">
-			<div class="bg-slate-200 text-center p-2">
+		<div class="rounded-md border-2 border-slate-200 dark:border-slate-800 dark:text-slate-100">
+			<div class="bg-slate-200 dark:bg-slate-800 text-center p-2">
 				<h2>Your wishlists</h2>
 			</div>
 			<div class="p-2">
@@ -109,17 +109,17 @@
 	</div>
 	{#if shared_wishlists.length > 0}
 	<div class="sm:w-[50%]">
-		<div class="rounded-md border-2 border-slate-200">
-			<div class="bg-slate-200 text-center p-2">
+		<div class="rounded-md border-2 border-slate-200 dark:border-slate-800 dark:text-slate-100">
+			<div class="bg-slate-200 dark:bg-slate-800 text-center p-2">
 				<h2>Friends' lists</h2>
 			</div>
 			<div class="p-2 flex flex-col space-y-3">
 				{#each shared_wishlists as shared_wishlist_group}
-					<div class="{shared_wishlist_group.owner_name == null ? "" : "border"} rounded-md border-slate-200 p-2 flex flex-col space-y-3">
+					<div class="{shared_wishlist_group.owner_name == null ? "" : "border"} rounded-md border-slate-200 dark:border-slate-800 p-2 flex flex-col space-y-3">
 						{#if shared_wishlist_group.owner_name != null}
 							<div>
-								<span class="text-base text-black">{shared_wishlist_group.owner_name}</span>
-								<span class="text-sm text-slate-500">{shared_wishlist_group.owner_email}</span>
+								<span class="text-base text-black dark:text-slate-100">{shared_wishlist_group.owner_name}</span>
+								<span class="text-sm text-slate-500 dark:text-slate-300">{shared_wishlist_group.owner_email}</span>
 							</div>
 						{/if}
 						{#each shared_wishlist_group.wishlists as shared_wishlist}

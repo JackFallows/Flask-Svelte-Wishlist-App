@@ -15,7 +15,6 @@
     const { Views, Api } = makeRoutes(window.base_path);
 
     const user_is_authenticated = name != null;
-    const external_login_page = internal_login_enabled ? Views.Auth.Login : Views.Auth.External.Login;
 
     let notifications_panel_visible: boolean = false;
     let user_panel_visible: boolean = false;
@@ -53,12 +52,12 @@
     }
 </script>
 
-<nav class="z-50 fixed top-0 flex w-screen bg-slate-300 h-16 items-center text-xl px-3 justify-between shadow-md">
+<nav class="z-50 fixed top-0 flex w-screen bg-slate-300 dark:bg-slate-900 h-16 items-center text-xl px-3 justify-between shadow-md">
     <div class="flex items-center space-x-3">
         <a class="icon-button" aria-current="page" href="{ Views.Home }" aria-label="Home button"><span class="fa-solid fa-home"></span></a>
         {#if page != ""}
-        <span class="fa fa-chevron-right"></span>
-        <span>{page}</span>
+        <span class="fa fa-chevron-right dark:text-slate-100"></span>
+        <span class="dark:text-slate-100">{page}</span>
         {/if}
     </div>
     <div class="flex space-x-4 items-center">
@@ -70,7 +69,7 @@
                 </span>
             </a>
             <div class="flex items-center">
-                <div class="p-3 {notifications_panel_visible ? 'bg-white rounded-t-xl' : ''}">
+                <div class="p-3 {notifications_panel_visible ? 'bg-white dark:bg-slate-600 rounded-t-xl' : ''}">
                     <button class="icon-button relative" type="button" aria-label="Notifications button" on:click={toggle_notifications_panel}>
                         <span class="fa-solid fa-bell pointer-events-none {notifications?.length > 0 ? 'text-orange-600' : ''}"></span>
                         {#if notifications?.length > 0}
@@ -82,7 +81,7 @@
                             <PanelMessage>
                                 <div slot="heading" class="flex items-center">
                                     <span class="grow">Email notifications are turned {window.user_has_enabled_email ? "on" : "off"}</span>
-                                    <a class="hover:text-purple-600 text-sm" href="{Views.Profile}">
+                                    <a class="hover:text-purple-600 dark:hover:text-purple-300 text-sm" href="{Views.Profile}">
                                         <span class="fa-solid fa-gear fa-fw"></span>
                                     </a>
                                 </div>
@@ -104,9 +103,9 @@
                         {/await}
                     </SlidePanel>
                 </div>
-                <div class="p-3 {user_panel_visible ? 'bg-white rounded-t-xl' : ''}">
+                <div class="p-3 {user_panel_visible ? 'bg-white dark:bg-slate-600 rounded-t-xl' : ''}">
                     {#if profile_pic != null}
-                    <button class="rounded-full h-10 w-10 hover:bg-purple-600 transition-all" type="button" on:click={toggle_user_panel}>
+                    <button class="rounded-full h-10 w-10 hover:bg-purple-600 dark:hover:bg-purple-300 transition-all" type="button" on:click={toggle_user_panel}>
                         <img src="{ profile_pic }" alt="Hi, {name}" width="30" height="30" class="rounded-full mx-auto pointer-events-none">
                     </button>
                     {:else}
@@ -116,12 +115,12 @@
                     {/if}
                     <SlidePanel bind:visible={user_panel_visible}>
                         <div class="flex flex-col space-y-3">
-                            <a class="w-full block bg-white hover:bg-slate-100 p-1" href="{ Views.Profile }">
+                            <a class="w-full block bg-white dark:bg-slate-600 hover:bg-slate-100 dark:hover:bg-slate-500 dark:text-slate-100 p-1" href="{ Views.Profile }">
                                 <span class="fa-fw fa-regular fa-user"></span>
                                 Profile
                             </a>
                             <hr />
-                            <a class="w-full block bg-white hover:bg-slate-100 p-1" href="{ Views.Auth.Logout.to_string() }">
+                            <a class="w-full block bg-white dark:bg-slate-600 hover:bg-slate-100 dark:hover:bg-slate-500 dark:text-slate-100 p-1" href="{ Views.Auth.Logout.to_string() }">
                                 <span class="fa-fw fa-solid fa-person-walking-arrow-right"></span>
                                 Logout
                             </a>
