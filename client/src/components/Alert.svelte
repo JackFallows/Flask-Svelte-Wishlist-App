@@ -7,10 +7,10 @@
     $: {
         switch (color) {
             case AlertColor.YELLOW:
-                bg_color = "bg-yellow-300";
+                bg_color = "bg-yellow-300 dark:bg-yellow-700";
                 break;
             case AlertColor.BLUE:
-                bg_color = "bg-blue-200";
+                bg_color = "bg-blue-200 dark:bg-blue-800";
                 break;
         }
     }
