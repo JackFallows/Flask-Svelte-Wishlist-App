@@ -262,51 +262,53 @@
 </script>
 
 <Toast bind:this={toast} />
-{#await loading_promise}
-    Loading...
-{:then}
-    {#if is_owned}
-        <div class="pr-2">
-            <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
-        </div>
-    {:else}
-        <div class="flex flex-col sm:flex-row">
-            <h1 class="text-2xl grow">{wishlist.name}</h1>
-            {#if wishlist_as_share != null && wishlist_as_share.owner_name != null}
-                <div>
-                    <span class="fa-solid fa-users"></span>
-                    <span class="text-lg text-black">{wishlist_as_share.owner_name}</span>
-                    <span class="text-base text-slate-600">{wishlist_as_share.owner_email}</span>
-                </div>
-            {/if}
-        </div>
-    {/if}
-
-    {#if is_owned && wishlist_id != 0}
-        <div class="mt-8 flex space-x-3">
-            <button class="button" on:click={() => add_item(false)}>Add item</button>
-            <button class="button" on:click={() => add_item(true)}>Add heading</button>
-        </div>
-    {/if}
-
-    <div class="mt-8 flex space-y-8 flex-col">
-        {#each visible_wishlist_items as wishlist_item(wishlist_item)}
-            <div animate:flip={{ duration: 200 }}>
-                <WishlistItem
-                    wishlist_item={wishlist_item}
-                    is_owned={is_owned}
-                    has_other_wishlists={has_other_wishlists}
-                    most_recent_bought_item={most_recent_bought_item}
-                    on:change_text={change_item_text}
-                    on:move_out={move_item_out}
-                    on:move_to_top={move_item_to_top}
-                    on:move_up={move_item_up}
-                    on:move_down={move_item_down}
-                    on:move_to_bottom={move_item_to_bottom}
-                    on:buy={mark_item_bought}
-                    on:remove={delete_item}
-                />
+<div class="dark:text-slate-100">
+    {#await loading_promise}
+        Loading...
+    {:then}
+        {#if is_owned}
+            <div class="pr-2">
+                <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
             </div>
-        {/each}
-    </div>
-{/await}
+        {:else}
+            <div class="flex flex-col sm:flex-row">
+                <h1 class="text-2xl grow">{wishlist.name}</h1>
+                {#if wishlist_as_share != null && wishlist_as_share.owner_name != null}
+                    <div>
+                        <span class="fa-solid fa-users"></span>
+                        <span class="text-lg text-black dark:text-slate-100">{wishlist_as_share.owner_name}</span>
+                        <span class="text-base text-slate-600 dark:text-slate-300">{wishlist_as_share.owner_email}</span>
+                    </div>
+                {/if}
+            </div>
+        {/if}
+
+        {#if is_owned && wishlist_id != 0}
+            <div class="mt-8 flex space-x-3">
+                <button class="button" on:click={() => add_item(false)}>Add item</button>
+                <button class="button" on:click={() => add_item(true)}>Add heading</button>
+            </div>
+        {/if}
+
+        <div class="mt-8 flex space-y-8 flex-col">
+            {#each visible_wishlist_items as wishlist_item(wishlist_item)}
+                <div animate:flip={{ duration: 200 }}>
+                    <WishlistItem
+                        wishlist_item={wishlist_item}
+                        is_owned={is_owned}
+                        has_other_wishlists={has_other_wishlists}
+                        most_recent_bought_item={most_recent_bought_item}
+                        on:change_text={change_item_text}
+                        on:move_out={move_item_out}
+                        on:move_to_top={move_item_to_top}
+                        on:move_up={move_item_up}
+                        on:move_down={move_item_down}
+                        on:move_to_bottom={move_item_to_bottom}
+                        on:buy={mark_item_bought}
+                        on:remove={delete_item}
+                    />
+                </div>
+            {/each}
+        </div>
+    {/await}
+</div>

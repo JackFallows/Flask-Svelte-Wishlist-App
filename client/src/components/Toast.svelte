@@ -20,8 +20,8 @@
 
         switch (type) {
             case ToastType.INFO:
-                bg_color = "bg-slate-800";
-                text_color = "text-white";
+                bg_color = "bg-slate-800 dark:bg-slate-400";
+                text_color = "text-white dark:text-black";
                 icon = "fa-info";
                 break;
             case ToastType.SUCCESS:

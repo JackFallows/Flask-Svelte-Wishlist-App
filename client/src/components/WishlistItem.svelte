@@ -176,7 +176,7 @@
             <hr class="mt-2" />
         </div>
         {:else}
-        <div class="grow rounded-t-md {is_editing || has_notes ? "" : "rounded-b-md"} bg-slate-200 p-2">
+        <div class="grow rounded-t-md {is_editing || has_notes ? "" : "rounded-b-md"} bg-slate-200 dark:bg-slate-800 p-2">
             <div class="flex items-center space-x-3" id="{html_id}">
                 {#if is_editing}
                     <div class="grow">
@@ -233,7 +233,7 @@
     {/if}
 </div>
 {#if !wishlist_item.is_header}
-    <div class="bg-slate-300 rounded-b-md {is_owned ? "sm:mr-12" : ""}">
+    <div class="bg-slate-300 dark:bg-slate-900 rounded-b-md {is_owned ? "sm:mr-12" : ""}">
         {#if is_editing}
             <Collapse heading="Description" subtle collapsed>
                 <textarea class="text-input grow" bind:value={notes} id="{html_id + "-notes"}" placeholder="Enter additional information about this item here..."></textarea>

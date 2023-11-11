@@ -41,7 +41,7 @@
                     Don't let the wishlist owner know until...
                 </label>
                 {#if defer_bought}
-                    <input type="date" min={min_date} bind:value={defer_until} />
+                    <input type="date" class="dark:bg-slate-800 dark:border-slate-900 border-2 border-slate-300 dark:text-slate-100 dark:[color-scheme:dark] p-2 rounded-md" min={min_date} bind:value={defer_until} />
                 {/if}
             </div>
         {/if}

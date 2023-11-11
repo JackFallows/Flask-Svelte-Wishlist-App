@@ -53,7 +53,7 @@
 
 {#each fragments as fragment}
     {#if fragment.is_link}
-        <a class="text-purple-600 hover:underline" href="{fragment.text}" target="_blank" style="overflow-wrap: anywhere">{fragment.text}</a>
+        <a class="text-purple-600 dark:text-purple-300 hover:underline" href="{fragment.text}" target="_blank" style="overflow-wrap: anywhere">{fragment.text}</a>
     {:else if fragment.is_line_break}
         <br />
     {:else}

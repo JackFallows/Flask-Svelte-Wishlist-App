@@ -33,7 +33,7 @@
 </script>
 
 <div class="w-full">
-    <button class="{subtle ? 'hover:text-purple-600' : 'bg-slate-200'} p-2 w-full flex justify-between" on:click={() => toggle()}>
+    <button class="{subtle ? 'hover:text-purple-600 dark:hover:text-purple-300' : 'bg-slate-200'} p-2 w-full flex justify-between" on:click={() => toggle()}>
         <span class="{subtle ? 'text-sm' : 'text-xl'}">{heading}</span>
         <span class="{subtle ? 'text-base' : 'text-2xl'} fa-solid {collapsed ? 'fa-chevron-down' : 'fa-chevron-up'}"></span>
     </button>
