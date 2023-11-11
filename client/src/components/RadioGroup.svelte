@@ -13,7 +13,7 @@
 
 <div class="flex flex-col space-y-1">
     {#each items as item}
-        <label for={`radio-option-${group_id}-${item.id}`} class="container border-2 border-slate-300 hover:border-purple-600 rounded">
+        <label for={`radio-option-${group_id}-${item.id}`} class="container border-2 border-slate-300 dark:border-slate-900 hover:border-purple-600 dark:hover:border-purple-300 rounded">
             {item.name}
             <input type="radio" class="" id={`radio-option-${group_id}-${item.id}`} name={group_id} value={item} bind:group={selected_item} />
             <span class="checkmark"></span>
@@ -61,9 +61,15 @@
         background-color: #ccc;
     }
 
-    /* When the radio button is checked, add a blue background */
+    /* When the radio button is checked, add a purple background */
     .container input:checked ~ .checkmark {
         background-color: rgb(147, 51, 234);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .container input:checked ~ .checkmark {
+            background-color: rgb(216, 180, 254);
+        }
     }
 
     /* Create the indicator (the dot/circle - hidden when not checked) */
