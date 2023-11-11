@@ -19,7 +19,7 @@
 }
 
 .success-button {
-    @apply bg-white min-w-[36px] border-green-600 border-2 text-green-600 hover:text-white hover:bg-green-600 transition-all rounded-full p-1;
+    @apply bg-white min-w-[36px] border-green-600 border-2 text-green-600 hover:text-white hover:bg-green-600 dark:bg-green-600 dark:text-white dark:hover:bg-green-300 dark:hover:border-green-300 dark:hover:text-black transition-all rounded-full p-1;
 }
 
 .button-group {
@@ -31,5 +31,5 @@
 }
 
 .text-input {
-    @apply p-2 border-2 dark:bg-slate-700 border-slate-300 dark:border-slate-800 dark:text-slate-100 hover:border-purple-600 dark:hover:border-purple-300 transition-all rounded-md w-full;
+    @apply p-2 border-2 dark:bg-slate-800 border-slate-300 dark:border-slate-900 dark:text-slate-100 hover:border-purple-600 dark:hover:border-purple-300 transition-all rounded-md w-full;
 }
