@@ -12,6 +12,7 @@ from flask import (
 from flask_login import (
     LoginManager
 )
+from flask_socketio import SocketIO, emit
 
 # Internal imports
 from helpers import custom_render_template
@@ -24,6 +25,7 @@ template_dir = os.path.dirname(__file__)
 template_dir = os.path.join(template_dir, 'client', 'public')
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
+socketio = SocketIO(app)
 
 from views.auth import auth
 from views.external_auth import external_auth
@@ -70,7 +72,15 @@ def index():
 def home(path):
     return send_from_directory("client/public", path)
 
+@socketio.on('connect')
+def connect():
+    emit('my response', { 'data': 'Connected' })
+    
+# @socketio.on('disconnect')
+# def disconnect():
+#     print('Client disconnected')
 
 if __name__ == "__main__":
-    app.run(debug=True, ssl_context=('secure/cert.pem', 'secure/key.pem'))
+    socketio.run(app, debug=True, ssl_context=('secure/cert.pem', 'secure/key.pem'))
+    #app.run(debug=True, ssl_context=('secure/cert.pem', 'secure/key.pem'))
 
