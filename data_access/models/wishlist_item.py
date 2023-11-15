@@ -189,7 +189,7 @@ class WishlistItem():
         with get_db_connection() as db:
             order_number_result = db.execute(
                 """
-                SELECT MAX(order_number) FROM wishlist_item WHERE wishlist_id = ?
+                SELECT IFNULL(MAX(order_number), 0) FROM wishlist_item WHERE wishlist_id = ?
                 """,
                 (wishlist_id,)
             ).fetchone()
