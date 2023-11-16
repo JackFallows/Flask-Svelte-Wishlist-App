@@ -1,5 +1,7 @@
+import os
 from typing import List
 from datetime import datetime
+
 from data_access.models.user import User
 from data_access.models.user_shared_wishlist import UserSharedWishlist
 from data_access.models.wishlist import Wishlist
@@ -7,6 +9,8 @@ from data_access.models.wishlist_item import WishlistItem
 from data_access.models.notification import Notification
 from services.email_service import send_share_email, send_update_email, send_owner_bought_email
 from enums.notification_type import NotificationType
+
+NOTIFICATIONS_API = os.environ.get('NOTIFICATIONS_API')
 
 def notify_wishlist_shared(source_user: User, target_user: User, wishlist: Wishlist):
     subject = f"{source_user.name} shared a wishlist with you!"

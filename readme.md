@@ -44,3 +44,8 @@ SMTP_SERVER
 SMTP_PORT
 SMTP_PASSWORD
 ```
+
+Environment variable for notifications API microservice URL
+```
+NOTIFICATIONS_API
+```

@@ -11,6 +11,7 @@ interface Window {
     email_is_configured: boolean;
     version_number: string;
     user_has_enabled_email: boolean;
+    notifications_api_url: string;
 }
 
 interface IValidationState {
