@@ -1,13 +1,17 @@
-import express from "express";
-import { createServer } from 'node:http';
-import { Server } from "socket.io";
+const express = require("express");
+const { createServer } = require('node:http');
+const { Server } = require("socket.io");
 
 const app = express();
+
+const cors_origin = process.env.CORS_ORIGIN
+    ? [...process.env.CORS_ORIGIN.split(",")]
+    : "https://127.0.0.1:5000";
 
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.CORS_ORIGIN ?? "https://127.0.0.1:5000"
+        origin: cors_origin
     }
 });
 
@@ -23,6 +27,4 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(process.env.PORT, () => {
-    console.log(`server running at http://localhost:${process.env.PORT}`);
-});
+server.listen(process.env.PORT);
