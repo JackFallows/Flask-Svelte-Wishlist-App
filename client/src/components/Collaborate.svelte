@@ -1,14 +1,27 @@
 <script lang="ts">
-    import { getContext } from "svelte";
+    import { getContext, createEventDispatcher } from "svelte";
     import Badge from "./Badge.svelte";
     import { BadgeColor } from "../enums";
 
     export let room: string;
     export let hidden: boolean = false;
+    export let listen_for: string[] = null;
+
+    const dispatch = createEventDispatcher();
 
     const get_is_connected = <() => boolean>getContext('get_is_connected');
     const join = <Join>getContext('join');
     const respond = <Respond>getContext('respond');
+
+    if (listen_for) {
+        for (const ev of listen_for) {
+            respond(ev, (data) => {
+                dispatch("notification", { event_name: ev, ...data });
+            });
+        }
+    }
+
+    export const notify = <Notify>getContext('notify');
 
     let active_users: number = 0;
     let connected: boolean = get_is_connected();

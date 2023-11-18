@@ -27,6 +27,10 @@ io.on('connection', (socket) => {
         if (event_name.startsWith('join:')) {
             const room = event_name.slice(event_name.indexOf(':') + 1);
             socket.join(room);
+        } else if (event_name.startsWith('item:')) {
+            const action = event_name.slice(event_name.indexOf(':') + 1);
+            const data = args[0];
+            socket.to(data.room).emit(action, data);
         }
     });
 

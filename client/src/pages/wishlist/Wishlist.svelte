@@ -14,6 +14,7 @@
     const { Api, Views } = makeRoutes(window.base_path);
 
     let toast: Toast;
+    let collaborate: Collaborate;
 
     let wishlist: IWishlist;
     let wishlist_items: IWishlistItem[] = [];
@@ -200,6 +201,8 @@
 
         bought_items.push(bought_item);
         bought_items = bought_items; // trigger reactivity
+
+        collaborate?.notify('item:bought', { wishlist_item_id: item.id });
     }
 
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
@@ -260,6 +263,20 @@
         toast.show("Saved!", ToastType.SUCCESS);
         return await result.get_json();
     }
+
+    async function handle_collaborator_notification(event: CustomEvent<{ event_name: string, wishlist_item_id: number }>) {
+        const { event_name, wishlist_item_id } = event.detail;
+
+        if (event_name === "bought") {
+            toast.show("An item was bought by another user", ToastType.INFO);
+            const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
+            const tmp_wishlist: IWishlist = wishlistPayload.get_json();
+            bought_items = tmp_wishlist.bought_items ?? [];
+            for (const bought_item of bought_items) {
+                bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
+            }
+        }
+    }
 </script>
 
 <Toast bind:this={toast} />
@@ -284,7 +301,7 @@
                     {/if}
                 </div>
             {/if}
-            <Collaborate room={`wishlist:${wishlist_id}`} hidden={is_owned} />
+            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "bought" ]} on:notification={handle_collaborator_notification} />
         </div>
 
         {#if is_owned && wishlist_id != 0}
