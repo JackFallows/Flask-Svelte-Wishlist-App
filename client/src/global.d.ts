@@ -1,5 +1,9 @@
 /// <reference types="svelte" />
 
+type Join = (room: string) => void;
+type Notify = (event_name: string, data: any) => void;
+type Respond = (to: string, with_callback: (data: any) => void) => void;
+
 interface Window {
     page_title?: string;
     internal_login_enabled: boolean;

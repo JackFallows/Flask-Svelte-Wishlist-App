@@ -21,10 +21,30 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('a user connected');
-    io.emit('my response');
+    socket.emit('connected');
+
+    socket.onAny((event_name, ...args) => {
+        if (event_name.startsWith('join:')) {
+            const room = event_name.slice(event_name.indexOf(':') + 1);
+            socket.join(room);
+        }
+    });
+
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
+});
+
+io.of("/").adapter.on('join-room', (room, id) => {
+    if (room !== id) {
+        io.to(room).emit('user-joined');
+    }
+});
+
+io.of("/").adapter.on('leave-room', (room, id) => {
+    if (room !== id) {
+        io.to(room).emit('user-left');
+    }
 });
 
 server.listen(process.env.PORT);

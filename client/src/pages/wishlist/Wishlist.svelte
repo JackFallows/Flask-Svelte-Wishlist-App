@@ -12,6 +12,16 @@
     const { Delete, Get, Patch, Post } = <IHttp>getContext("http");
     const { Api, Views } = makeRoutes(window.base_path);
 
+    const join = <Join>getContext('join');
+    const respond = <Respond>getContext('respond');
+
+    respond("user-joined", (data) => {
+        console.log("user joined wishlist");
+    });
+    respond("user-left", () => {
+        console.log("user left wishlist");
+    });
+
     let toast: Toast;
 
     let wishlist: IWishlist;
@@ -64,6 +74,8 @@
         }
 
         total_wishlists = countPayload.get_json().total_wishlists;
+
+        join(`wishlist:${wishlist_id}`);
     }
 
     function add_item(is_header: boolean = false) {
