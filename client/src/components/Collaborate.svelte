@@ -13,44 +13,43 @@
     let active_users: number = 0;
     let connected: boolean = get_is_connected();
 
+    let title: string;
+
+    $: title = !connected ? "Live updates are currently unavailable" :  active_users === 1
+        ? "You are currently the only person viewing this page"
+        : active_users === 2
+            ? "You and 1 other person are currently viewing this page"
+            : `You and ${active_users - 1} other people are currently viewing this page`;
+
     join(room);
 
-    respond("user-joined", (data: { clients: number }) => {
-        console.log("user joined wishlist");
-        active_users = data.clients;
-    });
-    respond("user-left", (data: { clients: number }) => {
-        console.log("user left wishlist");
-        active_users = data.clients;
-    });
-    respond("disconnect", () => {
-        connected = false;
-    });
-    respond("connected", () => {
-        connected = true;
-    });
+    if (!hidden) {
+        respond("user-joined", (data: { clients: number }) => {
+            active_users = data.clients;
+        });
+        respond("user-left", (data: { clients: number }) => {
+            active_users = data.clients;
+        });
+        respond("disconnect", () => {
+            connected = false;
+        });
+        respond("connected", () => {
+            connected = true;
+        });
+    }
 </script>
 
 {#if !hidden}
-
-{#if connected}
-    <Badge color={BadgeColor.GREEN}>
-        <span class="fa-solid fa-users"></span>
-        {active_users}
-        <!-- {#if active_users === 1}
-            You are currently the only person viewing this page
-        {:else}
-            {#if (active_users - 1) === 1}
-                There is currently 1 other person viewing this page
-            {:else}
-                There are currently {active_users - 1} other people viewing this page
-            {/if}
-        {/if} -->
-    </Badge>
-{:else}
-    <Badge color={BadgeColor.YELLOW}>
-        <span class="fa-solid fa-triangle-exclamation"></span>
-    </Badge>
-{/if}
-
+<div title={title}>
+    {#if connected}
+        <Badge color={BadgeColor.GREEN}>
+            <span class="fa-solid fa-users"></span>
+            {active_users}
+        </Badge>
+    {:else}
+        <Badge color={BadgeColor.YELLOW}>
+            <span class="fa-solid fa-triangle-exclamation"></span>
+        </Badge>
+    {/if}
+</div>
 {/if}
