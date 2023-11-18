@@ -6,21 +6,12 @@
     import EditableHeading from '../../components/EditableHeading.svelte';
     import Toast from '../../components/Toast.svelte';
     import WishlistItem from '../../components/WishlistItem.svelte';
+    import Collaborate from '../../components/Collaborate.svelte';
 
     export let wishlist_id: number;
 
     const { Delete, Get, Patch, Post } = <IHttp>getContext("http");
     const { Api, Views } = makeRoutes(window.base_path);
-
-    const join = <Join>getContext('join');
-    const respond = <Respond>getContext('respond');
-
-    respond("user-joined", (data) => {
-        console.log("user joined wishlist");
-    });
-    respond("user-left", () => {
-        console.log("user left wishlist");
-    });
 
     let toast: Toast;
 
@@ -74,8 +65,6 @@
         }
 
         total_wishlists = countPayload.get_json().total_wishlists;
-
-        join(`wishlist:${wishlist_id}`);
     }
 
     function add_item(is_header: boolean = false) {
@@ -278,22 +267,25 @@
     {#await loading_promise}
         Loading...
     {:then}
-        {#if is_owned}
-            <div class="pr-2">
-                <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
-            </div>
-        {:else}
-            <div class="flex flex-col sm:flex-row">
-                <h1 class="text-2xl grow">{wishlist.name}</h1>
-                {#if wishlist_as_share != null && wishlist_as_share.owner_name != null}
-                    <div>
-                        <span class="fa-solid fa-users"></span>
-                        <span class="text-lg text-black dark:text-slate-100">{wishlist_as_share.owner_name}</span>
-                        <span class="text-base text-slate-600 dark:text-slate-300">{wishlist_as_share.owner_email}</span>
-                    </div>
-                {/if}
-            </div>
-        {/if}
+        <div class="sticky top-16 bg-white dark:bg-slate-700 -mt-4 py-4 flex justify-between items-center border-b border-slate-300">
+            {#if is_owned}
+                <div class="pr-2 grow">
+                    <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
+                </div>
+            {:else}
+                <div class="flex flex-col">
+                    <h1 class="text-2xl grow">{wishlist.name}</h1>
+                    {#if wishlist_as_share != null && wishlist_as_share.owner_name != null}
+                        <div>
+                            <span class="fa-solid fa-users"></span>
+                            <span class="text-lg text-black dark:text-slate-100">{wishlist_as_share.owner_name}</span>
+                            <span class="text-base text-slate-600 dark:text-slate-300">{wishlist_as_share.owner_email}</span>
+                        </div>
+                    {/if}
+                </div>
+            {/if}
+            <Collaborate room={`wishlist:${wishlist_id}`} hidden={is_owned} />
+        </div>
 
         {#if is_owned && wishlist_id != 0}
             <div class="mt-8 flex space-x-3">

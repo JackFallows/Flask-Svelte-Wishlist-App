@@ -4,14 +4,24 @@
 
     const socket = io(window.notifications_api_url);
 
+    let is_connected: boolean = false;
     let current_room: string = null;
 
     socket.on('connected', () => {
         console.log('Connected');
+        is_connected = true;
 
         if (current_room) {
             socket.emit(`join:${current_room}`);
         }
+    });
+
+    socket.on('disconnect', () => {
+        is_connected = false;
+    });
+
+    setContext('get_is_connected', () => {
+        return is_connected;
     });
 
     setContext('join', (room: string) => {

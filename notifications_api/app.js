@@ -37,14 +37,22 @@ io.on('connection', (socket) => {
 
 io.of("/").adapter.on('join-room', (room, id) => {
     if (room !== id) {
-        io.to(room).emit('user-joined');
+        io.to(room).emit('user-joined', {
+            clients: get_room_clients(room)
+        });
     }
 });
 
 io.of("/").adapter.on('leave-room', (room, id) => {
     if (room !== id) {
-        io.to(room).emit('user-left');
+        io.to(room).emit('user-left', {
+            clients: get_room_clients(room)
+        });
     }
 });
 
 server.listen(process.env.PORT);
+
+function get_room_clients(room) {
+    return io.sockets.adapter.rooms.get(room).size;
+}
