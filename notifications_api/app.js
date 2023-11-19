@@ -15,11 +15,11 @@ const io = new Server(server, {
     }
 });
 
-app.get('/', (req, res) => {
-    res.send('<h1>Hello world</h1>');
-});
+const workspaces = io.of(/^\/\w+$/);
 
-io.on('connection', (socket) => {
+workspaces.on('connection', (socket) => {
+    const workspace = socket.nsp;
+
     console.log('a user connected');
     socket.emit('connected');
 
@@ -37,26 +37,26 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
-});
 
-io.of("/").adapter.on('join-room', (room, id) => {
-    if (room !== id) {
-        io.to(room).emit('user-joined', {
-            clients: get_room_clients(room)
-        });
-    }
-});
+    workspace.adapter.on('join-room', (room, id) => {
+        if (room !== id) {
+            workspace.to(room).emit('user-joined', {
+                clients: get_room_clients(workspace, room)
+            });
+        }
+    });
 
-io.of("/").adapter.on('leave-room', (room, id) => {
-    if (room !== id) {
-        io.to(room).emit('user-left', {
-            clients: get_room_clients(room)
-        });
-    }
+    workspace.adapter.on('leave-room', (room, id) => {
+        if (room !== id) {
+            workspace.to(room).emit('user-left', {
+                clients: get_room_clients(workspace, room)
+            });
+        }
+    });
 });
 
 server.listen(process.env.PORT);
 
-function get_room_clients(room) {
-    return io.sockets.adapter.rooms.get(room).size;
+function get_room_clients(workspace, room) {
+    return workspace.adapter.rooms.get(room).size;
 }
