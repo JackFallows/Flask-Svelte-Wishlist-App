@@ -237,7 +237,11 @@
         wishlist_items.splice(current_index, 1);
         wishlist_items.splice(target_index, 0, item);
 
-        await ensure_order()
+        await ensure_order();
+
+        collaborate?.notify('item:moved', {
+            wishlist_item_id: item.id
+        });
     }
 
     async function ensure_order() {
@@ -336,6 +340,26 @@
             wishlist_items.splice(wishlist_items.findIndex(i => i.id === updated_item.id), 1, updated_item);
             wishlist_items = wishlist_items;
             locked_items = locked_items.filter(i => i.id !== updated_item.id);
+        } else if (event_name === "moved") {
+            const wishlist_payload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
+            const tmp_wishlist = wishlist_payload.get_json();
+
+            for (const item of wishlist_items) {
+                const updated = tmp_wishlist.wishlist_items.find(wi => wi.id === item.id);
+                item.order_number = updated.order_number;
+            }
+
+            wishlist_items = wishlist_items.sort((a, b) => {
+                if (a.order_number < b.order_number) {
+                    return -1;
+                }
+
+                if (a.order_number > b.order_number) {
+                    return 1;
+                }
+
+                return 0;
+            });
         }
     }
 </script>
@@ -362,7 +386,7 @@
                     {/if}
                 </div>
             {/if}
-            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
         </div>
 
         {#if is_owned && wishlist_id != 0}
