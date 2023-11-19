@@ -121,6 +121,10 @@
             wishlist_items = wishlist_items; // trigger reactivity
 
             await ensure_order();
+
+            collaborate?.notify('item:created', {
+                wishlist_item_id: item.id
+            });
         } else {
             // update existing
             await save_changes(
@@ -303,6 +307,25 @@
     async function handle_collaborator_notification(event: CustomEvent<{ event_name: string, data: any }>) {
         const { event_name, data } = event.detail;
 
+        function update_order_numbers(updated_items: IWishlistItem[]) {
+            for (const item of wishlist_items) {
+                const updated = updated_items.find(wi => wi.id === item.id);
+                item.order_number = updated.order_number;
+            }
+
+            wishlist_items = wishlist_items.sort((a, b) => {
+                if (a.order_number < b.order_number) {
+                    return -1;
+                }
+
+                if (a.order_number > b.order_number) {
+                    return 1;
+                }
+
+                return 0;
+            });
+        }
+
         if (event_name === "get_status") {
             for (const editing_item of editing_items) {
                 collaborate?.notify('item:editing', {
@@ -343,23 +366,18 @@
         } else if (event_name === "moved") {
             const wishlist_payload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
             const tmp_wishlist = wishlist_payload.get_json();
+            update_order_numbers(tmp_wishlist.wishlist_items);
+        } else if (event_name === "created") {
+            const { wishlist_item_id }: { wishlist_item_id: number } = data;
 
-            for (const item of wishlist_items) {
-                const updated = tmp_wishlist.wishlist_items.find(wi => wi.id === item.id);
-                item.order_number = updated.order_number;
-            }
+            const wishlist_payload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
+            const tmp_wishlist = wishlist_payload.get_json();
+            const new_item = tmp_wishlist.wishlist_items.find(i => i.id === wishlist_item_id);
 
-            wishlist_items = wishlist_items.sort((a, b) => {
-                if (a.order_number < b.order_number) {
-                    return -1;
-                }
+            wishlist_items.splice(0, 0, new_item);
+            update_order_numbers(tmp_wishlist.wishlist_items);
 
-                if (a.order_number > b.order_number) {
-                    return 1;
-                }
-
-                return 0;
-            });
+            toast.show(`${wishlist_as_share.owner_name} added ${new_item.is_header ? "a header" : "an item"}`, ToastType.INFO);
         }
     }
 </script>
@@ -386,7 +404,7 @@
                     {/if}
                 </div>
             {/if}
-            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
         </div>
 
         {#if is_owned && wishlist_id != 0}
