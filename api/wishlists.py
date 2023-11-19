@@ -40,6 +40,21 @@ def get_wishlist(wishlist_id):
     
     return jsonify(wishlist_merged)
 
+@wishlists.route('/get_name/<wishlist_id>')
+@login_required
+def get_name(wishlist_id):
+    if wishlist_id == None:
+        return jsonify({})
+    
+    wishlist = Wishlist.get(wishlist_id=wishlist_id, user_id=current_user.id)
+    if wishlist == None:
+        wishlist = WishlistShare.get(user_id=current_user.id, wishlist_id=wishlist_id)
+        
+    if wishlist == None:
+        return "Not found", 404
+    
+    return jsonify({ "name": wishlist.name })
+
 @wishlists.route('/get_link_share/<share_guid>')
 def get_link_share(share_guid):
     if share_guid is None or len(share_guid) != 8:

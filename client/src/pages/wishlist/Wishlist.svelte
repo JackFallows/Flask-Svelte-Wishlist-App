@@ -299,6 +299,8 @@
         await save_changes(
             Patch(Api.Wishlists.PatchUpdateName.append(wishlist_id), { name: wishlist.name })
         );
+
+        collaborate?.notify('item:rename', {});
     }
 
     async function save_changes<T>(request: Promise<IHttpResult<T>>): Promise<T> {
@@ -385,7 +387,7 @@
             wishlist_items.splice(0, 0, new_item);
             update_order_numbers(tmp_wishlist.wishlist_items);
 
-            toast.show(`${wishlist_as_share.owner_name} added ${new_item.is_header ? "a header" : "an item"}`, ToastType.INFO);
+            toast.show(`${wishlist_as_share.owner_name} added ${new_item.is_header ? "a heading" : "an item"}`, ToastType.INFO);
         } else if (event_name === "removed") {
             const { wishlist_item_id }: { wishlist_item_id: number } = data;
 
@@ -395,7 +397,12 @@
             const deleted = wishlist_items.splice(wishlist_items.findIndex(i => i.id === wishlist_item_id), 1);
             update_order_numbers(tmp_wishlist.wishlist_items);
 
-            toast.show(`${wishlist_as_share.owner_name} removed ${deleted[0].is_header ? "a header" : "an item"}`, ToastType.INFO);
+            toast.show(`${wishlist_as_share.owner_name} removed ${deleted[0].is_header ? "a heading" : "an item"}`, ToastType.INFO);
+        } else if (event_name === "rename") {
+            const new_name_result = await Get<{ name: string }>(Api.Wishlists.GetName.append(wishlist_id));
+            const new_name = new_name_result.get_json().name;
+            wishlist.name = new_name;
+            toast.show(`${wishlist_as_share.owner_name} renamed the wishlist`, ToastType.INFO);
         }
     }
 </script>
@@ -422,7 +429,7 @@
                     {/if}
                 </div>
             {/if}
-            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created", "removed" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
         </div>
 
         {#if is_owned && wishlist_id != 0}

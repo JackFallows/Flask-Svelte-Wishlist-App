@@ -151,6 +151,7 @@ function makeRoutes(base_path: string) {
         },
         Wishlists: {
             Get: WishlistsApiRoot.append("get").as_get(),
+            GetName: WishlistsApiRoot.append("get_name").as_get(),
             GetLinkShare: WishlistsApiRoot.append("get_link_share").as_get(),
             GetAllForUser: WishlistsApiRoot.append("get_all_for_user").as_get(),
             GetCountForUser: WishlistsApiRoot.append("get_count_for_user").as_get(),
