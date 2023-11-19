@@ -6,6 +6,7 @@
     export let room: string;
     export let hidden: boolean = false;
     export let listen_for: string[] = null;
+    export let after_init: (notify: Notify) => void;
 
     const dispatch = createEventDispatcher();
 
@@ -49,6 +50,10 @@
         respond("connected", () => {
             connected = true;
         });
+    }
+
+    if (after_init) {
+        after_init(notify);
     }
 </script>
 

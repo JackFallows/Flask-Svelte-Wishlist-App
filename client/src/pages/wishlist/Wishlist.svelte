@@ -26,6 +26,9 @@
     let visible_wishlist_items: IWishlistItem[];
     let most_recent_bought_item: IBoughtItem;
 
+    let editing_items: IWishlistItem[] = [];
+    let locked_items: IWishlistItem[] = [];
+
     let loading_promise: Promise<any> = load_wishlist();
 
     $: wishlist_as_share = (<IWishlistShare>wishlist)?.is_share ? (<IWishlistShare>wishlist) : null;
@@ -82,6 +85,25 @@
         })];
     }
 
+    async function changing_item_text(event: CustomEvent<{ item: IWishlistItem, cancelled?: boolean }>) {
+        const { item, cancelled } = event.detail;
+
+        if (item.id == null) {
+            return;
+        }
+
+        if (!cancelled) {
+            editing_items = [ ...editing_items, item ];
+        } else {
+            editing_items = editing_items.filter(i => i !== item);
+        }
+
+        collaborate?.notify('item:editing', {
+            wishlist_item_id: item.id,
+            cancelled
+        });
+    }
+
     async function change_item_text(event: CustomEvent<{ item: IWishlistItem }>) {
         const { item } = event.detail;
 
@@ -105,6 +127,8 @@
                     description: item.notes
                 })
             );
+
+            editing_items = editing_items.filter(i => i.id !== item.id);
         }
     }
 
@@ -262,10 +286,20 @@
         return await result.get_json();
     }
 
+    function collaborate_init(notify: Notify) {
+        notify("item:get_status", {});
+    }
+
     async function handle_collaborator_notification(event: CustomEvent<{ event_name: string, data: any }>) {
         const { event_name, data } = event.detail;
 
-        if (event_name === "bought") {
+        if (event_name === "get_status") {
+            for (const editing_item of editing_items) {
+                collaborate?.notify('item:editing', {
+                    wishlist_item_id: editing_item.id
+                });
+            }
+        } else if (event_name === "bought") {
             const { wishlist_item_id, is_deferred }: { wishlist_item_id: number, is_deferred: boolean } = data;
 
             if (is_deferred && is_owned) {
@@ -275,14 +309,21 @@
             toast.show("An item was bought by another user", ToastType.INFO);
 
             if (is_owned) {
-                wishlist_items.splice(wishlist_items.findIndex(i => i.id === wishlist_item_id), 1);
-                wishlist_items = wishlist_items;
+                wishlist_items = wishlist_items.filter(i => i.id !== wishlist_item_id);
             } else {
                 // const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
                 // const tmp_wishlist: IWishlist = wishlistPayload.get_json();
                 // bought_items = tmp_wishlist.bought_items ?? [];
                 // fix_defer_dates();
                 bought_items = [ ...bought_items, <IBoughtItem>{ wishlist_item_id } ];
+            }
+        } else if (event_name === "editing") {
+            const { wishlist_item_id, cancelled }: { wishlist_item_id: number, cancelled?: boolean } = data;
+
+            if (!cancelled) {
+                locked_items = [ ...locked_items, wishlist_items.find(i => i.id === wishlist_item_id) ];
+            } else {
+                locked_items = locked_items.filter(i => i.id !== wishlist_item_id);
             }
         }
     }
@@ -299,7 +340,7 @@
     {#await loading_promise}
         Loading...
     {:then}
-        <div class="sticky top-16 bg-white dark:bg-slate-700 -mt-4 py-4 flex justify-between items-center border-b border-slate-300">
+        <div class="sticky z-[1] top-16 bg-white/90 dark:bg-slate-700/90 backdrop-blur-sm -mt-4 py-4 flex justify-between items-center border-b border-slate-300">
             {#if is_owned}
                 <div class="pr-2 grow">
                     <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
@@ -316,7 +357,7 @@
                     {/if}
                 </div>
             {/if}
-            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "bought" ]} on:notification={handle_collaborator_notification} />
+            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
         </div>
 
         {#if is_owned && wishlist_id != 0}
@@ -332,8 +373,10 @@
                     <WishlistItem
                         wishlist_item={wishlist_item}
                         is_owned={is_owned}
+                        is_locked={locked_items.some(i => i === wishlist_item)}
                         has_other_wishlists={has_other_wishlists}
                         most_recent_bought_item={most_recent_bought_item}
+                        on:changing_text={changing_item_text}
                         on:change_text={change_item_text}
                         on:move_out={move_item_out}
                         on:move_to_top={move_item_to_top}
