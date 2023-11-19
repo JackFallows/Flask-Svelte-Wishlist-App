@@ -13,3 +13,8 @@ export enum AlertColor {
     YELLOW,
     BLUE
 }
+
+export enum BadgeColor {
+    GREEN,
+    YELLOW
+}

@@ -69,6 +69,13 @@
             false
             {% endif %};
 
+        window.notifications_api_url = 
+            {% if notifications_api_url %}
+            '{{ notifications_api_url }}'
+            {% else %}
+            null
+            {% endif %};
+
     </script>
 
     {% block global_script %}

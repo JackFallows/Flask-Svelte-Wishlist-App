@@ -1,5 +1,9 @@
 /// <reference types="svelte" />
 
+type Join = (room: string) => void;
+type Notify = (event_name: string, data: any) => void;
+type Respond = (to: string, with_callback: (data: any) => void) => void;
+
 interface Window {
     page_title?: string;
     internal_login_enabled: boolean;
@@ -11,6 +15,7 @@ interface Window {
     email_is_configured: boolean;
     version_number: string;
     user_has_enabled_email: boolean;
+    notifications_api_url: string;
 }
 
 interface IValidationState {

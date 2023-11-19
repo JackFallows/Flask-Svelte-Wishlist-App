@@ -10,6 +10,7 @@ from data_access.models.user import User
 from decorators.auth import ENABLE_INTERNAL_AUTH
 
 from services.email_service import is_email_configured
+from services.notification_service import NOTIFICATIONS_API
 
 def get_base_path():
     env = environ.get("BASE_PATH")
@@ -92,5 +93,6 @@ def custom_render_template(template_name, **context):
         email_is_configured=is_email_configured(),
         version_number=get_version_number(),
         user_has_enabled_email=get_user_has_enabled_email(),
+        notifications_api_url=NOTIFICATIONS_API,
         **context
     )

@@ -23,6 +23,20 @@ def get_all_for_wishlist(wishlist_id):
     
     return jsonify(list(map(lambda w: w.as_dict(), wishlist_items)))
 
+@wishlist_items.route('/get/<wishlist_item_id>')
+@login_required
+def get(wishlist_item_id):
+    user_id = current_user.id
+    
+    is_available_to_user = WishlistItem.get_is_available_to_user(wishlist_item_id, user_id)
+    
+    if not is_available_to_user:
+        return "Not found", 404
+    
+    item = WishlistItem.get(wishlist_item_id)
+    
+    return jsonify(item.as_dict())
+
 @wishlist_items.route('/create', methods=["POST"])
 @login_required
 def create():

@@ -51,7 +51,7 @@
 
 </script>
 
-<div class="dark:text-slate-100">
+<div class="dark:text-slate-100 pt-4">
     {#await loading_promise}
         Loading...
     {:then}
