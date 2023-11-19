@@ -164,6 +164,7 @@ function makeRoutes(base_path: string) {
         },
         WishlistItems: {
             GetAllForWishlist: WishlistItemsApiRoot.append("get_all_for_wishlist").as_get(),
+            Get: WishlistItemsApiRoot.append("get").as_get(),
             PostCreate: WishlistItemsApiRoot.append("/create").as_post(),
             PatchMarkAsBought: WishlistItemsApiRoot.append("mark-as-bought").as_patch(),
             PatchChangeText: WishlistItemsApiRoot.append("change-text").as_patch(),

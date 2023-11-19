@@ -154,7 +154,7 @@
 
 <div class="relative">
     {#if is_locked && !wishlist_item.is_header}
-        <div class="absolute bg-slate-200/90 backdrop-blur-sm rounded-md left-0 top-0 w-full h-full flex flex-col justify-center text-xl text-center">
+        <div class="absolute bg-slate-200/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-md left-0 top-0 w-full h-full flex flex-col justify-center text-xl text-center">
             This item has been locked by another user.
         </div>
     {/if}

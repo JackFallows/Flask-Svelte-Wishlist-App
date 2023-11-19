@@ -64,7 +64,9 @@
         wishlist_items = wishlist.wishlist_items;
         bought_items = wishlist.bought_items ?? [];
 
-        fix_defer_dates();
+        for (const bought_item of bought_items) {
+            bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
+        }
 
         total_wishlists = countPayload.get_json().total_wishlists;
     }
@@ -129,6 +131,10 @@
             );
 
             editing_items = editing_items.filter(i => i.id !== item.id);
+
+            collaborate?.notify('item:edited', {
+                wishlist_item_id: item.id
+            });
         }
     }
 
@@ -311,10 +317,6 @@
             if (is_owned) {
                 wishlist_items = wishlist_items.filter(i => i.id !== wishlist_item_id);
             } else {
-                // const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
-                // const tmp_wishlist: IWishlist = wishlistPayload.get_json();
-                // bought_items = tmp_wishlist.bought_items ?? [];
-                // fix_defer_dates();
                 bought_items = [ ...bought_items, <IBoughtItem>{ wishlist_item_id } ];
             }
         } else if (event_name === "editing") {
@@ -325,12 +327,15 @@
             } else {
                 locked_items = locked_items.filter(i => i.id !== wishlist_item_id);
             }
-        }
-    }
+        } else if (event_name === "edited") {
+            const { wishlist_item_id }: { wishlist_item_id: number } = data;
 
-    function fix_defer_dates() {
-        for (const bought_item of bought_items) {
-            bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
+            const updated_item_result = await Get<IWishlistItem>(Api.WishlistItems.Get.append(wishlist_item_id));
+            const updated_item = updated_item_result.get_json();
+
+            wishlist_items.splice(wishlist_items.findIndex(i => i.id === updated_item.id), 1, updated_item);
+            wishlist_items = wishlist_items;
+            locked_items = locked_items.filter(i => i.id !== updated_item.id);
         }
     }
 </script>
@@ -357,7 +362,7 @@
                     {/if}
                 </div>
             {/if}
-            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
         </div>
 
         {#if is_owned && wishlist_id != 0}
