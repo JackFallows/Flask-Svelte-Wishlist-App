@@ -31,7 +31,7 @@
     });
 
     setContext('notify', (event_name: string, data: any) => {
-        socket.emit(event_name, { room: current_room, ...data });
+        socket.emit(event_name, { room: current_room, data });
     });
 
     setContext('respond', (to: string, with_callback: (data: any) => void) => {

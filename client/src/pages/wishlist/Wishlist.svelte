@@ -61,9 +61,7 @@
         wishlist_items = wishlist.wishlist_items;
         bought_items = wishlist.bought_items ?? [];
 
-        for (const bought_item of bought_items) {
-            bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
-        }
+        fix_defer_dates();
 
         total_wishlists = countPayload.get_json().total_wishlists;
     }
@@ -202,7 +200,7 @@
         bought_items.push(bought_item);
         bought_items = bought_items; // trigger reactivity
 
-        collaborate?.notify('item:bought', { wishlist_item_id: item.id });
+        collaborate?.notify('item:bought', { wishlist_item_id: item.id, is_deferred: bought_item.defer_until != null });
     }
 
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
@@ -264,17 +262,34 @@
         return await result.get_json();
     }
 
-    async function handle_collaborator_notification(event: CustomEvent<{ event_name: string, wishlist_item_id: number }>) {
-        const { event_name, wishlist_item_id } = event.detail;
+    async function handle_collaborator_notification(event: CustomEvent<{ event_name: string, data: any }>) {
+        const { event_name, data } = event.detail;
 
         if (event_name === "bought") {
-            toast.show("An item was bought by another user", ToastType.INFO);
-            const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
-            const tmp_wishlist: IWishlist = wishlistPayload.get_json();
-            bought_items = tmp_wishlist.bought_items ?? [];
-            for (const bought_item of bought_items) {
-                bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
+            const { wishlist_item_id, is_deferred }: { wishlist_item_id: number, is_deferred: boolean } = data;
+
+            if (is_deferred && is_owned) {
+                return;
             }
+
+            toast.show("An item was bought by another user", ToastType.INFO);
+
+            if (is_owned) {
+                wishlist_items.splice(wishlist_items.findIndex(i => i.id === wishlist_item_id), 1);
+                wishlist_items = wishlist_items;
+            } else {
+                // const wishlistPayload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
+                // const tmp_wishlist: IWishlist = wishlistPayload.get_json();
+                // bought_items = tmp_wishlist.bought_items ?? [];
+                // fix_defer_dates();
+                bought_items = [ ...bought_items, <IBoughtItem>{ wishlist_item_id } ];
+            }
+        }
+    }
+
+    function fix_defer_dates() {
+        for (const bought_item of bought_items) {
+            bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
         }
     }
 </script>
