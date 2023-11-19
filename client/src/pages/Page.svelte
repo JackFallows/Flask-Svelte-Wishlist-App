@@ -19,6 +19,6 @@
 
 <style>
     .page-height {
-        min-height: calc(100vh - 14rem);
+        min-height: calc(100vh - 10rem);
     }
 </style>

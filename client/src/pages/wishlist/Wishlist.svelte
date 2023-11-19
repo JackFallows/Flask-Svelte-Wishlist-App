@@ -408,11 +408,11 @@
 </script>
 
 <Toast bind:this={toast} />
-<div class="dark:text-slate-100">
+<div class="dark:text-slate-100 pb-8">
     {#await loading_promise}
         Loading...
     {:then}
-        <div class="sticky z-[1] top-16 bg-white/90 dark:bg-slate-700/90 backdrop-blur-sm -mt-4 py-4 flex justify-between items-center border-b border-slate-300">
+        <div class="sticky z-[1] top-16 bg-white/90 dark:bg-slate-700/90 backdrop-blur-sm py-4 flex justify-between items-center border-b border-slate-300">
             {#if is_owned}
                 <div class="pr-2 grow">
                     <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
