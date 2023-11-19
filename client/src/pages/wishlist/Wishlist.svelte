@@ -152,6 +152,10 @@
         );
 
         await ensure_order();
+
+        collaborate?.notify('item:removed', {
+            wishlist_item_id: item.id
+        });
     }
 
     async function move_item_to_top(event: CustomEvent<{ item: IWishlistItem }>) {
@@ -218,6 +222,10 @@
         }
         
         await ensure_order();
+
+        collaborate?.notify('item:removed', {
+            wishlist_item_id: item.id
+        });
     }
 
     async function mark_item_bought(event: CustomEvent<{ item: IWishlistItem, defer_until: string }>) {
@@ -378,6 +386,16 @@
             update_order_numbers(tmp_wishlist.wishlist_items);
 
             toast.show(`${wishlist_as_share.owner_name} added ${new_item.is_header ? "a header" : "an item"}`, ToastType.INFO);
+        } else if (event_name === "removed") {
+            const { wishlist_item_id }: { wishlist_item_id: number } = data;
+
+            const wishlist_payload = await Get<IWishlist>(Api.Wishlists.Get.append(wishlist_id));
+            const tmp_wishlist = wishlist_payload.get_json();
+            
+            const deleted = wishlist_items.splice(wishlist_items.findIndex(i => i.id === wishlist_item_id), 1);
+            update_order_numbers(tmp_wishlist.wishlist_items);
+
+            toast.show(`${wishlist_as_share.owner_name} removed ${deleted[0].is_header ? "a header" : "an item"}`, ToastType.INFO);
         }
     }
 </script>
@@ -404,7 +422,7 @@
                     {/if}
                 </div>
             {/if}
-            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created", "removed" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
         </div>
 
         {#if is_owned && wishlist_id != 0}
