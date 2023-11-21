@@ -106,11 +106,10 @@ interface INotificationDto {
 interface ITab {
     id: string;
     label: string;
+    icon: string;
 }
 
-interface ITabContent {
-    id: string;
-    label: string;
+interface ITabContent extends ITab {
     activate: () => void;
     deactivate: () => void;
 }

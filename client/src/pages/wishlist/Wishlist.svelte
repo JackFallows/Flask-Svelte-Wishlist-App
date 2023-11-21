@@ -7,6 +7,8 @@
     import Toast from '../../components/Toast.svelte';
     import WishlistItem from '../../components/WishlistItem.svelte';
     import Collaborate from '../../components/Collaborate.svelte';
+    import TabContainer from '../../components/TabContainer.svelte';
+    import TabContent from '../../components/TabContent.svelte';
 
     export let wishlist_id: number;
 
@@ -412,24 +414,34 @@
     {#await loading_promise}
         Loading...
     {:then}
-        <div class="sticky z-[1] top-16 bg-white/90 dark:bg-slate-700/90 backdrop-blur-sm py-4 flex justify-between items-center border-b border-slate-300">
-            {#if is_owned}
-                <div class="pr-2 grow">
-                    <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
+        <div class="sticky z-[1] top-16 bg-white/90 dark:bg-slate-700/90 backdrop-blur-sm border-b border-slate-200 dark:border-slate-600">
+            <div class="flex justify-between items-center">
+                {#if is_owned}
+                    <div class="pr-2 grow py-4">
+                        <EditableHeading tag="h1" classes="text-2xl" is_editing={wishlist_id == 0} placeholder="Enter a name for your wishlist" bind:value={wishlist.name} on:save={save_wishlist_name} />
+                    </div>
+                {:else}
+                    <div class="grow flex flex-col py-4">
+                        <h1 class="text-2xl grow">{wishlist.name}</h1>
+                        {#if wishlist_as_share != null && wishlist_as_share.owner_name != null}
+                            <div>
+                                <span class="fa-solid fa-users"></span>
+                                <span class="text-lg text-black dark:text-slate-100">{wishlist_as_share.owner_name}</span>
+                                <span class="text-base text-slate-600 dark:text-slate-300">{wishlist_as_share.owner_email}</span>
+                            </div>
+                        {/if}
+                    </div>
+                {/if}
+                <div class="flex flex-col self-end">
+                    <div class="flex space-x-3 items-baseline">
+                        <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+                        <TabContainer light no_content>
+                            <TabContent id="list-tab" label="List" icon="fa-solid fa-list" />
+                            <TabContent id="history-tab" label="History" icon="fa-solid fa-clock-rotate-left" />
+                        </TabContainer>
+                    </div>
                 </div>
-            {:else}
-                <div class="flex flex-col">
-                    <h1 class="text-2xl grow">{wishlist.name}</h1>
-                    {#if wishlist_as_share != null && wishlist_as_share.owner_name != null}
-                        <div>
-                            <span class="fa-solid fa-users"></span>
-                            <span class="text-lg text-black dark:text-slate-100">{wishlist_as_share.owner_name}</span>
-                            <span class="text-base text-slate-600 dark:text-slate-300">{wishlist_as_share.owner_email}</span>
-                        </div>
-                    {/if}
-                </div>
-            {/if}
-            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+            </div>
         </div>
 
         {#if is_owned && wishlist_id != 0}
