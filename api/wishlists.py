@@ -31,6 +31,8 @@ def get_wishlist(wishlist_id):
     bought_items = None
     if current_user.id != wishlist.user_id:
         bought_items = list(map(lambda bi: bi.as_dict(), BoughtItem.get_for_wishlist(wishlist_id)))
+    else:
+        bought_items = list(map(lambda bi: bi.as_dict(), BoughtItem.get_for_wishlist_owner(wishlist_id, current_user.id)))
     
     wishlist_merged = {
         **wishlist.as_dict(),

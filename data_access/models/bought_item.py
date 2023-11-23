@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from data_access.db_connect import get_db_connection
 
 class BoughtItem():
@@ -68,6 +68,31 @@ class BoughtItem():
                 WHERE wi.wishlist_id = ?
                 """,
                 (wishlist_id,)
+            ).fetchall()
+            
+            return list(
+                map(
+                    lambda bi: BoughtItem(
+                        id=bi[0],
+                        user_id=bi[1],
+                        wishlist_item_id=bi[2],
+                        defer_until=bi[3]),
+                    bought_items_result)
+                )
+            
+    @staticmethod
+    def get_for_wishlist_owner(wishlist_id: int, user_id: str):
+        with get_db_connection() as db:
+            today = datetime.combine(date.today(), datetime.min.time()).timestamp()
+            
+            bought_items_result = db.execute(
+                """
+                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until
+                FROM bought_item bi
+                JOIN wishlist_item wi ON wi.rowid = bi.wishlist_item_id
+                WHERE wi.wishlist_id = ? AND (bi.user_id = ? OR bi.defer_until IS NULL OR bi.defer_until < ?)
+                """,
+                (wishlist_id, user_id, today,)
             ).fetchall()
             
             return list(

@@ -1,4 +1,3 @@
-from datetime import date, datetime
 from data_access.db_connect import get_db_connection
 
 class WishlistItem():
@@ -68,17 +67,14 @@ class WishlistItem():
     @staticmethod
     def get_all_for_wishlist(wishlist_id):
         with get_db_connection() as db:
-            today = datetime.combine(date.today(), datetime.min.time()).timestamp()
-            
             wishlist_items = db.execute(
                 """
                 SELECT wi.rowid, wi.wishlist_id, wi.link, wi.notes, wi.order_number, wi.is_header 
                 FROM wishlist_item wi
-                LEFT OUTER JOIN bought_item bi ON bi.wishlist_item_id = wi.rowid
-                WHERE wi.wishlist_id = ? AND (bi.rowid IS NULL OR bi.defer_until > ?)
+                WHERE wi.wishlist_id = ?
                 ORDER BY wi.order_number
                 """,
-                (wishlist_id, today,)
+                (wishlist_id,)
                 
             ).fetchall()
             

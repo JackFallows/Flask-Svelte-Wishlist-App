@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getContext } from 'svelte';
     import { flip } from 'svelte/animate';
+    import { fade } from 'svelte/transition';
     import { ToastType } from '../../enums';
     import { makeRoutes } from '../../routes';
     import EditableHeading from '../../components/EditableHeading.svelte';
@@ -32,6 +33,8 @@
     let locked_items: IWishlistItem[] = [];
 
     let loading_promise: Promise<any> = load_wishlist();
+
+    let current_tab_id: string = "list-tab";
 
     $: wishlist_as_share = (<IWishlistShare>wishlist)?.is_share ? (<IWishlistShare>wishlist) : null;
     $: is_owned = wishlist_as_share == null;
@@ -71,6 +74,11 @@
         }
 
         total_wishlists = countPayload.get_json().total_wishlists;
+    }
+
+    function change_tab(event: CustomEvent<ITab>) {
+        const tab = event.detail;
+        current_tab_id = tab.id;
     }
 
     function add_item(is_header: boolean = false) {
@@ -435,7 +443,7 @@
                 <div class="flex flex-col self-end">
                     <div class="flex space-x-3 items-baseline">
                         <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
-                        <TabContainer light no_content>
+                        <TabContainer light no_content on:change_tab={change_tab}>
                             <TabContent id="list-tab" label="List" icon="fa-solid fa-list" />
                             <TabContent id="history-tab" label="History" icon="fa-solid fa-clock-rotate-left" />
                         </TabContainer>
@@ -444,34 +452,42 @@
             </div>
         </div>
 
-        {#if is_owned && wishlist_id != 0}
-            <div class="mt-8 flex space-x-3">
-                <button class="button" on:click={() => add_item(false)}>Add item</button>
-                <button class="button" on:click={() => add_item(true)}>Add heading</button>
+        {#if current_tab_id === "list-tab"}
+            <div in:fade={{ delay: 150, duration: 150 }} out:fade={{ duration: 150 }}>
+                {#if is_owned && wishlist_id != 0}
+                    <div class="mt-8 flex space-x-3">
+                        <button class="button" on:click={() => add_item(false)}>Add item</button>
+                        <button class="button" on:click={() => add_item(true)}>Add heading</button>
+                    </div>
+                {/if}
+
+                <div class="mt-8 flex space-y-8 flex-col">
+                    {#each visible_wishlist_items as wishlist_item(wishlist_item)}
+                        <div animate:flip={{ duration: 200 }}>
+                            <WishlistItem
+                                wishlist_item={wishlist_item}
+                                is_owned={is_owned}
+                                is_locked={locked_items.some(i => i === wishlist_item)}
+                                has_other_wishlists={has_other_wishlists}
+                                most_recent_bought_item={most_recent_bought_item}
+                                on:changing_text={changing_item_text}
+                                on:change_text={change_item_text}
+                                on:move_out={move_item_out}
+                                on:move_to_top={move_item_to_top}
+                                on:move_up={move_item_up}
+                                on:move_down={move_item_down}
+                                on:move_to_bottom={move_item_to_bottom}
+                                on:buy={mark_item_bought}
+                                on:remove={delete_item}
+                            />
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        {:else}
+            <div in:fade={{ delay: 150, duration: 150 }} out:fade={{ duration: 150 }}>
+                History
             </div>
         {/if}
-
-        <div class="mt-8 flex space-y-8 flex-col">
-            {#each visible_wishlist_items as wishlist_item(wishlist_item)}
-                <div animate:flip={{ duration: 200 }}>
-                    <WishlistItem
-                        wishlist_item={wishlist_item}
-                        is_owned={is_owned}
-                        is_locked={locked_items.some(i => i === wishlist_item)}
-                        has_other_wishlists={has_other_wishlists}
-                        most_recent_bought_item={most_recent_bought_item}
-                        on:changing_text={changing_item_text}
-                        on:change_text={change_item_text}
-                        on:move_out={move_item_out}
-                        on:move_to_top={move_item_to_top}
-                        on:move_up={move_item_up}
-                        on:move_down={move_item_down}
-                        on:move_to_bottom={move_item_to_bottom}
-                        on:buy={mark_item_bought}
-                        on:remove={delete_item}
-                    />
-                </div>
-            {/each}
-        </div>
     {/await}
 </div>
