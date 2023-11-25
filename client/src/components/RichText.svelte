@@ -9,7 +9,11 @@
 
     let fragments: IFragment[] = [];
 
-    $: {
+    $: update_fragments(text);
+
+    function update_fragments(text: string) {
+        fragments = [];
+
         let current_fragment: IFragment = {
             is_link: false,
             is_line_break: false,
@@ -48,6 +52,8 @@
         }
 
         fragments.push(current_fragment);
+
+        fragments = fragments;
     }
 </script>
 

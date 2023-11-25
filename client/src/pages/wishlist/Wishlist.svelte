@@ -13,6 +13,7 @@
     import PanelMessage from '../../components/PanelMessage.svelte';
     import RichText from '../../components/RichText.svelte';
     import IconButton from '../../components/IconButton.svelte';
+    import RestoreModal from '../../components/modals/RestoreModal.svelte';
 
     export let wishlist_id: number;
 
@@ -21,6 +22,7 @@
 
     let toast: Toast;
     let collaborate: Collaborate;
+    let restore_modal: RestoreModal;
 
     let wishlist: IWishlist;
     let wishlist_items: IWishlistItem[] = [];
@@ -271,6 +273,12 @@
     }
 
     async function restore_item(wishlist_item_id: number) {
+        const confirm = await restore_modal.show(wishlist_items.find(wi => wi.id === wishlist_item_id).link);
+
+        if (!confirm) {
+            return;
+        }
+
         await save_changes(Patch(Api.WishlistItems.PatchRestore.append(wishlist_item_id), {}));
 
         bought_items = bought_items.filter(bi => bi.wishlist_item_id !== wishlist_item_id);
@@ -550,3 +558,5 @@
         {/if}
     {/await}
 </div>
+
+<RestoreModal bind:this={restore_modal} />
