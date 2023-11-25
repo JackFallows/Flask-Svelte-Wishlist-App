@@ -10,6 +10,8 @@
     import Collaborate from '../../components/Collaborate.svelte';
     import TabContainer from '../../components/TabContainer.svelte';
     import TabContent from '../../components/TabContent.svelte';
+    import PanelMessage from '../../components/PanelMessage.svelte';
+    import RichText from '../../components/RichText.svelte';
 
     export let wishlist_id: number;
 
@@ -27,6 +29,7 @@
     let total_wishlists: number;
     let has_other_wishlists: boolean;
     let visible_wishlist_items: IWishlistItem[];
+    let bought_wishlist_items: { bought: IBoughtItem, item: IWishlistItem }[];
     let most_recent_bought_item: IBoughtItem;
 
     let editing_items: IWishlistItem[] = [];
@@ -42,10 +45,14 @@
     $: {
         const bought_item_ids = bought_items.map(bi => bi.wishlist_item_id);
         visible_wishlist_items = wishlist_items.filter(wi => !bought_item_ids.includes(wi.id));
+        bought_wishlist_items = bought_items.map(bi => ({
+            bought: bi,
+            item: wishlist_items.find(wi => wi.id === bi.wishlist_item_id)
+        }));
     }
     $: {
         most_recent_bought_item = bought_items.reduce((most_recent: IBoughtItem, bought_item: IBoughtItem) => {
-            if (bought_item.user_id === window.user_id && (most_recent == null || bought_item.id > most_recent.id)) {
+            if (bought_item.current_user_bought && (most_recent == null || bought_item.id > most_recent.id)) {
                 most_recent = bought_item;
             }
 
@@ -71,6 +78,7 @@
 
         for (const bought_item of bought_items) {
             bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
+            bought_item.bought_date = new Date(<number><any>bought_item.bought_date * 1000);
         }
 
         total_wishlists = countPayload.get_json().total_wishlists;
@@ -249,10 +257,16 @@
             bought_item.defer_until = new Date(<number><any>bought_item.defer_until * 1000);
         }
 
+        bought_item.bought_date = new Date(<number><any>bought_item.bought_date * 1000);
+
         bought_items.push(bought_item);
         bought_items = bought_items; // trigger reactivity
 
-        collaborate?.notify('item:bought', { wishlist_item_id: item.id, is_deferred: bought_item.defer_until != null });
+        collaborate?.notify('item:bought', {
+            wishlist_item_id: item.id,
+            is_deferred: bought_item.defer_until != null,
+            bought_date: bought_item.bought_date
+        });
     }
 
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
@@ -353,7 +367,7 @@
                 });
             }
         } else if (event_name === "bought") {
-            const { wishlist_item_id, is_deferred }: { wishlist_item_id: number, is_deferred: boolean } = data;
+            const { wishlist_item_id, is_deferred, bought_date }: { wishlist_item_id: number, is_deferred: boolean, bought_date: Date } = data;
 
             if (is_deferred && is_owned) {
                 return;
@@ -364,7 +378,7 @@
             if (is_owned) {
                 wishlist_items = wishlist_items.filter(i => i.id !== wishlist_item_id);
             } else {
-                bought_items = [ ...bought_items, <IBoughtItem>{ wishlist_item_id } ];
+                bought_items = [ ...bought_items, <IBoughtItem>{ wishlist_item_id, bought_date: new Date(bought_date), current_user_bought: false } ];
             }
         } else if (event_name === "editing") {
             const { wishlist_item_id, cancelled }: { wishlist_item_id: number, cancelled?: boolean } = data;
@@ -445,7 +459,7 @@
                         <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
                         <TabContainer light no_content on:change_tab={change_tab}>
                             <TabContent id="list-tab" label="List" icon="fa-solid fa-list" />
-                            <TabContent id="history-tab" label="History" icon="fa-solid fa-clock-rotate-left" />
+                            <TabContent id="history-tab" label="Bought items" icon="fa-solid fa-clock-rotate-left" />
                         </TabContainer>
                     </div>
                 </div>
@@ -486,7 +500,32 @@
             </div>
         {:else}
             <div in:fade={{ delay: 150, duration: 150 }} out:fade={{ duration: 150 }}>
-                History
+                <div class="mt-8 flex space-y-8 flex-col">
+                    {#if bought_wishlist_items.length === 0}
+                        <p>No items have been bought.</p>
+                    {/if}
+                    {#each bought_wishlist_items as bought_wishlist_item(bought_wishlist_item)}
+                        <div>
+                            <PanelMessage highlighted={bought_wishlist_item.bought.current_user_bought}>
+                                <div slot="heading" class="flex justify-between items-baseline">
+                                    <div>
+                                        {#if bought_wishlist_item.bought.current_user_bought}
+                                        You bought this item
+                                        {:else}
+                                        Someone else bought this item
+                                        {/if}
+                                    </div>
+                                    <div>
+                                        {bought_wishlist_item.bought.bought_date.toLocaleString()}
+                                    </div>
+                                </div>
+                                <div slot="body">
+                                    <RichText text={bought_wishlist_item.item.link} />
+                                </div>
+                            </PanelMessage>
+                        </div>
+                    {/each}
+                </div>
             </div>
         {/if}
     {/await}

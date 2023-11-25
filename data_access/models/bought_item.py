@@ -2,18 +2,20 @@ from datetime import datetime, date
 from data_access.db_connect import get_db_connection
 
 class BoughtItem():
-    def __init__(self, id, user_id, wishlist_item_id, defer_until):
+    def __init__(self, id, user_id, wishlist_item_id, defer_until, bought_date):
         self.id = id
         self.user_id = user_id
         self.wishlist_item_id = wishlist_item_id
         self.defer_until = defer_until
+        self.bought_date = bought_date
         
-    def as_dict(self):
+    def as_dict(self, current_user_id: str):
         return {
             "id": self.id,
-            "user_id": self.user_id,
+            "current_user_bought": self.user_id == current_user_id,
             "wishlist_item_id": self.wishlist_item_id,
-            "defer_until": self.defer_until
+            "defer_until": self.defer_until,
+            "bought_date": self.bought_date
         }
         
     @staticmethod
@@ -22,14 +24,17 @@ class BoughtItem():
         
         if defer_until is not None:
             defer_until_time = datetime.strptime(defer_until, "%Y-%m-%d").timestamp()
+            
+        now = datetime.now()
+        timestamp = int(now.timestamp())
         
         with get_db_connection() as db:
             db.execute(
                 """
-                INSERT INTO bought_item (user_id, wishlist_item_id, defer_until)
-                VALUES (?, ?, ?)
+                INSERT INTO bought_item (user_id, wishlist_item_id, defer_until, bought_date)
+                VALUES (?, ?, ?, ?)
                 """,
-                (user_id, wishlist_item_id, defer_until_time,)
+                (user_id, wishlist_item_id, defer_until_time, timestamp,)
             )
             
             db.commit()
@@ -42,7 +47,8 @@ class BoughtItem():
                 id=bought_item_id,
                 user_id=user_id,
                 wishlist_item_id=int(wishlist_item_id),
-                defer_until=defer_until_time
+                defer_until=defer_until_time,
+                bought_date=timestamp
             )
             
     @staticmethod
@@ -62,7 +68,7 @@ class BoughtItem():
         with get_db_connection() as db:
             bought_items_result = db.execute(
                 """
-                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until
+                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until, bi.bought_date
                 FROM bought_item bi
                 JOIN wishlist_item wi ON wi.rowid = bi.wishlist_item_id
                 WHERE wi.wishlist_id = ?
@@ -76,7 +82,8 @@ class BoughtItem():
                         id=bi[0],
                         user_id=bi[1],
                         wishlist_item_id=bi[2],
-                        defer_until=bi[3]),
+                        defer_until=bi[3],
+                        bought_date=bi[4]),
                     bought_items_result)
                 )
             
@@ -87,7 +94,7 @@ class BoughtItem():
             
             bought_items_result = db.execute(
                 """
-                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until
+                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until, bi.bought_date
                 FROM bought_item bi
                 JOIN wishlist_item wi ON wi.rowid = bi.wishlist_item_id
                 WHERE wi.wishlist_id = ? AND (bi.user_id = ? OR bi.defer_until IS NULL OR bi.defer_until < ?)
@@ -101,7 +108,8 @@ class BoughtItem():
                         id=bi[0],
                         user_id=bi[1],
                         wishlist_item_id=bi[2],
-                        defer_until=bi[3]),
+                        defer_until=bi[3],
+                        bought_date=bi[4]),
                     bought_items_result)
                 )
             

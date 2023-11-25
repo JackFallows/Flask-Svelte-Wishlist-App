@@ -55,9 +55,10 @@ interface IWishlistItem {
 
 interface IBoughtItem {
     id: number;
-    user_id: string;
+    current_user_bought: boolean;
     wishlist_item_id: number;
     defer_until: Date;
+    bought_date: Date;
 }
 
 interface IWishlist {

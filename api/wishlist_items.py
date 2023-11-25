@@ -100,11 +100,11 @@ def mark_as_bought(wishlist_item_id):
             
             notify_owner_bought_item(current_user, target_user, wishlist, wishlist_item)
             
-            return jsonify(existing.as_dict())
+            return jsonify(existing.as_dict(current_user.id))
             
     bought_item = BoughtItem.create(current_user.id, wishlist_item_id, defer_until)
     
-    return jsonify(bought_item.as_dict())
+    return jsonify(bought_item.as_dict(current_user.id))
 
 @wishlist_items.route('/reparent/<wishlist_item_id>/<target_wishlist_id>', methods=["PATCH"])
 @login_required
