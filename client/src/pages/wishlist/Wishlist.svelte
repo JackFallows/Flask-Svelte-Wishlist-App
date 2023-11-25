@@ -12,6 +12,7 @@
     import TabContent from '../../components/TabContent.svelte';
     import PanelMessage from '../../components/PanelMessage.svelte';
     import RichText from '../../components/RichText.svelte';
+    import IconButton from '../../components/IconButton.svelte';
 
     export let wishlist_id: number;
 
@@ -269,6 +270,16 @@
         });
     }
 
+    async function restore_item(wishlist_item_id: number) {
+        await save_changes(Patch(Api.WishlistItems.PatchRestore.append(wishlist_item_id), {}));
+
+        bought_items = bought_items.filter(bi => bi.wishlist_item_id !== wishlist_item_id);
+
+        collaborate?.notify('item:restored', {
+            wishlist_item_id: wishlist_item_id
+        });
+    }
+
     async function rearrange(item: IWishlistItem, current_index: number, target_index: number) {
         wishlist_items.splice(current_index, 1);
         wishlist_items.splice(target_index, 0, item);
@@ -380,6 +391,10 @@
             } else {
                 bought_items = [ ...bought_items, <IBoughtItem>{ wishlist_item_id, bought_date: new Date(bought_date), current_user_bought: false } ];
             }
+        } else if (event_name === "restored") {
+            const { wishlist_item_id }: { wishlist_item_id: number } = data;
+
+            bought_items = bought_items.filter(bi => bi.wishlist_item_id !== wishlist_item_id);
         } else if (event_name === "editing") {
             const { wishlist_item_id, cancelled }: { wishlist_item_id: number, cancelled?: boolean } = data;
 
@@ -456,7 +471,7 @@
                 {/if}
                 <div class="flex flex-col self-end">
                     <div class="flex space-x-3 items-baseline">
-                        <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+                        <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "restored", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
                         <TabContainer light no_content on:change_tab={change_tab}>
                             <TabContent id="list-tab" label="List" icon="fa-solid fa-list" />
                             <TabContent id="history-tab" label="Bought items" icon="fa-solid fa-clock-rotate-left" />
@@ -519,8 +534,13 @@
                                         {bought_wishlist_item.bought.bought_date.toLocaleString()}
                                     </div>
                                 </div>
-                                <div slot="body">
-                                    <RichText text={bought_wishlist_item.item.link} />
+                                <div slot="body" class="flex items-center justify-between">
+                                    <div>
+                                        <RichText text={bought_wishlist_item.item.link} />
+                                    </div>
+                                    {#if bought_wishlist_item.bought.current_user_bought}
+                                        <IconButton id="restore-item-{bought_wishlist_item.item.id}" label="Restore" icon="fa-solid fa-rotate-left" on:click={() => restore_item(bought_wishlist_item.item.id)} />
+                                    {/if}
                                 </div>
                             </PanelMessage>
                         </div>

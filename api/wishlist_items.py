@@ -106,6 +106,21 @@ def mark_as_bought(wishlist_item_id):
     
     return jsonify(bought_item.as_dict(current_user.id))
 
+@wishlist_items.route('/restore/<wishlist_item_id>', methods=['PATCH'])
+@login_required
+def restore(wishlist_item_id):
+    if not WishlistItem.get_is_available_to_user(wishlist_item_id=wishlist_item_id, user_id=current_user.id):
+        return "Not found", 404
+    
+    bought_item = BoughtItem.get_for_item(wishlist_item_id)
+    
+    if bought_item.user_id != current_user.id:
+        return "Forbidden", 403
+    
+    BoughtItem.delete(bought_item.id)
+    
+    return jsonify({})
+
 @wishlist_items.route('/reparent/<wishlist_item_id>/<target_wishlist_id>', methods=["PATCH"])
 @login_required
 def reparent(wishlist_item_id, target_wishlist_id):

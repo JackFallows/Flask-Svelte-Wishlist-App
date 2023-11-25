@@ -52,6 +52,28 @@ class BoughtItem():
             )
             
     @staticmethod
+    def get_for_item(wishlist_item_id: int):
+        with get_db_connection() as db:
+            bought_item_result = db.execute(
+                """
+                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until, bi.bought_date
+                FROM bought_item bi
+                WHERE bi.wishlist_item_id = ?
+                """,
+                (wishlist_item_id,)
+            ).fetchone()
+            
+            if not bought_item_result:
+                return None
+            
+            return BoughtItem(
+                id=bought_item_result[0],
+                user_id=bought_item_result[1],
+                wishlist_item_id=bought_item_result[2],
+                defer_until=bought_item_result[3],
+                bought_date=bought_item_result[4])
+            
+    @staticmethod
     def remove_defer_date(id: int, user_id: str):
         with get_db_connection() as db:
             db.execute(
@@ -113,4 +135,13 @@ class BoughtItem():
                     bought_items_result)
                 )
             
+    def delete(id: int):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                DELETE FROM bought_item WHERE rowid = ?
+                """,
+                (id,)
+            )
             
+            db.commit()
