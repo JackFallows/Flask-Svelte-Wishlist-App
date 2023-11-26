@@ -394,11 +394,7 @@
 
             toast.show("An item was bought by another user", ToastType.INFO);
 
-            if (is_owned) {
-                wishlist_items = wishlist_items.filter(i => i.id !== wishlist_item_id);
-            } else {
-                bought_items = [ ...bought_items, <IBoughtItem>{ wishlist_item_id, bought_date: new Date(bought_date), current_user_bought: false } ];
-            }
+            bought_items = [ ...bought_items, <IBoughtItem>{ wishlist_item_id, bought_date: new Date(bought_date), current_user_bought: false } ];
         } else if (event_name === "restored") {
             const { wishlist_item_id }: { wishlist_item_id: number } = data;
 
@@ -477,15 +473,17 @@
                         {/if}
                     </div>
                 {/if}
-                <div class="flex flex-col self-end">
-                    <div class="flex space-x-3 items-baseline">
-                        <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "restored", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
-                        <TabContainer light no_content on:change_tab={change_tab}>
-                            <TabContent id="list-tab" label="List" icon="fa-solid fa-list" />
-                            <TabContent id="history-tab" label="Bought items" icon="fa-solid fa-clock-rotate-left" />
-                        </TabContainer>
+                {#if wishlist_id != 0}
+                    <div class="flex flex-col self-end">
+                        <div class="flex space-x-3 items-baseline">
+                            <Collaborate bind:this={collaborate} room={`wishlist:${wishlist_id}`} hidden={is_owned} listen_for={[ "get_status", "bought", "restored", "editing", "edited", "moved", "created", "removed", "rename" ]} after_init={collaborate_init} on:notification={handle_collaborator_notification} />
+                            <TabContainer light no_content on:change_tab={change_tab}>
+                                <TabContent id="list-tab" label="List" icon="fa-solid fa-list" />
+                                <TabContent id="history-tab" label="Bought items" icon="fa-solid fa-clock-rotate-left" />
+                            </TabContainer>
+                        </div>
                     </div>
-                </div>
+                {/if}
             </div>
         </div>
 
@@ -527,8 +525,8 @@
                     {#if bought_wishlist_items.length === 0}
                         <p>No items have been bought.</p>
                     {/if}
-                    {#each bought_wishlist_items as bought_wishlist_item(bought_wishlist_item)}
-                        <div>
+                    {#each bought_wishlist_items as bought_wishlist_item(bought_wishlist_item.item)}
+                        <div animate:flip={{ duration: 200 }}>
                             <PanelMessage highlighted={bought_wishlist_item.bought.current_user_bought}>
                                 <div slot="heading" class="flex justify-between items-baseline">
                                     <div>

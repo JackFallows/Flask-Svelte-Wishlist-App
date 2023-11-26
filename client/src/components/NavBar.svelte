@@ -115,12 +115,12 @@
                     {/if}
                     <SlidePanel bind:visible={user_panel_visible}>
                         <div class="flex flex-col space-y-3">
-                            <a class="w-full block bg-white dark:bg-slate-600 hover:bg-slate-100 dark:hover:bg-slate-500 dark:text-slate-100 p-1" href="{ Views.Profile }">
+                            <a class="w-full block bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 dark:text-slate-100 p-1" href="{ Views.Profile }">
                                 <span class="fa-fw fa-regular fa-user"></span>
                                 Profile
                             </a>
                             <hr />
-                            <a class="w-full block bg-white dark:bg-slate-600 hover:bg-slate-100 dark:hover:bg-slate-500 dark:text-slate-100 p-1" href="{ Views.Auth.Logout.to_string() }">
+                            <a class="w-full block bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 dark:text-slate-100 p-1" href="{ Views.Auth.Logout.to_string() }">
                                 <span class="fa-fw fa-solid fa-person-walking-arrow-right"></span>
                                 Logout
                             </a>

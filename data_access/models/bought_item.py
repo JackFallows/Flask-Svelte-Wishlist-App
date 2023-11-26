@@ -94,6 +94,7 @@ class BoughtItem():
                 FROM bought_item bi
                 JOIN wishlist_item wi ON wi.rowid = bi.wishlist_item_id
                 WHERE wi.wishlist_id = ?
+                ORDER by bi.bought_date
                 """,
                 (wishlist_id,)
             ).fetchall()
@@ -120,6 +121,7 @@ class BoughtItem():
                 FROM bought_item bi
                 JOIN wishlist_item wi ON wi.rowid = bi.wishlist_item_id
                 WHERE wi.wishlist_id = ? AND (bi.user_id = ? OR bi.defer_until IS NULL OR bi.defer_until < ?)
+                ORDER BY bi.bought_date
                 """,
                 (wishlist_id, user_id, today,)
             ).fetchall()
