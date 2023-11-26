@@ -17,6 +17,6 @@
 
 </script>
 
-<span class="rounded-full {bg_color} dark:text-white p-2 min-w-[40px] text-center">
+<span class="rounded-full {bg_color} dark:text-white p-2 min-w-[40px] text-center whitespace-nowrap">
     <slot></slot>
 </span>

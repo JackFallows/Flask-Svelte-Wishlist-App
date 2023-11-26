@@ -55,9 +55,10 @@ interface IWishlistItem {
 
 interface IBoughtItem {
     id: number;
-    user_id: string;
+    current_user_bought: boolean;
     wishlist_item_id: number;
     defer_until: Date;
+    bought_date: Date;
 }
 
 interface IWishlist {
@@ -106,11 +107,10 @@ interface INotificationDto {
 interface ITab {
     id: string;
     label: string;
+    icon: string;
 }
 
-interface ITabContent {
-    id: string;
-    label: string;
+interface ITabContent extends ITab {
     activate: () => void;
     deactivate: () => void;
 }

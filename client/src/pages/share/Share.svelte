@@ -62,7 +62,7 @@
                 <div class="flex space-y-8 flex-col">
                     {#each wishlist_items as wishlist_item(wishlist_item)}
                         <div>
-                            <WishlistItem wishlist_item={wishlist_item} is_link_share />
+                            <WishlistItem wishlist_item={wishlist_item} can_buy={false} />
                         </div>
                     {/each}
                 </div>

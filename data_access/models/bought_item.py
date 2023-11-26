@@ -1,19 +1,21 @@
-from datetime import datetime
+from datetime import datetime, date
 from data_access.db_connect import get_db_connection
 
 class BoughtItem():
-    def __init__(self, id, user_id, wishlist_item_id, defer_until):
+    def __init__(self, id, user_id, wishlist_item_id, defer_until, bought_date):
         self.id = id
         self.user_id = user_id
         self.wishlist_item_id = wishlist_item_id
         self.defer_until = defer_until
+        self.bought_date = bought_date
         
-    def as_dict(self):
+    def as_dict(self, current_user_id: str):
         return {
             "id": self.id,
-            "user_id": self.user_id,
+            "current_user_bought": self.user_id == current_user_id,
             "wishlist_item_id": self.wishlist_item_id,
-            "defer_until": self.defer_until
+            "defer_until": self.defer_until,
+            "bought_date": self.bought_date
         }
         
     @staticmethod
@@ -22,14 +24,17 @@ class BoughtItem():
         
         if defer_until is not None:
             defer_until_time = datetime.strptime(defer_until, "%Y-%m-%d").timestamp()
+            
+        now = datetime.now()
+        timestamp = int(now.timestamp())
         
         with get_db_connection() as db:
             db.execute(
                 """
-                INSERT INTO bought_item (user_id, wishlist_item_id, defer_until)
-                VALUES (?, ?, ?)
+                INSERT INTO bought_item (user_id, wishlist_item_id, defer_until, bought_date)
+                VALUES (?, ?, ?, ?)
                 """,
-                (user_id, wishlist_item_id, defer_until_time,)
+                (user_id, wishlist_item_id, defer_until_time, timestamp,)
             )
             
             db.commit()
@@ -42,8 +47,31 @@ class BoughtItem():
                 id=bought_item_id,
                 user_id=user_id,
                 wishlist_item_id=int(wishlist_item_id),
-                defer_until=defer_until_time
+                defer_until=defer_until_time,
+                bought_date=timestamp
             )
+            
+    @staticmethod
+    def get_for_item(wishlist_item_id: int):
+        with get_db_connection() as db:
+            bought_item_result = db.execute(
+                """
+                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until, bi.bought_date
+                FROM bought_item bi
+                WHERE bi.wishlist_item_id = ?
+                """,
+                (wishlist_item_id,)
+            ).fetchone()
+            
+            if not bought_item_result:
+                return None
+            
+            return BoughtItem(
+                id=bought_item_result[0],
+                user_id=bought_item_result[1],
+                wishlist_item_id=bought_item_result[2],
+                defer_until=bought_item_result[3],
+                bought_date=bought_item_result[4])
             
     @staticmethod
     def remove_defer_date(id: int, user_id: str):
@@ -62,10 +90,11 @@ class BoughtItem():
         with get_db_connection() as db:
             bought_items_result = db.execute(
                 """
-                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until
+                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until, bi.bought_date
                 FROM bought_item bi
                 JOIN wishlist_item wi ON wi.rowid = bi.wishlist_item_id
                 WHERE wi.wishlist_id = ?
+                ORDER by bi.bought_date
                 """,
                 (wishlist_id,)
             ).fetchall()
@@ -76,8 +105,45 @@ class BoughtItem():
                         id=bi[0],
                         user_id=bi[1],
                         wishlist_item_id=bi[2],
-                        defer_until=bi[3]),
+                        defer_until=bi[3],
+                        bought_date=bi[4]),
                     bought_items_result)
                 )
             
+    @staticmethod
+    def get_for_wishlist_owner(wishlist_id: int, user_id: str):
+        with get_db_connection() as db:
+            today = datetime.combine(date.today(), datetime.min.time()).timestamp()
             
+            bought_items_result = db.execute(
+                """
+                SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until, bi.bought_date
+                FROM bought_item bi
+                JOIN wishlist_item wi ON wi.rowid = bi.wishlist_item_id
+                WHERE wi.wishlist_id = ? AND (bi.user_id = ? OR bi.defer_until IS NULL OR bi.defer_until < ?)
+                ORDER BY bi.bought_date
+                """,
+                (wishlist_id, user_id, today,)
+            ).fetchall()
+            
+            return list(
+                map(
+                    lambda bi: BoughtItem(
+                        id=bi[0],
+                        user_id=bi[1],
+                        wishlist_item_id=bi[2],
+                        defer_until=bi[3],
+                        bought_date=bi[4]),
+                    bought_items_result)
+                )
+            
+    def delete(id: int):
+        with get_db_connection() as db:
+            db.execute(
+                """
+                DELETE FROM bought_item WHERE rowid = ?
+                """,
+                (id,)
+            )
+            
+            db.commit()

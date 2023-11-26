@@ -15,7 +15,7 @@
     export let wishlist_item: IWishlistItem;
     export let is_owned: boolean = false;
     export let is_locked: boolean = false;
-    export let is_link_share: boolean = false;
+    export let can_buy: boolean = true;
     export let has_other_wishlists: boolean = false;
     export let most_recent_bought_item: IBoughtItem = null;
 
@@ -231,7 +231,7 @@
                             {/if}
                             <IconButton id="{wishlist_item.id}-delete-button" icon="fa-solid fa-trash" label="Delete" on:click={remove} />
                         </BurgerMenu>
-                    {:else if !is_link_share}
+                    {:else if can_buy}
                         <IconButton id="{wishlist_item.id}-bought-button" icon="fa-solid fa-basket-shopping" label="Mark as bought" on:click={mark_as_bought} />
                     {/if}
                     {#if is_owned}

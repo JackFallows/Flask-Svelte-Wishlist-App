@@ -58,7 +58,7 @@
 </script>
 
 {#if !hidden}
-<div title={title}>
+<div title={title} class="text-sm">
     {#if connected}
         <Badge color={BadgeColor.GREEN}>
             <span class="fa-solid fa-users"></span>
