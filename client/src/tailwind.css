@@ -7,7 +7,7 @@
 }
 
 .button {
-    @apply bg-white dark:bg-transparent min-w-[36px] hover:bg-purple-600 dark:hover:bg-purple-300 text-purple-600 dark:text-slate-100 hover:text-white dark:hover:text-black rounded-full transition-all p-1 border-purple-600 dark:border-slate-100 dark:hover:border-purple-300 border-2 disabled:opacity-75 disabled:hover:bg-white disabled:hover:text-purple-600;
+    @apply bg-white dark:bg-transparent min-w-[36px] hover:bg-purple-600 dark:hover:bg-purple-300 text-purple-600 dark:text-slate-100 hover:text-white dark:hover:text-black rounded-full transition-all p-1 border-purple-600 dark:border-slate-100 dark:hover:border-purple-300 border-2 disabled:opacity-75 disabled:hover:bg-white dark:disabled:hover:bg-transparent dark:disabled:hover:border-slate-100 dark:disabled:hover:text-slate-100 disabled:hover:text-purple-600;
 }
 
 .clear-button {
