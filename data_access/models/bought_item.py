@@ -120,7 +120,7 @@ class BoughtItem():
                 SELECT bi.rowid, bi.user_id, bi.wishlist_item_id, bi.defer_until, bi.bought_date
                 FROM bought_item bi
                 JOIN wishlist_item wi ON wi.rowid = bi.wishlist_item_id
-                WHERE wi.wishlist_id = ? AND (bi.user_id = ? OR bi.defer_until IS NULL OR bi.defer_until < ?)
+                WHERE wi.wishlist_id = ? AND (bi.user_id = ? OR bi.defer_until IS NULL OR bi.defer_until <= ?)
                 ORDER BY bi.bought_date
                 """,
                 (wishlist_id, user_id, today,)
