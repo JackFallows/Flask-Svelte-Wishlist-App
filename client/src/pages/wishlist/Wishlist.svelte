@@ -8,6 +8,7 @@
     import Toast from '../../components/Toast.svelte';
     import WishlistItem from '../../components/WishlistItem.svelte';
     import Collaborate from '../../components/Collaborate.svelte';
+    import Collapse from '../../components/Collapse.svelte';
     import TabContainer from '../../components/TabContainer.svelte';
     import TabContent from '../../components/TabContent.svelte';
     import PanelMessage from '../../components/PanelMessage.svelte';
@@ -540,12 +541,24 @@
                                         {bought_wishlist_item.bought.bought_date.toLocaleString()}
                                     </div>
                                 </div>
-                                <div slot="body" class="flex items-center justify-between">
-                                    <div>
-                                        <RichText text={bought_wishlist_item.item.link} />
+                                <div slot="body">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <RichText text={bought_wishlist_item.item.link} />
+                                        </div>
+                                        {#if bought_wishlist_item.bought.current_user_bought}
+                                            <IconButton id="restore-item-{bought_wishlist_item.item.id}" label="Restore" icon="fa-solid fa-rotate-left" on:click={() => restore_item(bought_wishlist_item.item.id)} />
+                                        {/if}
                                     </div>
-                                    {#if bought_wishlist_item.bought.current_user_bought}
-                                        <IconButton id="restore-item-{bought_wishlist_item.item.id}" label="Restore" icon="fa-solid fa-rotate-left" on:click={() => restore_item(bought_wishlist_item.item.id)} />
+
+                                    {#if bought_wishlist_item.item.notes?.trim().length > 0}
+                                        <div class="bg-slate-200 dark:bg-slate-800 rounded-b-md -mx-2 -mb-2 mt-2">
+                                            <Collapse heading="Description" subtle collapsed>
+                                                <div class="text-sm">
+                                                    <RichText text={bought_wishlist_item.item.notes} />
+                                                </div>
+                                            </Collapse>
+                                        </div>
                                     {/if}
                                 </div>
                             </PanelMessage>
