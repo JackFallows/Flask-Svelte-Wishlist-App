@@ -81,7 +81,7 @@
         bought_items = wishlist.bought_items ?? [];
 
         for (const bought_item of bought_items) {
-            bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000) : null;
+            bought_item.defer_until = bought_item.defer_until != null ? new Date(<number><any>bought_item.defer_until * 1000 - (new Date().getTimezoneOffset() * 60000)) : null;
             bought_item.bought_date = new Date(<number><any>bought_item.bought_date * 1000);
         }
 
@@ -258,7 +258,7 @@
         }));
 
         if (bought_item.defer_until) {
-            bought_item.defer_until = new Date(<number><any>bought_item.defer_until * 1000);
+            bought_item.defer_until = new Date(<number><any>bought_item.defer_until * 1000 - (new Date().getTimezoneOffset() * 60000));
         }
 
         bought_item.bought_date = new Date(<number><any>bought_item.bought_date * 1000);
